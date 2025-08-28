@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use Config\Database;
+use App\Libraries\Template;
 use CodeIgniter\Controller;
+use Psr\Log\LoggerInterface;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class BaseController
@@ -42,6 +44,8 @@ abstract class BaseController extends Controller
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
     // protected $session;
+    protected $template;
+    protected $db;
 
     /**
      * @return void
@@ -52,7 +56,8 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-
+        $this->template = new Template();
+        $this->db = Database::connect();
         // E.g.: $this->session = service('session');
     }
 }
