@@ -24160,7 +24160,7 @@ table.dataTable tbody td.select-checkbox:after {
   margin: 0;
 }
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded=true] {
-  border-radius: 8px 8px 0 0;
+  /* border-radius: 8px 8px 0 0; */
   background: #4B49AC;
   color: #fff;
 }
