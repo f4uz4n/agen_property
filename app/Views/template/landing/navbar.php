@@ -1,3 +1,16 @@
+<div class="container">
+  <div class="row justify-content-end py-1 fw-semibold">
+    <div class="col-auto me-3">
+      <a href="<?= base_url('tentang') ?>" class="text-decoration-none">Tentang Sampro</a>
+    </div>
+    <div class="col-auto me-3">
+      <a href="<?= base_url('artikel') ?>" class="text-decoration-none">Artikel</a>
+    </div>
+    <div class="col-auto">
+      <a href="<?= base_url('kontak') ?>" class="text-decoration-none">Kontak</a>
+    </div>
+  </div>
+</div>
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow sticky-top">
   <div class="container">
     <a class="navbar-brand fw-semibold" href="<?= base_url() ?>"><i class="fa-regular fa-house text-primary"></i> Sampro
@@ -7,18 +20,18 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navbar-menu">
+      <ul class="navbar-nav fw-medium me-auto mb-2 mb-lg-0" id="navbar-menu">
         <li class="nav-item me-2">
-          <a class="nav-link" href="#">Jual</a>
+          <a class="nav-link" href="<?= base_url('jual') ?>">Jual</a>
         </li>
         <li class="nav-item me-2">
-          <a class="nav-link" href="#">Sewa</a>
+          <a class="nav-link" href="<?= base_url('sewa') ?>">Sewa</a>
         </li>
         <li class="nav-item me-2">
-          <a class="nav-link" href="#">Agen</a>
+          <a class="nav-link" href="<?= base_url('agen') ?>">Agen</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Properti Baru</a>
+          <a class="nav-link" href="<?= base_url('properti') ?>">Properti Baru</a>
         </li>
       </ul>
       <ul class="navbar-nav mb-2 mb-lg-0">

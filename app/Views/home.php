@@ -75,7 +75,7 @@
         <p class="lead mb-4">Temukan rumah, apartemen, dan kavling terbaik dengan proses mudah, aman, dan transparan.
           Tim profesional kami siap mendampingi setiap langkah Anda.</p>
         <div class="d-flex gap-3">
-          <a href="#tentang" class="btn btn-lg btn-primary-custom">Pelajari Lebih Lanjut</a>
+          <a href="#tentang" class="btn btn-lg btn-primary">Pelajari Lebih Lanjut</a>
           <a href="#kontak" class="btn btn-lg btn-outline-light">Konsultasi Gratis</a>
         </div>
       </div>
@@ -176,7 +176,7 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
-                <i class="fas fa-award text-primary-custom"></i>
+                <i class="fas fa-award text-white"></i>
               </div>
               <div>
                 <div class="fw-semibold">Terpercaya</div>
@@ -187,7 +187,7 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
-                <i class="fas fa-certificate text-primary-custom"></i>
+                <i class="fas fa-certificate text-white"></i>
               </div>
               <div>
                 <div class="fw-semibold">Bersertifikat</div>
@@ -198,7 +198,7 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
-                <i class="fas fa-users text-primary-custom"></i>
+                <i class="fas fa-users text-white"></i>
               </div>
               <div>
                 <div class="fw-semibold">Tim Profesional</div>
@@ -209,7 +209,7 @@
           <div class="col-6">
             <div class="d-flex align-items-center">
               <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
-                <i class="fas fa-shield-alt text-primary-custom"></i>
+                <i class="fas fa-shield-alt text-white"></i>
               </div>
               <div>
                 <div class="fw-semibold">Garansi</div>
@@ -221,8 +221,7 @@
       </div>
       <div class="col-lg-6">
         <div class="position-relative">
-          <img src="<?= base_url('public/images/samples/1.jpg') ?>" class="img-fluid rounded-3 shadow"
-            alt="Kantor Kami">
+          <img src="<?= base_url('public/images/1.jpg') ?>" class="img-fluid rounded-3 shadow" alt="Kantor Kami">
           <div class="position-absolute top-0 start-0 bg-primary-custom text-white p-3 rounded-3 m-3">
             <div class="h4 mb-0">15+</div>
             <div class="small">Tahun Pengalaman</div>
@@ -260,7 +259,7 @@
           <div class="card h-100 border-0 shadow-sm">
             <div class="card-body">
               <div class="d-flex align-items-center mb-3">
-                <img src="<?= base_url('public/images/faces/' . (10 + $i) . '.jpg') ?>" class="rounded-circle me-3"
+                <img src="<?= base_url('public/images/faces/face' . (10 + $i) . '.jpg') ?>" class="rounded-circle me-3"
                   width="48" height="48" alt="Klien">
                 <div>
                   <div class="fw-semibold">Klien <?= $i ?></div>
@@ -341,26 +340,27 @@
       <div class="col-6 col-lg-2">
         <h6 class="fw-semibold">Perusahaan</h6>
         <ul class="list-unstyled text-white-50 mb-0">
-          <li><a href="#">Tentang</a></li>
-          <li><a href="#">Karir</a></li>
-          <li><a href="#">Blog</a></li>
+          <li><a href="<?= base_url('tentang') ?>">Tentang</a></li>
+          <li><a href="<?= base_url('artikel') ?>">Artikel</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
         <h6 class="fw-semibold">Layanan</h6>
         <ul class="list-unstyled text-white-50 mb-0">
-          <li><a href="#">Jual Properti</a></li>
-          <li><a href="#">Beli Properti</a></li>
-          <li><a href="#">Sewa Properti</a></li>
+          <li><a href="<?= base_url('jual') ?>">Jual Properti</a></li>
+          <li><a href="<?= base_url('sewa') ?>">Sewa Properti</a></li>
         </ul>
       </div>
       <div class="col-lg-4">
-        <h6 class="fw-semibold">Berlangganan</h6>
-        <p class="text-white-50">Dapatkan update listing terbaru setiap minggu.</p>
-        <div class="d-flex gap-2">
-          <input type="email" class="form-control" placeholder="Alamat email">
-          <button class="btn btn-primary-custom">Daftar</button>
-        </div>
+        <h6 class="fw-semibold">Kontak Cepat</h6>
+        <ul class="list-unstyled text-white-50 mb-3">
+          <li class="mb-1"><i class="fas fa-phone me-2 text-primary-custom"></i>(021) 123-4567</li>
+          <li class="mb-1"><i class="fas fa-envelope me-2 text-primary-custom"></i><?= $contact['email'] ?></li>
+          <li><i class="fas fa-clock me-2 text-primary-custom"></i>Senin - Jumat, 09.00 - 17.00</li>
+        </ul>
+        <a href="<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary-custom w-100">
+          <i class="fab fa-whatsapp me-2"></i>Chat via WhatsApp
+        </a>
       </div>
     </div>
     <hr class="border-secondary my-4">
