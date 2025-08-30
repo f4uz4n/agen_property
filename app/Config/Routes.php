@@ -51,4 +51,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
   $routes->post('user/store', 'User::store');
   $routes->post('user/update/(:num)', 'User::update/$1');
   $routes->get('user/delete/(:num)', 'User::delete/$1');
+
+  $routes->get('setting', 'Setting::index');
+  $routes->post('setting/update', 'Setting::update');
 });

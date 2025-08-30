@@ -1,5 +1,5 @@
 <style>
-  .text-primary-custom {
+  /* .text-primary-custom {
     color: #4c80ae !important;
   }
 
@@ -15,7 +15,7 @@
   .btn-primary-custom:hover {
     background-color: #3a6790;
     border-color: #3a6790;
-  }
+  } */
 
   .hero-section {
     background: linear-gradient(135deg, #4c80ae 0%, #3a6790 100%);
@@ -75,7 +75,7 @@
         <p class="lead mb-4">Temukan rumah, apartemen, dan kavling terbaik dengan proses mudah, aman, dan transparan.
           Tim profesional kami siap mendampingi setiap langkah Anda.</p>
         <div class="d-flex gap-3">
-          <a href="#tentang" class="btn btn-lg btn-primary">Pelajari Lebih Lanjut</a>
+          <a href="#tentang" class="btn btn-lg btn-light text-primary">Pelajari Lebih Lanjut</a>
           <a href="#kontak" class="btn btn-lg btn-outline-light">Konsultasi Gratis</a>
         </div>
       </div>
@@ -85,19 +85,19 @@
             <h5 class="fw-semibold mb-3">Statistik Kami</h5>
             <div class="row g-3 text-center">
               <div class="col-6">
-                <div class="h3 fw-bold text-primary-custom">500+</div>
+                <div class="h3 fw-bold text-primary">500+</div>
                 <div class="small text-muted">Properti Terjual</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary-custom">1000+</div>
+                <div class="h3 fw-bold text-primary">1000+</div>
                 <div class="small text-muted">Klien Puas</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary-custom">15+</div>
+                <div class="h3 fw-bold text-primary">15+</div>
                 <div class="small text-muted">Tahun Pengalaman</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary-custom">50+</div>
+                <div class="h3 fw-bold text-primary">50+</div>
                 <div class="small text-muted">Kota Terjangkau</div>
               </div>
             </div>
@@ -119,7 +119,7 @@
       <div class="col-md-6 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body">
-            <div class="feature-icon bg-primary-custom bg-opacity-10 mb-3">
+            <div class="feature-icon bg-primary mb-3">
               <i class="fa-solid fa-house-chimney text-white"></i>
             </div>
             <h5 class="fw-semibold mb-2">Pilihan Lengkap</h5>
@@ -130,7 +130,7 @@
       <div class="col-md-6 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body">
-            <div class="feature-icon bg-primary-custom bg-opacity-10 mb-3">
+            <div class="feature-icon bg-primary mb-3">
               <i class="fa-solid fa-user-shield text-white"></i>
             </div>
             <h5 class="fw-semibold mb-2">Transaksi Aman</h5>
@@ -141,7 +141,7 @@
       <div class="col-md-6 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body">
-            <div class="feature-icon bg-primary-custom bg-opacity-10 mb-3">
+            <div class="feature-icon bg-primary mb-3">
               <i class="fa-solid fa-handshake angle text-white"></i>
             </div>
             <h5 class="fw-semibold mb-2">Konsultasi Profesional</h5>
@@ -152,7 +152,7 @@
       <div class="col-md-6 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body">
-            <div class="feature-icon bg-primary-custom bg-opacity-10 mb-3">
+            <div class="feature-icon bg-primary mb-3">
               <i class="fa-solid fa-tags text-white"></i>
             </div>
             <h5 class="fw-semibold mb-2">Harga Kompetitif</h5>
@@ -175,7 +175,7 @@
         <div class="row g-3">
           <div class="col-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
+              <div class="feature-icon bg-primary me-3">
                 <i class="fas fa-award text-white"></i>
               </div>
               <div>
@@ -186,7 +186,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
+              <div class="feature-icon bg-primary me-3">
                 <i class="fas fa-certificate text-white"></i>
               </div>
               <div>
@@ -197,7 +197,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
+              <div class="feature-icon bg-primary me-3">
                 <i class="fas fa-users text-white"></i>
               </div>
               <div>
@@ -208,7 +208,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon bg-primary-custom bg-opacity-10 me-3">
+              <div class="feature-icon bg-primary me-3">
                 <i class="fas fa-shield-alt text-white"></i>
               </div>
               <div>
@@ -222,7 +222,7 @@
       <div class="col-lg-6">
         <div class="position-relative">
           <img src="<?= base_url('public/images/1.jpg') ?>" class="img-fluid rounded-3 shadow" alt="Kantor Kami">
-          <div class="position-absolute top-0 start-0 bg-primary-custom text-white p-3 rounded-3 m-3">
+          <div class="position-absolute top-0 start-0 bg-primary text-white p-3 rounded-3 m-3">
             <div class="h4 mb-0">15+</div>
             <div class="small">Tahun Pengalaman</div>
           </div>
@@ -236,7 +236,7 @@
 <section class="py-5">
   <div class="container">
     <div
-      class="p-4 p-lg-5 bg-primary-custom text-white rounded-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between">
+      class="p-4 p-lg-5 bg-primary text-white rounded-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between">
       <div class="mb-3 mb-lg-0">
         <h3 class="mb-2">Butuh Konsultasi Properti?</h3>
         <p class="mb-0">Tim profesional kami siap membantu Anda memahami seluk beluk dunia properti.</p>
@@ -302,8 +302,8 @@
               <textarea rows="4" class="form-control" placeholder="Ceritakan kebutuhan properti Anda"></textarea>
             </div>
             <div class="col-12 d-grid d-sm-flex gap-2">
-              <button type="button" class="btn btn-primary-custom">Kirim Pesan</button>
-              <button type="reset" class="btn btn-outline-secondary">Reset</button>
+              <button type="button" class="btn btn-primary">Kirim Pesan</button>
+              <button type="reset" class="btn btn-outline-primary">Reset</button>
             </div>
           </div>
         </form>
@@ -311,9 +311,9 @@
       <div class="col-lg-6">
         <div class="h-100 p-4 bg-light rounded-3">
           <h5 class="fw-semibold mb-3">Kantor Pusat</h5>
-          <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-primary-custom"></i>Jl. Contoh No. 123, Jakarta</p>
-          <p class="mb-1"><i class="fas fa-phone me-2 text-primary-custom"></i>(021) 123-4567</p>
-          <p class="mb-3"><i class="fas fa-envelope me-2 text-primary-custom"></i>info@perusahaanproperti.co.id</p>
+          <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i><?= $contact['alamat'] ?></p>
+          <p class="mb-1"><i class="fas fa-phone me-2 text-primary"></i>(021) 123-4567</p>
+          <p class="mb-3"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></p>
           <div class="ratio ratio-16x9 rounded-3 overflow-hidden">
             <iframe src="https://maps.google.com/maps?q=Jakarta&t=&z=12&ie=UTF8&iwloc=&output=embed" style="border:0;"
               loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -354,11 +354,11 @@
       <div class="col-lg-4">
         <h6 class="fw-semibold">Kontak Cepat</h6>
         <ul class="list-unstyled text-white-50 mb-3">
-          <li class="mb-1"><i class="fas fa-phone me-2 text-primary-custom"></i>(021) 123-4567</li>
-          <li class="mb-1"><i class="fas fa-envelope me-2 text-primary-custom"></i><?= $contact['email'] ?></li>
-          <li><i class="fas fa-clock me-2 text-primary-custom"></i>Senin - Jumat, 09.00 - 17.00</li>
+          <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i>(021) 123-4567</li>
+          <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></li>
+          <li><i class="fas fa-clock me-2 text-primary"></i>Senin - Jumat, 09.00 - 17.00</li>
         </ul>
-        <a href="<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary-custom w-100">
+        <a href="<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary w-100">
           <i class="fab fa-whatsapp me-2"></i>Chat via WhatsApp
         </a>
       </div>
