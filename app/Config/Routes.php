@@ -47,10 +47,9 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
   $routes->get('artikel/delete/(:num)', 'Artikel::delete/$1');
 
   $routes->get('user', 'User::index');
-  $routes->get('user/(:any)', 'User::$1');
-  $routes->post('user/store', 'User::store');
+  $routes->post('user/create', 'User::create');
   $routes->post('user/update/(:num)', 'User::update/$1');
-  $routes->get('user/delete/(:num)', 'User::delete/$1');
+  $routes->post('user/delete/(:num)', 'User::delete/$1');
 
   $routes->get('setting', 'Setting::index');
   $routes->post('setting/update', 'Setting::update');

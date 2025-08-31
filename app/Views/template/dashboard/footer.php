@@ -5,12 +5,12 @@
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <script src="<?= base_url('public/vendors/chart.js/chart.umd.js') ?>"></script>
-<script src="<?= base_url('public/vendors/datatables.net/jquery.dataTables.js') ?>"></script>
-<!-- <script src="<?= base_url('public/vendors/datatables.net-bs4/dataTables.bootstrap4.js') ?>"></script> -->
-<script src="<?= base_url('public/vendors/datatables.net-bs5/dataTables.bootstrap5.js') ?>"></script>
+<script src="<?= base_url('public/js/datatables.min.js') ?>"></script>
 <script src="<?= base_url('public/js/dataTables.select.min.js') ?>"></script>
 
-<script src="<?= base_url('public/vendors/sweetalert2/sweetalert2.min.js') ?>"></script>
+
+<script src="<?= base_url('public/vendors/select2/select2.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/sweetalert/sweetalert2.all.min.js') ?>"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="<?= base_url('public/js/off-canvas.js') ?>"></script>
@@ -22,6 +22,7 @@
 <script src="<?= base_url('public/js/jquery.cookie.js') ?>" type="text/javascript"></script>
 <script src="<?= base_url('public/js/dashboard.js') ?>"></script>
 <!-- <script src="public/js/Chart.roundedBarCharts.js"></script> -->
+<script src="<?= base_url('public/js/custom.js') ?>"></script>
 <!-- End custom js for this page-->
 <script>
   $(document).ready(function () {
@@ -45,11 +46,11 @@
   <?php endif ?>
 
   // ~inisiasi datetimepicker
-  $('.datetimepicker').DateTimePicker({
-    time: false,
-    lang: 'id',
-    format: 'yyyy-MM-DD'
-  });
+  // $('.datetimepicker').DateTimePicker({
+  //   time: false,
+  //   lang: 'id',
+  //   format: 'yyyy-MM-DD'
+  // });
 
   // ~file upload
   $(document).on("click", ".file-upload-browse", function () {

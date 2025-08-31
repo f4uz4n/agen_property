@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Config\Cache;
 use Config\Database;
 use App\Libraries\Template;
 use CodeIgniter\Controller;
@@ -46,6 +47,7 @@ abstract class BaseController extends Controller
     // protected $session;
     protected $template;
     protected $db;
+    protected $cache;
 
     /**
      * @return void
@@ -58,6 +60,7 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->template = new Template();
         $this->db = Database::connect();
+        $this->cache = new Cache();
         // E.g.: $this->session = service('session');
     }
 }

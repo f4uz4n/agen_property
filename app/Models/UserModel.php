@@ -25,6 +25,15 @@ class UserModel extends Model
   protected $dateFormat = 'datetime';
   protected $createdField = 'created_at';
   protected $updatedField = 'updated_at';
+
+  public function getAgents()
+  {
+    $builder = $this->db->table($this->table);
+    $builder->where('role', 'agen');
+    $builder->where('status', 'aktif');
+    $builder->orderBy('name', 'ASC');
+    return $builder->get()->getResultArray();
+  }
 }
 
 
