@@ -77,20 +77,7 @@ function formatDate(sourceDate, format = "DD-MM-YYYY") {
 }
 
 function get_bulan(bln) {
-  const bulan = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
+  const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
   return bulan[parseInt(bln) - 1] || "";
 }
 
@@ -141,32 +128,20 @@ function disabledInputSibling(selector) {
   });
 }
 
-function handleModalClick({
-  selector,
-  modalTitle,
-  formActionUrl,
-  findData,
-  defaultValues,
-  fieldMap,
-}) {
+function handleModalClick({ selector, modalTitle, formActionUrl, findData, defaultValues, fieldMap }) {
   $(document).on("click", selector, function () {
     const id = $(this).data("id");
     const isEdit = !!id;
     const fullAction = isEdit ? formActionUrl(id) + id : formActionUrl(id);
 
-    $(".modal-title").text(
-      isEdit ? `Edit ${modalTitle}` : `Tambah ${modalTitle}`
-    );
+    $(".modal-title").text(isEdit ? `Edit ${modalTitle}` : `Tambah ${modalTitle}`);
     $("form").attr("action", fullAction);
 
     const values = isEdit ? findData(id) || {} : {};
-
+    
     fieldMap.inputs?.forEach(({ name, valueKey = name }) => {
       const val = values[valueKey];
-      const finalVal =
-        val !== undefined && val !== null && val !== ""
-          ? val
-          : defaultValues?.[name] ?? "";
+      const finalVal = val !== undefined && val !== null && val !== "" ? val : defaultValues?.[name] ?? "";
       $(`input[name="${name}"]`).val(finalVal);
     });
 
@@ -174,11 +149,7 @@ function handleModalClick({
       const $select = $(`select[name="${name}"]`);
       let selectedValue = values?.[valueKey];
 
-      if (
-        selectedValue == undefined ||
-        selectedValue == null ||
-        selectedValue == ""
-      ) {
+      if (selectedValue == undefined || selectedValue == null || selectedValue == "") {
         selectedValue = defaultValues?.[name] || "";
       }
 
@@ -248,9 +219,7 @@ function boolToHtmlStatus(status, type = "full", text = null) {
   const textTrue = text ? text[0] : "Ya";
   const textFalse = text ? text[1] : "Tidak";
 
-  const icon = trueValue.includes(status)
-    ? "fa-circle-check text-success"
-    : "fa-circle-xmark text-danger";
+  const icon = trueValue.includes(status) ? "fa-circle-check text-success" : "fa-circle-xmark text-danger";
   const statusText = trueValue.includes(status) ? textTrue : textFalse;
 
   switch (type) {
@@ -277,17 +246,12 @@ function boolToHtmlStatus(status, type = "full", text = null) {
 
 function randomProgressBar(selector, min = 0, max = 99) {
   const $selector = $(selector);
-  const $progressBar = $(
-    '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div></div>'
-  );
+  const $progressBar = $('<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div></div>');
   $selector.html($progressBar);
   let value = min;
   const intervalId = setInterval(() => {
     value = Math.min(value + 1, max);
-    $progressBar
-      .find(".progress-bar")
-      .css("width", `${value}%`)
-      .text(`${value}%`);
+    $progressBar.find(".progress-bar").css("width", `${value}%`).text(`${value}%`);
     if (value === max) {
       clearInterval(intervalId);
     }
@@ -300,22 +264,8 @@ function generateRandomColor(count = 1) {
     borderColor: [],
   };
 
-  let backgroundColor = [
-    "rgba(255, 99, 132, 0.2)",
-    "rgba(54, 162, 235, 0.2)",
-    "rgba(255, 206, 86, 0.2)",
-    "rgba(75, 192, 192, 0.2)",
-    "rgba(153, 102, 255, 0.2)",
-    "rgba(255, 159, 64, 0.2)",
-  ];
-  let borderColor = [
-    "rgba(255,99,132, 1)",
-    "rgba(54, 162, 235, 1)",
-    "rgba(255, 206, 86, 1)",
-    "rgba(75, 192, 192, 1)",
-    "rgba(153, 102, 255, 1)",
-    "rgba(255, 159, 64, 1)",
-  ];
+  let backgroundColor = ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(255, 159, 64, 0.2)"];
+  let borderColor = ["rgba(255,99,132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)", "rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)", "rgba(255, 159, 64, 1)"];
 
   for (let i = 0; i < count; i++) {
     if (i < 6) {

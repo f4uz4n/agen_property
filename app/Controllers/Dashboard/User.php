@@ -16,22 +16,33 @@ class User extends BaseController
 
   public function index()
   {
-    $users = $this->userModel->orderBy('name', 'ASC')->findAll();
+    $users = $this->userModel
+      ->orderBy('status', 'ASC')
+      ->orderBy('name', 'ASC')
+      ->findAll();
     $data = [
+      'title' => 'Kelola User',
       'data' => $users,
     ];
     return $this->template->display('dashboard/user', $data);
   }
 
-  public function create()
+  public function store()
   {
+    $name = $this->request->getPost('name');
+    $email = $this->request->getPost('email');
+    $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+    $phone = $this->request->getPost('phone');
+    $role = $this->request->getPost('role');
+    $status = $this->request->getPost('status');
+
     $data = [
-      'name' => $this->request->getPost('name'),
-      'email' => $this->request->getPost('email'),
-      'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-      'phone' => $this->request->getPost('phone'),
-      'role' => $this->request->getPost('role'),
-      'status' => $this->request->getPost('status')
+      'name' => $name,
+      'email' => $email,
+      'password' => $password,
+      'phone' => $phone,
+      'role' => $role,
+      'status' => $status,
     ];
 
     $validation = \Config\Services::validation();
@@ -87,17 +98,24 @@ class User extends BaseController
       ]);
     }
 
+    $name = $this->request->getPost('name');
+    $email = $this->request->getPost('email');
+    $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+    $phone = $this->request->getPost('phone');
+    $role = $this->request->getPost('role');
+    $status = $this->request->getPost('status');
+
     $data = [
-      'name' => $this->request->getPost('name'),
-      'email' => $this->request->getPost('email'),
-      'phone' => $this->request->getPost('phone'),
-      'role' => $this->request->getPost('role'),
-      'status' => $this->request->getPost('status')
+      'name' => $name,
+      'email' => $email,
+      'phone' => $phone,
+      'role' => $role,
+      'status' => $status,
     ];
 
     // Jika password diisi, update password
     if ($this->request->getPost('password')) {
-      $data['password'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+      $data['password'] = $password;
     }
 
     $validation = \Config\Services::validation();
@@ -131,6 +149,45 @@ class User extends BaseController
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'Gagal memperbarui user: ' . $e->getMessage()
+      ]);
+    }
+  }
+
+  public function disabled($id)
+  {
+    if (!$id) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'ID user tidak ditemukan'
+      ]);
+    }
+    // TODO: handle tidak bisa disable diri sendiri dan owner
+    $user = $this->userModel->find($id);
+    if (!$user) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'User tidak ditemukan'
+      ]);
+    }
+
+    $data = [
+      'status' => 'nonaktif',
+    ];
+
+    try {
+      $this->userModel->update($id, $data);
+      return $this->response->setJSON([
+        'title' => 'Berhasil',
+        'icon' => 'success',
+        'text' => 'User berhasil dinonaktifkan.'
+      ]);
+    } catch (\Exception $e) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'Gagal menonaktifkan user: ' . $e->getMessage()
       ]);
     }
   }

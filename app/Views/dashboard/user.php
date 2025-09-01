@@ -3,7 +3,7 @@
     <h3>Kelola User</h3>
   </div>
   <div class="col text-end">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="resetForm()">
+    <button class="btn btn-primary btn-modal" data-bs-toggle="modal" data-bs-target="#userModal">
       <i class="fas fa-plus"></i> Tambah User
     </button>
   </div>
@@ -34,15 +34,17 @@
               <td><?= $row['phone'] ?></td>
               <td><?= ucfirst($row['role']) ?></td>
               <td>
-                <span class="badge badge-success"><?= ucfirst($row['status']) ?></span>
+                <span class="badge badge-<?= $row['status'] == 'aktif' ? 'success' : 'danger' ?>">
+                  <?= ucfirst($row['status']) ?></span>
               </td>
               <td class="text-center">
-                <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#userModal"
-                  onclick="editUser(<?= $row['id'] ?>)">
+                <button class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#userModal"
+                  data-id="<?= $row['id'] ?>">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= $row['id'] ?>)">
-                  <i class="fas fa-trash"></i>
+                <button class="btn btn-danger btn-sm btn-disable" data-id="<?= $row['id'] ?>"
+                  data-name="<?= $row['name'] ?>">
+                  <i class="fas fa-eye-slash"></i>
                 </button>
               </td>
             </tr>
@@ -62,10 +64,8 @@
         <h5 class="modal-title fw-semibold" id="userModalLabel">Tambah User Baru</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="userForm">
+      <form method="post" id="userForm">
         <div class="modal-body">
-          <input type="hidden" id="userId" name="id">
-
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -106,7 +106,7 @@
               <div class="form-group">
                 <label for="role">Role <span class="text-danger">*</span></label>
                 <select class="form-control" id="role" name="role" required>
-                  <option value="agen">Agent</option>
+                  <option value="agen">Agen</option>
                   <option value="admin">Admin</option>
                 </select>
                 <div class="invalid-feedback" id="roleError"></div>
@@ -134,11 +134,66 @@
 </div>
 
 <?= $this->section('js') ?>
-<script>;
-  let isEditMode = false;
+<script>
+  const title = '<?= $title ?>';
+  let data = <?= json_encode($data) ?>;
 
   tableInit('#basic-table');
-  $(document).ready(function () {
+
+  $(document).on('click', '.btn-disable', function () {
+    const id = $(this).data('id');
+    const name = $(this).data('name');
+    Swal.fire({
+      title: 'Non Aktifkan User',
+      text: 'Apakah Anda yakin ingin menonaktifkan ' + name + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Nonaktifkan',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '<?= base_url('dashboard/user/disabled/') ?>' + id,
+          type: 'POST',
+          data: {},
+          success: function (res) {
+            console.log(res);
+            Swal.fire({
+              title: res.title,
+              text: res.text,
+              icon: res.icon,
+            });
+            location.reload();
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+    });
+  })
+
+  handleModalClick({
+    selector: '.btn-modal',
+    modalTitle: '<?= $title ?>',
+    formActionUrl: id => '<?= base_url('dashboard/user/') ?>' + (id ? 'update/' + id : 'store'),
+    findData: id => data.find(item => item.id == id),
+    defaultValues: {
+    },
+    fieldMap: {
+      inputs: [{
+        name: 'name',
+      }, {
+        name: 'email',
+      }, {
+        name: 'phone',
+      },],
+      selects: [{
+        name: 'role',
+      }, {
+        name: 'status',
+      },],
+    }
   });
 
   // Handle form submission
