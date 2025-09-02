@@ -2,8 +2,8 @@
 
 namespace App\Controllers\Dashboard;
 
-use App\Controllers\BaseController;
 use App\Models\UserModel;
+use App\Controllers\BaseController;
 
 class User extends BaseController
 {
