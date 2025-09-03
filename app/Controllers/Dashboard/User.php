@@ -29,10 +29,10 @@ class User extends BaseController
 
   public function store()
   {
-    $name = $this->request->getPost('name');
+    $name = $this->request->getPost('nama');
     $email = $this->request->getPost('email');
     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
-    $phone = $this->request->getPost('phone');
+    $phone = $this->request->getPost('whatsapp');
     $role = $this->request->getPost('role');
     $status = $this->request->getPost('status');
 
@@ -47,12 +47,12 @@ class User extends BaseController
 
     $validation = \Config\Services::validation();
     $validation->setRules([
-      'name' => 'required|min_length[3]',
+      'nama' => 'required|min_length[3]',
       'email' => 'required|valid_email|is_unique[users.email]',
       'password' => 'required|min_length[8]',
-      'phone' => 'required|regex_match[/^628\d+$/]|numeric',
-      'role' => 'required|in_list[admin,user,agent]',
-      'status' => 'required|in_list[0,1]'
+      'whatsapp' => 'required|regex_match[/^628\d+$/]|numeric',
+      'role' => 'required|in_list[admin,agen]',
+      'status' => 'required|in_list[aktif,nonaktif]'
     ]);
 
     if (!$validation->withRequest($this->request)->run()) {
@@ -82,26 +82,28 @@ class User extends BaseController
   public function update($id = null)
   {
     if (!$id) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'ID user tidak ditemukan'
       ]);
+      return redirect()->to(base_url('dashboard/user'));
     }
 
     $user = $this->userModel->find($id);
     if (!$user) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'User tidak ditemukan'
       ]);
+      return redirect()->to(base_url('dashboard/user'));
     }
 
-    $name = $this->request->getPost('name');
+    $name = $this->request->getPost('nama');
     $email = $this->request->getPost('email');
     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
-    $phone = $this->request->getPost('phone');
+    $phone = trim($this->request->getPost('whatsapp'));
     $role = $this->request->getPost('role');
     $status = $this->request->getPost('status');
 
@@ -120,37 +122,45 @@ class User extends BaseController
 
     $validation = \Config\Services::validation();
     $validation->setRules([
-      'name' => 'required|min_length[3]',
+      'nama' => 'required|min_length[3]',
       'email' => 'required|valid_email|is_unique[users.email,id,' . $id . ']',
       'password' => 'permit_empty|min_length[8]',
-      'phone' => 'required|regex_match[/^628\d+$/]|numeric',
-      'role' => 'required|in_list[admin,user,agent]',
-      'status' => 'required|in_list[0,1]'
+      'whatsapp' => 'required|regex_match[/^628\d+$/]|numeric',
+      'role' => 'required|in_list[admin,agen]',
+      'status' => 'required|in_list[aktif,nonaktif]'
     ]);
 
     if (!$validation->withRequest($this->request)->run()) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Validasi gagal',
         'icon' => 'error',
         'text' => 'Validasi gagal',
-        'errors' => $validation->getErrors()
+        'open_modal' => 'userForm',
       ]);
+      return redirect()->to(base_url('dashboard/user'))->withInput()
+        ->with('errors', $validation->getErrors());
     }
 
     try {
       $this->userModel->update($id, $data);
-      return $this->response->setJSON([
+      log_message('info', '{user} mengubah data user {id}', [
+        'user' => 'diki',
+        'id' => $id
+      ]);
+
+      session()->setFlashdata([
         'title' => 'Berhasil',
         'icon' => 'success',
         'text' => 'User berhasil diperbarui'
       ]);
     } catch (\Exception $e) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'Gagal memperbarui user: ' . $e->getMessage()
       ]);
     }
+    return redirect()->to(base_url('dashboard/user'));
   }
 
   public function disabled($id)

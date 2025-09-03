@@ -3,7 +3,7 @@
   <ul class="nav">
     <li class="nav-item">
       <a class="nav-link" href="<?= base_url('dashboard') ?>" data-page="dashboard">
-        <i class="fa-solid fa-home menu-icon"></i>
+        <i class="fa-solid fa-gauge-high menu-icon"></i>
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
@@ -28,9 +28,9 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="<?= base_url('dashboard/kategori_properti') ?>" data-page="kategori_properti">
-        <i class="fa-solid fa-list menu-icon"></i>
-        <span class="menu-title">Kategori Properti</span>
+      <a class="nav-link" href="<?= base_url('dashboard/kategori') ?>" data-page="kategori">
+        <i class="fa-solid fa-home menu-icon"></i>
+        <span class="menu-title">Kategori</span>
       </a>
     </li>
     <li class="nav-item">

@@ -42,7 +42,12 @@
       title: "<?= session('title') ?>",
       icon: "<?= session('icon') ?>",
       text: "<?= session('text') ?>"
-    })
+    }).then(() => {
+      <?php if (session('icon') === 'error' && session()->has('open_modal')): ?>
+        // var modalId = "<?= session('open_modal') ?>";
+        // $('#' + modalId).modal('show');
+      <?php endif ?>
+    });
   <?php endif ?>
 
   // ~inisiasi datetimepicker

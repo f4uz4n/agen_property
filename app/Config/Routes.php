@@ -26,25 +26,27 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
   $routes->get('properti/(:any)', 'Properti::$1');
   $routes->post('properti/store', 'Properti::store');
   $routes->post('properti/update/(:num)', 'Properti::update/$1');
+  $routes->post('properti/sell/(:num)', 'Properti::sell/$1');
+  $routes->post('properti/validation/(:num)', 'Properti::validation/$1');
   $routes->get('properti/delete/(:num)', 'Properti::delete/$1');
-
-  $routes->get('agen', 'Agen::index');
-  $routes->get('agen/(:any)', 'Agen::$1');
-  $routes->post('agen/store', 'Agen::store');
-  $routes->post('agen/update/(:num)', 'Agen::update/$1');
-  $routes->get('agen/delete/(:num)', 'Agen::delete/$1');
-
-  $routes->get('kategori', 'Kategori::index');
-  $routes->get('kategori/(:any)', 'Kategori::$1');
-  $routes->post('kategori/store', 'Kategori::store');
-  $routes->post('kategori/update/(:num)', 'Kategori::update/$1');
-  $routes->get('kategori/delete/(:num)', 'Kategori::delete/$1');
 
   $routes->get('artikel', 'Artikel::index');
   $routes->get('artikel/(:any)', 'Artikel::$1');
   $routes->post('artikel/store', 'Artikel::store');
   $routes->post('artikel/update/(:num)', 'Artikel::update/$1');
   $routes->get('artikel/delete/(:num)', 'Artikel::delete/$1');
+
+  $routes->get('kategori', 'Kategori::index');
+  $routes->get('kategori/(:any)', 'Kategori::$1');
+  $routes->post('kategori/store', 'Kategori::store');
+  $routes->post('kategori/update/(:num)', 'Kategori::update/$1');
+  $routes->get('kategori/disabled/(:num)', 'Kategori::disabled/$1');
+
+  $routes->get('agen', 'Agen::index');
+  $routes->get('agen/(:any)', 'Agen::$1');
+  $routes->post('agen/store', 'Agen::store');
+  $routes->post('agen/update/(:num)', 'Agen::update/$1');
+  $routes->get('agen/disabled/(:num)', 'Agen::disabled/$1');
 
   $routes->get('user', 'User::index');
   $routes->post('user/store', 'User::store');
