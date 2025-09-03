@@ -1,6 +1,5 @@
 <?php
 
-use DateTime;
 use Dompdf\Dompdf;
 use Config\Services;
 use Endroid\QrCode\QrCode;
@@ -66,13 +65,13 @@ function cetakPDF($filename, $data, $paper = 'A4', $oriented = 'potrait')
 
 function enkripsi($id)
 {
-  $encrypter = \Config\Services::encrypter();
+  $encrypter = Services::encrypter();
   return bin2hex($encrypter->encrypt($id));
 }
 
 function dekripsi($id)
 {
-  $encrypter = \Config\Services::encrypter();
+  $encrypter = Services::encrypter();
   return $encrypter->decrypt(hex2bin($id));
 }
 
@@ -147,6 +146,20 @@ function numberToText($number)
   }
 
   return ucwords(trim($text));
+}
+
+function shortNumber($number)
+{
+  $satuan = ['', 'Ribu', 'Juta', 'Miliyar', 'Triliun'];
+  $nilai = (int) $number;
+  $i = 0;
+  while ($nilai >= 1000) {
+    $nilai /= 1000;
+    $i++;
+  }
+  $decimal = (string) $nilai;
+  $decimal = strlen(substr(strrchr($decimal, '.'), 1));
+  return 'Rp. ' . number_format($nilai, $decimal, ',', '.') . ' ' . $satuan[$i];
 }
 
 function sanitizeTanggal($tanggal)

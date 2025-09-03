@@ -20,8 +20,10 @@ class User extends BaseController
       ->orderBy('status', 'ASC')
       ->orderBy('name', 'ASC')
       ->findAll();
+      
     $data = [
       'title' => 'Kelola User',
+      'subtitle' => 'Data user yang terdaftar di dalam sistem.',
       'data' => $users,
     ];
     return $this->template->display('dashboard/user', $data);

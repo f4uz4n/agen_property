@@ -1,11 +1,11 @@
 <div class="row align-items-center justify-content-between mb-5">
   <div class="col">
     <h3><?= $title ?></h3>
-    <p class="text-muted">Data user yang terdaftar di dalam sistem.</p>
+    <p class="text-muted"><?= $subtitle ?></p>
   </div>
   <div class="col text-end">
-    <button class="btn btn-primary btn-modal" data-bs-toggle="modal" data-bs-target="#userModal">
-      <i class="fas fa-plus"></i> Tambah User
+    <button class="btn btn-primary btn-modal" data-bs-toggle="modal" data-bs-target="#myModal">
+      <i class="fas fa-plus"></i> Tambah Data
     </button>
   </div>
 </div>
@@ -40,7 +40,7 @@
               </td>
               <td class="text-center">
                 <?php if ($row['role'] != 'owner'): ?>
-                  <button class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#userModal"
+                  <button class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
                     data-id="<?= $row['id'] ?>">
                     <i class="fas fa-edit"></i>
                   </button>
@@ -60,11 +60,11 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-semibold" id="userModalLabel">Tambah User Baru</h5>
+        <h5 class="modal-title fw-semibold" id="myModalLabel">Tambah User Baru</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="post" id="userForm">
@@ -181,7 +181,7 @@
 
   handleModalClick({
     selector: '.btn-modal',
-    modalTitle: '<?= $title ?>',
+    modalTitle: 'User',
     formActionUrl: id => '<?= base_url('dashboard/user/') ?>' + (id ? 'update/' : 'store'),
     findData: id => data.find(item => item.id == id),
     defaultValues: {
