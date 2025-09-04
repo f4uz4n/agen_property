@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="<?= base_url('public/vendors/select2/select2.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/sweetalert/sweetalert2.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/jquery-step/jquery-steps.css') ?>">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="<?= base_url('public/css/style.css') ?>" />

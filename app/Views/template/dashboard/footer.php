@@ -8,9 +8,9 @@
 <script src="<?= base_url('public/js/datatables.min.js') ?>"></script>
 <script src="<?= base_url('public/js/dataTables.select.min.js') ?>"></script>
 
-
 <script src="<?= base_url('public/vendors/select2/select2.min.js') ?>"></script>
 <script src="<?= base_url('public/vendors/sweetalert/sweetalert2.all.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/jquery-step/jquery.steps.min.js') ?>"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="<?= base_url('public/js/off-canvas.js') ?>"></script>

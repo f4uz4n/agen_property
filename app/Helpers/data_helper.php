@@ -157,9 +157,8 @@ function shortNumber($number)
     $nilai /= 1000;
     $i++;
   }
-  $decimal = (string) $nilai;
-  $decimal = strlen(substr(strrchr($decimal, '.'), 1));
-  return 'Rp. ' . number_format($nilai, $decimal, ',', '.') . ' ' . $satuan[$i];
+
+  return 'Rp. ' . round($nilai, 2) . ' ' . $satuan[$i];
 }
 
 function sanitizeTanggal($tanggal)

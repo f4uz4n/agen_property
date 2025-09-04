@@ -52,6 +52,7 @@
             <th>Kota</th>
             <th>Status</th>
             <th>Publikasi</th>
+            <th>Favorit</th>
             <th class="text-center">Aksi</th>
           </tr>
         </thead>
@@ -69,6 +70,9 @@
               <td>
                 <span class="badge badge-<?= $row['publish'] == 1 ? 'success' : 'danger' ?>">
                   <?= $row['publish'] == 1 ? 'Publikasi' : 'Belum Publikasi' ?></span>
+              </td>
+              <td class="text-center fs-4 favorite" data-id="<?= $row['id'] ?>">
+                <i class="fa-regular fa-star text-warning"></i>
               </td>
               <td class="text-center">
                 <a href="<?= base_url('dashboard/properti/' . $row['id']) ?>" class="btn btn-light btn-sm">
@@ -89,7 +93,27 @@
 
 <?= $this->section('js') ?>
 <script>
+  $('.favorite').css('cursor', 'pointer');
   tableInit('#basic-table');
+
+  $(document).on('click', '.favorite', function () {
+    let $this = $(this);
+    let id = $(this).data('id');
+    let value = $this.hasClass('fa-regular') ? 0 : 1;
+    $.ajax({
+      url: `<?= base_url('dashboard/properti/favorite/') ?>${id}`,
+      type: 'POST',
+      data: {
+        value: value,
+      },
+      success: function (res) {
+        $this.toggleClass('fa-regular fa-solid');
+      },
+      error: function (err) {
+        console.error(err);
+      }
+    });
+  })
 
   function getData(kategori, status, agen, provinsi, kota) {
     $.ajax({

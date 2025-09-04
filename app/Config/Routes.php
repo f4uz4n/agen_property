@@ -22,40 +22,52 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
   $routes->get('/', 'Home::index');
   $routes->get('laporan-penjualan', 'Laporan::index');
 
-  $routes->get('properti', 'Properti::index');
-  $routes->get('properti/create', 'Properti::create');
-  $routes->get('properti/(:any)', 'Properti::detail/$1');
-  $routes->post('properti/store', 'Properti::store');
-  $routes->post('properti/update/(:num)', 'Properti::update/$1');
-  $routes->post('properti/sell/(:num)', 'Properti::sell/$1');
-  $routes->post('properti/validation/(:num)', 'Properti::validation/$1');
-  $routes->get('properti/delete/(:num)', 'Properti::delete/$1');
+  $routes->group('properti', ['namespace' => 'App\Controllers\Dashboard\Properti'], function ($routes) {
+    $routes->get('/', 'Properti::index');
+    $routes->get('create', 'Properti::create');
+    $routes->get('(:num)', 'Properti::detail/$1');
+    $routes->post('store', 'Properti::store');
+    $routes->post('update/(:num)', 'Properti::update/$1');
+    $routes->post('favorite/(:num)', 'Properti::favorite/$1');
+    $routes->post('sell/(:num)', 'Properti::sell/$1');
+    $routes->post('validation/(:num)', 'Properti::validation/$1');
+    $routes->get('delete/(:num)', 'Properti::delete/$1');
+  });
 
-  $routes->get('artikel', 'Artikel::index');
-  $routes->get('artikel/(:any)', 'Artikel::detail/$1');
-  $routes->post('artikel/store', 'Artikel::store');
-  $routes->post('artikel/update/(:num)', 'Artikel::update/$1');
-  $routes->get('artikel/delete/(:num)', 'Artikel::delete/$1');
+  $routes->group('artikel', ['namespace' => 'App\Controllers\Dashboard\Artikel'], function ($routes) {
+    $routes->get('/', 'Artikel::index');
+    $routes->get('(:num)', 'Artikel::detail/$1');
+    $routes->post('store', 'Artikel::store');
+    $routes->post('update/(:num)', 'Artikel::update/$1');
+    $routes->get('delete/(:num)', 'Artikel::delete/$1');
+  });
 
-  $routes->get('kategori', 'Kategori::index');
-  $routes->get('kategori/(:any)', 'Kategori::detail/$1');
-  $routes->post('kategori/store', 'Kategori::store');
-  $routes->post('kategori/update/(:num)', 'Kategori::update/$1');
-  $routes->get('kategori/disabled/(:num)', 'Kategori::disabled/$1');
+  $routes->group('kategori', ['namespace' => 'App\Controllers\Dashboard\Kategori'], function ($routes) {
+    $routes->get('/', 'Kategori::index');
+    $routes->get('(:num)', 'Kategori::detail/$1');
+    $routes->post('store', 'Kategori::store');
+    $routes->post('update/(:num)', 'Kategori::update/$1');
+    $routes->get('disabled/(:num)', 'Kategori::disabled/$1');
+  });
 
-  $routes->get('agen', 'Agen::index');
-  $routes->get('agen/(:any)', 'Agen::detail/$1');
-  $routes->post('agen/store', 'Agen::store');
-  $routes->post('agen/update/(:num)', 'Agen::update/$1');
-  $routes->get('agen/disabled/(:num)', 'Agen::disabled/$1');
+  $routes->group('agen', ['namespace' => 'App\Controllers\Dashboard\Agen'], function ($routes) {
+    $routes->get('/', 'Agen::index');
+    $routes->get('(:num)', 'Agen::detail/$1');
+    $routes->post('store', 'Agen::store');
+    $routes->post('update/(:num)', 'Agen::update/$1');
+    $routes->get('disabled/(:num)', 'Agen::disabled/$1');
+  });
 
-  $routes->get('user', 'User::index');
-  $routes->post('user/store', 'User::store');
-  $routes->post('user/update/(:num)', 'User::update/$1');
-  $routes->post('user/disabled/(:num)', 'User::disabled/$1');
-  // $routes->post('user/delete/(:num)', 'User::delete/$1');
+  $routes->group('user', ['namespace' => 'App\Controllers\Dashboard\User'], function ($routes) {
+    $routes->get('/', 'User::index');
+    $routes->post('store', 'User::store');
+    $routes->post('update/(:num)', 'User::update/$1');
+    $routes->post('disabled/(:num)', 'User::disabled/$1');
+  });
 
-  $routes->get('setting', 'Setting::index');
-  $routes->post('setting/update/(:num)', 'Setting::update/$1');
-  $routes->post('setting/password/(:num)', 'Setting::password/$1');
+  $routes->group('setting', ['namespace' => 'App\Controllers\Dashboard\Setting'], function ($routes) {
+    $routes->get('/', 'Setting::index');
+    $routes->post('update/(:num)', 'Setting::update/$1');
+    $routes->post('password/(:num)', 'Setting::password/$1');
+  });
 });

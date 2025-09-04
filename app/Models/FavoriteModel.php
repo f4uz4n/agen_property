@@ -13,7 +13,6 @@ class FavoriteModel extends Model
   protected $returnType = 'array';
   protected $protectFields = true;
   protected $allowedFields = [
-    'user_id',
     'property_id',
     'created_at',
   ];
