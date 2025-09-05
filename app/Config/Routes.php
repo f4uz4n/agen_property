@@ -21,8 +21,8 @@ $routes->get('logout', 'Login::logout');
 $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], function ($routes) {
   $routes->get('/', 'Home::index');
   $routes->get('laporan-penjualan', 'Laporan::index');
-
-  $routes->group('properti', ['namespace' => 'App\Controllers\Dashboard\Properti'], function ($routes) {
+  
+  $routes->group('properti', function ($routes) {
     $routes->get('/', 'Properti::index');
     $routes->get('create', 'Properti::create');
     $routes->get('(:num)', 'Properti::detail/$1');
@@ -34,7 +34,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
     $routes->get('delete/(:num)', 'Properti::delete/$1');
   });
 
-  $routes->group('artikel', ['namespace' => 'App\Controllers\Dashboard\Artikel'], function ($routes) {
+  $routes->group('artikel', function ($routes) {
     $routes->get('/', 'Artikel::index');
     $routes->get('(:num)', 'Artikel::detail/$1');
     $routes->post('store', 'Artikel::store');
@@ -42,7 +42,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
     $routes->get('delete/(:num)', 'Artikel::delete/$1');
   });
 
-  $routes->group('kategori', ['namespace' => 'App\Controllers\Dashboard\Kategori'], function ($routes) {
+  $routes->group('kategori', function ($routes) {
     $routes->get('/', 'Kategori::index');
     $routes->get('(:num)', 'Kategori::detail/$1');
     $routes->post('store', 'Kategori::store');
@@ -50,7 +50,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
     $routes->get('disabled/(:num)', 'Kategori::disabled/$1');
   });
 
-  $routes->group('agen', ['namespace' => 'App\Controllers\Dashboard\Agen'], function ($routes) {
+  $routes->group('agen', function ($routes) {
     $routes->get('/', 'Agen::index');
     $routes->get('(:num)', 'Agen::detail/$1');
     $routes->post('store', 'Agen::store');
@@ -58,14 +58,14 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
     $routes->get('disabled/(:num)', 'Agen::disabled/$1');
   });
 
-  $routes->group('user', ['namespace' => 'App\Controllers\Dashboard\User'], function ($routes) {
+  $routes->group('user', function ($routes) {
     $routes->get('/', 'User::index');
     $routes->post('store', 'User::store');
     $routes->post('update/(:num)', 'User::update/$1');
     $routes->post('disabled/(:num)', 'User::disabled/$1');
   });
 
-  $routes->group('setting', ['namespace' => 'App\Controllers\Dashboard\Setting'], function ($routes) {
+  $routes->group('setting', function ($routes) {
     $routes->get('/', 'Setting::index');
     $routes->post('update/(:num)', 'Setting::update/$1');
     $routes->post('password/(:num)', 'Setting::password/$1');

@@ -4,19 +4,24 @@
 <script src="<?= base_url('public/vendors/js/vendor.bundle.base.js') ?>"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
-<script src="<?= base_url('public/vendors/chart.js/chart.umd.js') ?>"></script>
-<script src="<?= base_url('public/js/datatables.min.js') ?>"></script>
-<script src="<?= base_url('public/js/dataTables.select.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/chart.js/Chart.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/datatables/js/datatables.min.js') ?>"></script>
+<!-- <script src="<?= base_url('public/js/dataTables.select.min.js') ?>"></script> -->
 
 <script src="<?= base_url('public/vendors/select2/select2.min.js') ?>"></script>
-<script src="<?= base_url('public/vendors/sweetalert/sweetalert2.all.min.js') ?>"></script>
-<script src="<?= base_url('public/vendors/jquery-step/jquery.steps.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/jquery-steps/jquery.steps.min.js') ?>"></script>
+
+<script src="<?= base_url('public/vendors/dropify/js/dropify.min.js') ?>"></script>
+
+<!-- <script src="<?= base_url('public/vendors/datetimepicker/bootstrap-material-datetimepicker.js') ?>"></script>
+<script src="<?= base_url('public/vendors/datetimepicker/moment-with-locales.min.js') ?>"></script> -->
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="<?= base_url('public/js/off-canvas.js') ?>"></script>
 <script src="<?= base_url('public/js/template.js') ?>"></script>
-<script src="<?= base_url('public/js/settings.js') ?>"></script>
-<script src="<?= base_url('public/js/todolist.js') ?>"></script>
+<!-- <script src="<?= base_url('public/js/settings.js') ?>"></script>
+<script src="<?= base_url('public/js/todolist.js') ?>"></script> -->
 <!-- endinject -->
 <!-- Custom js for this page-->
 <script src="<?= base_url('public/js/jquery.cookie.js') ?>" type="text/javascript"></script>
@@ -31,6 +36,8 @@
       width: '100%',
       dropdownParent: $('#myModal'),
     });
+
+    $('.dropify').dropify();
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -99,6 +106,8 @@
   // ~format angka
   $(document).on('keyup', '.currency', function () {
     let value = $(this).val().replace(/[^0-9]/g, '');
+    console.log(value);
+
     $(this).val(value ? parseInt(value).toLocaleString('id-ID') : '');
   });
 

@@ -161,9 +161,9 @@ function shortNumber($number)
   return 'Rp. ' . round($nilai, 2) . ' ' . $satuan[$i];
 }
 
-function sanitizeTanggal($tanggal)
+function defaultValue($value, $default = '')
 {
-  return ($tanggal == '1970-01-01' || $tanggal === null || $tanggal === '0000-00-00') ? '' : $tanggal;
+  return empty($value) ? $default : $value;
 }
 
 function range_tgl($tanggal_awal, $tanggal_akhir)
@@ -187,23 +187,6 @@ function range_tgl($tanggal_awal, $tanggal_akhir)
     } else {
       return $tgl_awal . ' ' . $bulan_awal . ' ' . $tahun_awal . ' - ' . $tgl_akhir . ' ' . $bulan_akhir . ' ' . $tahun_akhir;
     }
-  }
-}
-
-function hitungMasaKerja($tmt, $filter = 'tahun')
-{
-  $tmtDate = new DateTime($tmt);
-  $currentDate = new DateTime();
-  $interval = $currentDate->diff($tmtDate);
-  switch ($filter) {
-    case 'tahun':
-      return floor($interval->y); // pembulatan tahun ke bawah
-    case 'bulan':
-      return $interval->y * 12 + floor($interval->m); // return berapa bulan total (tahun * 12 + bulan)
-    case 'hari':
-      return $interval->y * 365 + $interval->d; // return berapa hari
-    default:
-      return floor($interval->y); // pembulatan tahun ke bawah
   }
 }
 
@@ -396,22 +379,6 @@ function get_hari($tanggal)
   return $h;
 }
 
-function truncateString($string, $maxLength)
-{
-  if (strlen($string) > $maxLength) {
-    $string = substr($string, 0, $maxLength - 3) . '...';
-  }
-  return $string;
-}
-
-function truncateNama($string, $maxLength)
-{
-  if (strlen($string) > $maxLength) {
-    $string = substr($string, 0, $maxLength - 3);
-  }
-  return $string;
-}
-
 function url_active($url)
 {
   $active = url_is($url) ? 'active' : '';
@@ -433,66 +400,8 @@ function boolToHtmlStatus($status): string
     </div>';
 }
 
-function sortByJabatan(array $data, string $nameKey = 'nama', string $jabatanKey = 'nm_jabatan'): array
+function uploadImage($file, $path)
 {
-  $urutanJabatan = [
-    "Rektor" => 1,
-    "Wakil Rektor 1" => 2,
-    "Wakil Rektor 2" => 3,
-    "Wakil Rektor 3" => 4,
-    "Direktur" => 5,
-    "Kepala Badan" => 6,
-    "Dekan" => 7,
-    "Wakil Dekan" => 8,
-    "Ketua Program" => 9,
-    "Sekretaris Prodi" => 10,
-    "Kepala Bidang" => 11,
-    "Kepala Seksi" => 12,
-    "Kepala Laboratorium" => 13,
-    "Laboran" => 14,
-  ];
-
-  $getOrder = function ($struktural) use ($urutanJabatan) {
-    if (!$struktural)
-      return 99;
-
-    if ($struktural === "Rektor")
-      return $urutanJabatan["Rektor"];
-
-    if (strpos($struktural, "Wakil Rektor") !== false) {
-      if (preg_match('/Wakil Rektor (\d+)/', $struktural, $match)) {
-        $key = "Wakil Rektor " . $match[1];
-        return $urutanJabatan[$key] ?? 15;
-      }
-    }
-
-    if (preg_match('/^Dekan [A-Z]+/', $struktural)) {
-      return $urutanJabatan["Dekan"];
-    }
-
-    if (strpos($struktural, "Wakil Dekan") !== false) {
-      return $urutanJabatan["Wakil Dekan"];
-    }
-
-    foreach ($urutanJabatan as $key => $order) {
-      if (strpos($struktural, $key) !== false) {
-        return $order;
-      }
-    }
-
-    return 99;
-  };
-
-  usort($data, function ($a, $b) use ($nameKey, $jabatanKey, $getOrder) {
-    $orderA = $getOrder($a[$jabatanKey] ?? '');
-    $orderB = $getOrder($b[$jabatanKey] ?? '');
-
-    if ($orderA === $orderB) {
-      return strcmp($a[$nameKey] ?? '', $b[$nameKey] ?? '');
-    }
-
-    return $orderA - $orderB;
-  });
-
-  return $data;
+  $file->move($path, $file->getClientOriginalName());
+  return $file->getClientOriginalName();
 }

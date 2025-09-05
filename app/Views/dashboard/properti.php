@@ -4,8 +4,7 @@
     <p class="text-muted"><?= $subtitle ?></p>
   </div>
   <div class="col text-end">
-    <a href="<?= base_url('dashboard/properti/tambah') ?>" class="btn btn-primary btn-modal" data-bs-toggle="modal"
-      data-bs-target="#myModal">
+    <a href="<?= base_url('dashboard/properti/create') ?>" class="btn btn-primary" target="_blank">
       <i class="fas fa-plus"></i> Tambah Data
     </a>
   </div>
@@ -72,7 +71,7 @@
                   <?= $row['publish'] == 1 ? 'Publikasi' : 'Belum Publikasi' ?></span>
               </td>
               <td class="text-center fs-4 favorite" data-id="<?= $row['id'] ?>">
-                <i class="fa-regular fa-star text-warning"></i>
+                <i class="<?= $row['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i>
               </td>
               <td class="text-center">
                 <a href="<?= base_url('dashboard/properti/' . $row['id']) ?>" class="btn btn-light btn-sm">
@@ -97,9 +96,9 @@
   tableInit('#basic-table');
 
   $(document).on('click', '.favorite', function () {
-    let $this = $(this);
+    let $this = $(this).find('i');
     let id = $(this).data('id');
-    let value = $this.hasClass('fa-regular') ? 0 : 1;
+    let value = $this.hasClass('fa-regular') ? 1 : 0;
     $.ajax({
       url: `<?= base_url('dashboard/properti/favorite/') ?>${id}`,
       type: 'POST',
@@ -107,7 +106,15 @@
         value: value,
       },
       success: function (res) {
-        $this.toggleClass('fa-regular fa-solid');
+        console.log(res);
+
+        if (value == 1) {
+          $this.removeClass('fa-regular');
+          $this.addClass('fa-solid');
+        } else {
+          $this.removeClass('fa-solid');
+          $this.addClass('fa-regular');
+        }
       },
       error: function (err) {
         console.error(err);

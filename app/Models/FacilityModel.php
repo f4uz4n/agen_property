@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PropertyCategoryModel extends Model
+class FacilityModel extends Model
 {
-  protected $table = 'property_categories';
+  protected $table = 'facilities';
   protected $primaryKey = 'id';
   protected $useAutoIncrement = true;
 
@@ -14,8 +14,6 @@ class PropertyCategoryModel extends Model
   protected $protectFields = true;
   protected $allowedFields = [
     'name',
-    'slug',
-    'description',
     'status',
   ];
 

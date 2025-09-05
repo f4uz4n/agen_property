@@ -2,21 +2,34 @@
 
 namespace App\Controllers\Dashboard;
 
+use App\Models\UserModel;
+use App\Models\WilayahModel;
+use App\Models\CategoryModel;
+use App\Models\FacilityModel;
 use App\Models\FavoriteModel;
 use App\Models\PropertyModel;
+use App\Models\PropertyImageModel;
 use App\Controllers\BaseController;
-use App\Models\PropertyCategoryModel;
 
 class Properti extends BaseController
 {
-    protected $propertyModel, $propertyCategoryModel;
+    protected $userModel;
+    protected $wilayahModel;
+    protected $propertyModel;
+    protected $categoryModel;
+    protected $facilityModel;
     protected $favoriteModel;
+    protected $propertyImageModel;
 
     public function __construct()
     {
+        $this->userModel = new UserModel();
+        $this->wilayahModel = new WilayahModel();
         $this->favoriteModel = new FavoriteModel();
+        $this->facilityModel = new FacilityModel();
+        $this->categoryModel = new CategoryModel();
         $this->propertyModel = new PropertyModel();
-        $this->propertyCategoryModel = new PropertyCategoryModel();
+        $this->propertyImageModel = new PropertyImageModel();
     }
 
     public function index()
@@ -25,7 +38,7 @@ class Properti extends BaseController
             'title' => 'Daftar Properti',
             'subtitle' => 'Kelola semua daftar properti Anda di Sini.',
             'data' => $this->propertyModel->getData(),
-            'kategori' => $this->propertyCategoryModel
+            'kategori' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
@@ -33,23 +46,136 @@ class Properti extends BaseController
         return $this->template->display('dashboard/properti', $data);
     }
 
-    public function create()
-    {
-        $data = [
-
-        ];
-        return $this->template->display('dashboard/properti_create', $data);
-    }
-
     public function favorite($id)
     {
         $value = $this->request->getPost('value');
         if ($value == 1) {
             $this->favoriteModel->insert(['property_id' => $id,]);
+            $hasil = 'success';
         } else {
             $this->favoriteModel->where('property_id', $id)->delete();
+            $hasil = 'danger';
         }
-        
-        return $this->response->setJSON(['status' => 200]);
+
+        return $this->response->setJSON(['status' => 200, 'message' => $hasil]);
+    }
+
+    public function create()
+    {
+        $data = [
+            'title' => 'Tambah Properti',
+            'subtitle' => 'Tambah properti baru di Sini.',
+            'kategoris' => $this->categoryModel
+                ->where('status', 'aktif')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
+            'fasilitas' => $this->facilityModel->where('status', 'aktif')->findAll(),
+            'agens' => $this->userModel
+                ->where('status', 'aktif')
+                ->where('role', 'agen')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
+            'provinsi' => $this->wilayahModel->where('level', 'provinsi')->findAll(),
+            'kota' => $this->wilayahModel->where('level', 'kabupaten')->findAll(),
+            'validation' => session('validation'),
+        ];
+        return $this->template->display('dashboard/properti/create', $data);
+    }
+
+    public function store()
+    {
+        // step 1
+        $title = $this->request->getPost('title');
+        $price = str_replace('.', '', $this->request->getPost('price'));
+        $type = $this->request->getPost('type');
+        $status = $this->request->getPost('status');
+        $province = $this->request->getPost('province');
+        $city = $this->request->getPost('city');
+        $address = $this->request->getPost('address');
+        $certificate = $this->request->getPost('certificate');
+        // step 2
+        $bedrooms = defaultValue($this->request->getPost('bedrooms'), 0);
+        $bathrooms = defaultValue($this->request->getPost('bathrooms'), 0);
+        $carport = defaultValue($this->request->getPost('carport'), 0);
+        $building_area = defaultValue($this->request->getPost('building_area'), 0);
+        $land_area = defaultValue($this->request->getPost('land_area'), 0);
+        $floors = defaultValue($this->request->getPost('floors'), 0);
+        // step 3
+        $tempFasilitas = defaultValue($this->request->getPost('fasilitas'), []);
+        $facilitas = implode(',', $tempFasilitas);
+        $images = defaultValue($this->request->getFileMultiple('images'), []);
+        // step 4
+        $user_id = $this->request->getPost('user_id');
+        $description = $this->request->getPost('description');
+
+        $data = [
+            'title' => $title,
+            'price' => $price,
+            'type' => $type,
+            'status' => $status,
+            'province' => $province,
+            'city' => $city,
+            'address' => $address,
+            'certificate' => $certificate,
+            'bedrooms' => $bedrooms,
+            'bathrooms' => $bathrooms,
+            'carport' => $carport,
+            'building_area' => $building_area,
+            'land_area' => $land_area,
+            'floors' => $floors,
+            'facilitas' => $facilitas,
+            'description' => $description,
+            'user_id' => $user_id,
+        ];
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'title' => 'required|min_length[3]',
+            'type' => 'required',
+            'status' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+            'certificate' => 'required',
+            'user_id' => 'required|numeric',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'Validasi gagal',
+                'text' => $validation->getErrors()
+            ]);
+        }
+
+        try {
+            $this->propertyModel->insert($data);
+            $id = $this->propertyModel->insertID();
+
+            $fileName = $this->request->getPost('tipe');
+            $uploaded = uploadPropertyImages($images, $id, $fileName);
+
+            // contoh simpan ke DB
+            foreach ($uploaded as $key => $imgUrl) {
+                $this->propertyImageModel->insert([
+                    'property_id' => $id,
+                    'image_url' => $imgUrl,
+                    'is_primary' => $key == 0 ? 1 : 0,
+                ]);
+            }
+
+            session()->setFlashdata([
+                'title' => 'Berhasil',
+                'icon' => 'success',
+                'text' => 'Properti berhasil ditambahkan'
+            ]);
+        } catch (\Exception $e) {
+            session()->setFlashdata([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Gagal menambahkan properti: ' . $e->getMessage()
+            ]);
+        }
+        return redirect()->to('/dashboard/properti');
     }
 }
