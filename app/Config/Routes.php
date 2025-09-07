@@ -15,23 +15,35 @@ $routes->get('sewa', 'Sewa::index');
 $routes->get('artikel', 'Artikel::index');
 
 $routes->get('login', 'Login::index');
+$routes->post('user_login', 'Login::process');
 $routes->get('logout', 'Login::logout');
 
+$routes->get('unauthorized', 'Error::unauthorized');
+
 // dashboard group
-$routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], function ($routes) {
+$routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter' => 'auth'], function ($routes) {
   $routes->get('/', 'Home::index');
   $routes->get('laporan-penjualan', 'Laporan::index');
-  
+
   $routes->group('properti', function ($routes) {
     $routes->get('/', 'Properti::index');
+    $routes->post('get_ajax', 'Properti::get_ajax');
     $routes->get('create', 'Properti::create');
-    $routes->get('(:num)', 'Properti::detail/$1');
     $routes->post('store', 'Properti::store');
+    $routes->get('(:num)', 'Properti::detail/$1');
     $routes->post('update/(:num)', 'Properti::update/$1');
     $routes->post('favorite/(:num)', 'Properti::favorite/$1');
-    $routes->post('sell/(:num)', 'Properti::sell/$1');
-    $routes->post('validation/(:num)', 'Properti::validation/$1');
+    $routes->post('disabled/(:num)', 'Properti::disabled/$1');
     $routes->get('delete/(:num)', 'Properti::delete/$1');
+  });
+
+  $routes->group('transaksi', function ($routes) {
+    $routes->get('/', 'Transaksi::index');
+    $routes->get('(:num)', 'Transaksi::detail/$1');
+    $routes->post('store', 'Transaksi::store');
+    $routes->post('update/(:num)', 'Transaksi::update/$1');
+    $routes->post('validation/(:num)', 'Transaksi::validation/$1');
+    $routes->get('delete/(:num)', 'Transaksi::delete/$1');
   });
 
   $routes->group('artikel', function ($routes) {
@@ -58,7 +70,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard'], functi
     $routes->get('disabled/(:num)', 'Agen::disabled/$1');
   });
 
-  $routes->group('user', function ($routes) {
+  $routes->group('user', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'User::index');
     $routes->post('store', 'User::store');
     $routes->post('update/(:num)', 'User::update/$1');

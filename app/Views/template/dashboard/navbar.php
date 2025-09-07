@@ -1,9 +1,9 @@
 <!-- partial:partials/_navbar.html -->
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-    <a class="navbar-brand brand-logo fw-semibold me-5" href="<?= base_url() ?>">Sampro Indonesia</a>
+    <a class="navbar-brand brand-logo fw-semibold me-5" href="<?= base_url('dashboard') ?>">Sampro Indonesia</a>
     <!-- <img src="<?= base_url('public/images/logo.svg') ?>" class="me-2" alt="logo" /> -->
-    <a class="navbar-brand brand-logo-mini fw-semibold" href="<?= base_url() ?>">
+    <a class="navbar-brand brand-logo-mini fw-semibold" href="<?= base_url('dashboard') ?>">
       <!-- <img src="<?= ''//base_url('public/images/logo-mini.svg') ?>" alt="logo" /> -->
       <i class="fa-solid fa-gauge"></i>
     </a>

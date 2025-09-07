@@ -22,29 +22,37 @@
       </a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="<?= base_url('dashboard/transaksi') ?>" data-page="transaksi">
+        <i class="fa-solid fa-file-invoice-dollar menu-icon"></i>
+        <span class="menu-title">Transaksi</span>
+      </a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="<?= base_url('dashboard/artikel') ?>" data-page="artikel">
         <i class="fa-solid fa-newspaper menu-icon"></i>
         <span class="menu-title">Artikel</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?= base_url('dashboard/kategori') ?>" data-page="kategori">
-        <i class="fa-solid fa-home menu-icon"></i>
-        <span class="menu-title">Kategori</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?= base_url('dashboard/agen') ?>" data-page="agen">
-        <i class="fa-solid fa-user-tie menu-icon"></i>
-        <span class="menu-title">Agen</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?= base_url('dashboard/user') ?>" data-page="user">
-        <i class="fa-solid fa-users menu-icon"></i>
-        <span class="menu-title">User</span>
-      </a>
-    </li>
+    <?php if (session('role') != 'agen'): ?>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('dashboard/kategori') ?>" data-page="kategori">
+          <i class="fa-solid fa-home menu-icon"></i>
+          <span class="menu-title">Kategori</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('dashboard/agen') ?>" data-page="agen">
+          <i class="fa-solid fa-user-tie menu-icon"></i>
+          <span class="menu-title">Agen</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('dashboard/user') ?>" data-page="user">
+          <i class="fa-solid fa-users menu-icon"></i>
+          <span class="menu-title">User</span>
+        </a>
+      </li>
+    <?php endif ?>
     <li class="nav-item">
       <a class="nav-link" href="<?= base_url('dashboard/setting') ?>" data-page="setting">
         <i class="fa-solid fa-gear menu-icon"></i>

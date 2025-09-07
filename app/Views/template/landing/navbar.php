@@ -37,7 +37,11 @@
       </ul>
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="btn btn-primary" href="<?= base_url('login') ?>">Masuk</a>
+          <?php if (session('isLoggedIn')): ?>
+            <a class="btn btn-primary" href="<?= base_url('dashboard') ?>">Dashboard</a>
+          <?php else: ?>
+            <a class="btn btn-primary" href="<?= base_url('login') ?>">Masuk</a>
+          <?php endif ?>
         </li>
       </ul>
     </div>

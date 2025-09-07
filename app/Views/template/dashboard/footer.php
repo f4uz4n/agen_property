@@ -32,6 +32,10 @@
 <script>
   $(document).ready(function () {
     $('.multi-select').css('width', '100%').select2()
+    $('.multiple-select').select2({
+      width: '100%',
+      multiple: true,
+    })
     $('.modal-select').select2({
       width: '100%',
       dropdownParent: $('#myModal'),

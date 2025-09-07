@@ -18,7 +18,7 @@ class Login extends BaseController
         return $this->template->displayLogin('login');
     }
 
-    public function proses()
+    public function process()
     {
         $email = $this->request->getPost('email')
             ? filter_var($this->request->getPost('email'), FILTER_SANITIZE_EMAIL) : '';
@@ -35,12 +35,12 @@ class Login extends BaseController
                 'isLoggedIn' => TRUE
             ];
             session()->set($session_data);
-            return redirect()->to(base_url());
+            return redirect()->to(base_url('dashboard'));
         } else {
             session()->setFlashdata([
                 'title' => 'Login Gagal',
                 'icon' => 'error',
-                'text' => 'Email atau Password salah'
+                'text' => 'Email atau Password salah',
             ]);
             return redirect()->to(base_url('login'));
         }

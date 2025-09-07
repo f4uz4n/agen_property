@@ -10,7 +10,6 @@
       <?= $pagecontent ?>
     </div>
     <!-- content-wrapper ends -->
-    <?= $this->include('template/dashboard/watermark') ?>
     <!-- partial -->
   </div>
   <!-- main-panel ends -->

@@ -171,13 +171,13 @@
         <p class="login-subtitle">Masuk ke akun Anda untuk melanjutkan</p>
       </div>
 
-      <form class="login-form">
+      <form action="<?= base_url('user_login') ?>" method="post" class="login-form">
         <?= csrf_field() ?>
         <div class="form-group">
-          <input type="email" class="form-control" id="email" placeholder="Email" required>
+          <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
         </div>
         <div class="form-group mb-1">
-          <input type="password" class="form-control" id="password" placeholder="Password" required>
+          <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
         </div>
         <div class="text-end">
           <a href="#" class="forgot-password">Lupa password?</a>
