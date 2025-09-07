@@ -68,6 +68,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="post" id="userForm">
+        <?= csrf_field() ?>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
@@ -89,7 +90,6 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -101,7 +101,15 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- TODO: PROVINSI -->
+            </div>
+            <div class="col-md-6">
+              <!-- TODO: KOTA -->
 
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">

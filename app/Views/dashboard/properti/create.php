@@ -56,6 +56,10 @@
             });
           }
         });
+        $(".steps-selects").select2({
+          multiple: true,
+          width: "100%",
+        })
         $(".currency").on('keyup', function () {
           let value = $(this).val().replace(/[^0-9]/g, '');
           $(this).val(value ? parseInt(value).toLocaleString('id-ID') : '');

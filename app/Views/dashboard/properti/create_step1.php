@@ -43,7 +43,7 @@
           <?php endforeach ?>
         </select>
         <div class="invalid-feedback">
-          <?= $validation?->getError('bedroom') ?>
+          <?= $validation?->getError('type') ?>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
           <option value="disewakan" <?= (old('status') == 'disewakan') ? 'selected' : '' ?>>Disewakan</option>
         </select>
         <div class="invalid-feedback">
-          <?= $validation?->getError('bedroom') ?>
+          <?= $validation?->getError('status') ?>
         </div>
       </div>
     </div>

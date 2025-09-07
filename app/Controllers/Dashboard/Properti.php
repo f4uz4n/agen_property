@@ -34,16 +34,39 @@ class Properti extends BaseController
 
     public function index()
     {
+        $agen_id = session()->get('role') == 'agen' ? (int) (session()->get('id')) : null;
         $data = [
             'title' => 'Daftar Properti',
             'subtitle' => 'Kelola semua daftar properti Anda di Sini.',
-            'data' => $this->propertyModel->getData(),
+            'data' => $this->propertyModel->getData($agen_id),
             'kategori' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
+            'agens' => $this->userModel
+                ->where('status', 'aktif')
+                ->where('role', 'agen')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
         ];
         return $this->template->display('dashboard/properti', $data);
+    }
+
+    public function get_ajax()
+    {
+        $status = defaultValue($this->request->getPost('status'), null);
+        $agen = defaultValue($this->request->getPost('agen'), null);
+        $agen = session()->get('role') == 'agen' ? (int) (session()->get('id')) : $agen;
+        $kategori = defaultValue($this->request->getPost('kategori'), null);
+
+        $key = 'properti_' . $agen . '_' . $status . '_' . $kategori;
+        $res = $this->cache->get($key);
+        if (!$res) {
+            $res = $this->propertyModel->getData($agen, $status, $kategori);
+            $detik = 60 * 60;
+            $this->cache->save($key, $res, $detik);
+        }
+        return $this->response->setJSON($res);
     }
 
     public function favorite($id)
@@ -102,7 +125,7 @@ class Properti extends BaseController
         $floors = defaultValue($this->request->getPost('floors'), 0);
         // step 3
         $tempFasilitas = defaultValue($this->request->getPost('fasilitas'), []);
-        $facilitas = implode(',', $tempFasilitas);
+        $facilities = implode(',', $tempFasilitas);
         $images = defaultValue($this->request->getFileMultiple('images'), []);
         // step 4
         $user_id = $this->request->getPost('user_id');
@@ -123,10 +146,14 @@ class Properti extends BaseController
             'building_area' => $building_area,
             'land_area' => $land_area,
             'floors' => $floors,
-            'facilitas' => $facilitas,
+            'facilities' => $facilities,
             'description' => $description,
             'user_id' => $user_id,
         ];
+
+        if (session()->get('role') == 'agen') {
+            $data['publish'] = 0;
+        }
 
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -177,5 +204,85 @@ class Properti extends BaseController
             ]);
         }
         return redirect()->to('/dashboard/properti');
+    }
+
+    public function detail($id)
+    {
+        $data = [
+            'title' => 'Detail Properti',
+            'subtitle' => 'Kelola detail properti Anda di Sini.',
+            'data' => $this->propertyModel->getDataById($id),
+            'kategoris' => $this->categoryModel
+                ->where('status', 'aktif')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
+            'fasilitas' => $this->facilityModel->where('status', 'aktif')->findAll(),
+            'agens' => $this->userModel
+                ->where('status', 'aktif')
+                ->where('role', 'agen')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
+            'provinsi' => $this->wilayahModel->where('level', 'provinsi')->findAll(),
+            'kota' => $this->wilayahModel->where('level', 'kabupaten')->findAll(),
+            'validation' => session('validation'),
+        ];
+
+        return $this->template->display('dashboard/properti/detail', $data);
+    }
+
+    public function disabled($id)
+    {
+        if (!$id) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'ID properti tidak ditemukan'
+            ]);
+        }
+        $property = $this->propertyModel->find($id);
+        if (!$property) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Properti tidak ditemukan'
+            ]);
+        }
+        $publish = $this->request->getPost('value');
+        $data = [
+            'publish' => $publish,
+        ];
+
+        try {
+            $this->propertyModel->update($id, $data);
+            return $this->response->setJSON([
+                'title' => 'Berhasil',
+                'icon' => 'success',
+                'text' => 'Properti berhasil ' . ($publish == 0 ? 'dinonaktifkan' : 'diaktifkan') . '.',
+            ]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Gagal menonaktifkan properti: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function delete($id)
+    {
+        $property = $this->propertyModel->find($id);
+        if (!$property) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Properti tidak ditemukan'
+            ]);
+        }
+        $this->propertyModel->delete($id);
+        return $this->response->setJSON([
+            'title' => 'Berhasil',
+            'icon' => 'success',
+            'text' => 'Properti berhasil dihapus'
+        ]);
     }
 }

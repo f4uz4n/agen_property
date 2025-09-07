@@ -15,11 +15,14 @@ class TransactionModel extends Model
   protected $allowedFields = [
     'property_id',
     'agen_id',
+    'buyer',
+    'wa_buyer',
     'price',
     'status',
     'tanggal_penjualan',
     'tanggal_serah_terima',
     'validator',
+    'note',
     'created_at',
   ];
 

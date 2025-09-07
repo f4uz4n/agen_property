@@ -18,12 +18,26 @@
           <label for="status">Status</label>
           <select class="form-select" id="status" name="status">
             <option value="">Semua</option>
-            <option value="available">Available</option>
-            <option value="rented">Rented</option>
-            <option value="sold">Sold</option>
+            <option value="dijual">Dijual</option>
+            <option value="disewakan">Disewakan</option>
+            <option value="terjual">Terjual</option>
+            <option value="tersewa">Tersewa</option>
           </select>
         </div>
       </div>
+      <?php if (session('role') != 'agen'): ?>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label for="agen">Agen</label>
+            <select class="form-select multi-select" id="agen" name="agen">
+              <option value="">Semua</option>
+              <?php foreach ($agens as $agen): ?>
+                <option value="<?= $agen['id'] ?>"><?= $agen['name'] ?></option>
+              <?php endforeach ?>
+            </select>
+          </div>
+        </div>
+      <?php endif ?>
       <div class="col-sm-3">
         <div class="form-group">
           <label for="kategori">Kategori</label>
@@ -51,7 +65,9 @@
             <th>Kota</th>
             <th>Status</th>
             <th>Publikasi</th>
-            <th>Favorit</th>
+            <?php if (session('role') != 'agen'): ?>
+              <th>Favorit</th>
+            <?php endif ?>
             <th class="text-center">Aksi</th>
           </tr>
         </thead>
@@ -68,19 +84,23 @@
               <td><?= ucfirst($row['status']) ?></td>
               <td>
                 <span class="badge badge-<?= $row['publish'] == 1 ? 'success' : 'danger' ?>">
-                  <?= $row['publish'] == 1 ? 'Publikasi' : 'Belum Publikasi' ?></span>
+                  <?= $row['publish'] == 1 ? 'Publikasi' : 'Draft' ?></span>
               </td>
-              <td class="text-center fs-4 favorite" data-id="<?= $row['id'] ?>">
-                <i class="<?= $row['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i>
-              </td>
+              <?php if (session('role') != 'agen'): ?>
+                <td class="text-center fs-4 favorite" data-id="<?= $row['id'] ?>">
+                  <i class="<?= $row['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i>
+                </td>
+              <?php endif ?>
               <td class="text-center">
                 <a href="<?= base_url('dashboard/properti/' . $row['id']) ?>" class="btn btn-light btn-sm">
                   <i class="fas fa-edit"></i>
                 </a>
-                <button class="btn btn-danger btn-sm btn-disable" data-id="<?= $row['id'] ?>"
-                  data-name="<?= $row['kategori'] ?>">
-                  <i class="fas fa-eye-slash"></i>
-                </button>
+                <?php if (session('role') != 'agen'): ?>
+                  <button class="btn btn-<?= $row['publish'] == 0 ? 'success' : 'danger' ?> btn-sm btn-disable"
+                    data-id="<?= $row['id'] ?>" data-value="<?= $row['publish'] ?>">
+                    <i class="fas fa-eye<?= $row['publish'] == 0 ? '' : '-slash' ?>"></i>
+                  </button>
+                <?php endif ?>
               </td>
             </tr>
           <?php endforeach ?>
@@ -94,6 +114,20 @@
 <script>
   $('.favorite').css('cursor', 'pointer');
   tableInit('#basic-table');
+
+  let data = {};
+
+  let status = $('#status').find('option:selected').val();
+  let agen = $('#agen').find('option:selected').val();
+  let kategori = $('#kategori').find('option:selected').val();
+  getData(kategori, status, agen);
+
+  $(document).on('click', '#btn-cari', function () {
+    status = $('#status').find('option:selected').val();
+    agen = $('#agen').find('option:selected').val();
+    kategori = $('#kategori').find('option:selected').val();
+    getData(kategori, status, agen);
+  })
 
   $(document).on('click', '.favorite', function () {
     let $this = $(this).find('i');
@@ -122,7 +156,45 @@
     });
   })
 
-  function getData(kategori, status, agen, provinsi, kota) {
+  $(document).on('click', '.btn-disable', function () {
+    let id = $(this).data('id');
+    let value = $(this).data('value');
+    if (value == 1) {
+      Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin ingin menonaktifkan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, nonaktifkan!',
+        cancelButtonText: 'Tidak, batalkan!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setPublish(id, 0);
+        }
+      });
+    } else {
+      setPublish(id, 1);
+    }
+  });
+
+  function setPublish(id, value) {
+    $.ajax({
+      url: `<?= base_url('dashboard/properti/disabled/') ?>${id}`,
+      type: 'POST',
+      data: {
+        value: value,
+      },
+      success: function (res) {
+        console.log(res);
+        location.reload();
+      },
+      error: function (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  function getData(kategori, status, agen) {
     $.ajax({
       url: '<?= base_url('dashboard/properti/get_ajax') ?>',
       type: 'POST',
@@ -130,11 +202,10 @@
         kategori: kategori,
         status: status,
         agen: agen,
-        provinsi: provinsi,
-        kota: kota,
       },
       success: function (res) {
         console.log(res);
+        data = res;
         tableInit('#basic-table');
       },
       error: function (err) {

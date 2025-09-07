@@ -11,9 +11,9 @@
 
   <div class="row">
     <div class="col-12">
-      <div class="mb-3">
-        <label for="user_id" class="form-label">Agen</label>
-        <select class="form-select" id="user_id" name="user_id">
+      <div class="form-group">
+        <label for="agen" class="form-label">Agen</label>
+        <select class="form-select steps-selects" id="agen" name="agen">
           <?php if (session('role') == 'agen'): ?>
             <option value="<?= session('id') ?>" selected><?= session('name') ?></option>
           <?php else: ?>
@@ -24,7 +24,7 @@
           <?php endif ?>
         </select>
       </div>
-      <div class="mb-3">
+      <div class="form-group">
         <label for="description" class="form-label">Deskripsi</label>
         <textarea class="form-control" id="description" name="description" rows="6"
           placeholder="Tulis deskripsi properti..."></textarea>

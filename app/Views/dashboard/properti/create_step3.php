@@ -27,13 +27,21 @@
         </div>
       </div>
     <?php endforeach ?>
+    <div class="col-6 col-md-4">
+      <div class="form-group m-0">
+        <label for="lainnya">Fasilitas Lainnya</label>
+        <input type="text" class="form-control" name="fasilitas[]" id="lainnya">
+        <small class="text-muted">Pisahkan fasilitas lainnya dengan koma (,)</small>
+      </div>
+    </div>
   </div>
   <hr>
 
   <div class="row mb-3">
     <div class="col-12">
       <h6 class="m-0">Foto Properti</h6>
-      <p class="text-muted">Unggah foto-foto properti Anda. Foto pertama akan ditampilkan sebagai banner iklan. Kami sarankan unggah foto yang jelas dan menarik untuk menarik minat calon pembeli.</p>
+      <p class="text-muted">Unggah foto-foto properti Anda. Foto pertama akan ditampilkan sebagai banner iklan. Kami
+        sarankan unggah foto yang jelas dan menarik untuk menarik minat calon pembeli.</p>
     </div>
   </div>
   <div class="row" id="upload-container">

@@ -16,7 +16,7 @@ class Setting extends BaseController
 
     public function index()
     {
-        $user = $this->userModel->where('id', 1)->first();
+        $user = $this->userModel->where('id', session()->get('id'))->first();
         $data = [
             'title' => 'Pengaturan Akun',
             'data' => $user,

@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use Config\Cache;
 use Config\Database;
+use Config\Services;
 use App\Libraries\Template;
 use CodeIgniter\Controller;
 use Psr\Log\LoggerInterface;
@@ -60,7 +60,7 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->template = new Template();
         $this->db = Database::connect();
-        $this->cache = new Cache();
+        $this->cache = Services::cache();
         // E.g.: $this->session = service('session');
     }
 }
