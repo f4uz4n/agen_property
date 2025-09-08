@@ -24,6 +24,11 @@ function uploadPropertyImages(array $images, int $propertyId, string $fileName):
     activity_log('create', 'folder ' . $uploadPath);
   }
 
+  // hapus semua isi folder jika ada
+  if (is_dir($uploadPath)) {
+    array_map('unlink', glob($uploadPath . '*'));
+  }
+
   foreach ($images as $key => $img) {
     if ($img->isValid() && !$img->hasMoved()) {
       // sanitize nama file

@@ -76,6 +76,7 @@ class PropertyModel extends Model
       $builder = $this->db->table('property_images pi');
       $builder->select('pi.*');
       $builder->where('pi.property_id', $value['id']);
+      $builder->orderBy('pi.is_primary', 'DESC');
       $query = $builder->get();
       $images = $query->getResultArray();
       $data[$key]['images'] = $images;
@@ -104,11 +105,12 @@ class PropertyModel extends Model
     $query = $builder->get();
     $tempAgents = $query->getResultArray();
     $agents = array_column($tempAgents, 'name');
-    $data['agen'] = implode(', ', $agents);
+    $data['agen'] = implode(',', $agents);
 
     $builder = $this->db->table('property_images pi');
     $builder->select('pi.*');
     $builder->where('pi.property_id', $data['id']);
+    $builder->orderBy('pi.is_primary', 'DESC');
     $query = $builder->get();
     $images = $query->getResultArray();
     $data['images'] = $images;

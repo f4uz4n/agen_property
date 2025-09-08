@@ -73,7 +73,7 @@
         <div class="col-6 col-md-4">
           <div class="form-group">
             <label for="certificate">Sertifikat</label>
-            <select class="form-select" name="certificate" id="certificate">
+            <select class="form-select multi-select" name="certificate" id="certificate">
               <option value="">-- Pilih Sertifikat --</option>
               <option value="SHM" <?= (old('certificate', $data['certificate']) == 'SHM') ? 'selected' : '' ?>>SHM
                 (Sertifikat Hak Milik)
@@ -110,7 +110,7 @@
           <div class="form-group">
             <label for="provinsi">Provinsi</label>
             <input type="hidden" name="province" id="province" value="<?= $data['province'] ?>">
-            <select class="form-select steps-select" name="provinsi" id="provinsi">
+            <select class="form-select multi-select" name="provinsi" id="provinsi">
               <option value="">--Pilih Provinsi--</option>
               <?php foreach ($provinsi as $p): ?>
                 <option value="<?= $p['kode'] ?>" <?= (old('provinsi', $data['province']) == $p['name']) ? 'selected' : '' ?>>
@@ -126,7 +126,7 @@
         <div class="col-6 col-md-4">
           <div class="form-group">
             <label for="city">Kabupaten/Kota</label>
-            <select class="form-select steps-select" name="city" id="city">
+            <select class="form-select multi-select" name="city" id="city">
               <option value="">--Pilih Kabupaten/Kota--</option>
             </select>
             <div class="invalid-feedback">
@@ -193,13 +193,15 @@
           <h6 class="m-0">Fasilitas</h6>
           <p class="text-muted">Pilih semua fasilitas yang berlaku.</p>
         </div>
+        <?php $listFasilitas = explode(',', $data['facilities']); ?>
+        <?php $fasilitasLain = array_diff($listFasilitas, array_column($fasilitas, 'name')); ?>
         <?php foreach ($fasilitas as $item): ?>
           <div class="col-6 col-md-4">
             <div class="form-group m-0">
               <div class="form-check mt-0">
                 <label class="form-check-label" for="<?= $item['name'] ?>">
                   <input class="form-check-input" type="checkbox" name="fasilitas[]" id="<?= $item['name'] ?>"
-                    value="<?= $item['name'] ?>">
+                    value="<?= $item['name'] ?>" <?= in_array($item['name'], $listFasilitas) ? 'checked' : '' ?>>
                   <?= $item['name'] ?>
                 </label>
               </div>
@@ -209,22 +211,23 @@
         <div class="col-6 col-md-4">
           <div class="form-group m-0">
             <label for="lainnya">Fasilitas Lainnya</label>
-            <input type="text" class="form-control" name="fasilitas[]" id="lainnya">
+            <input type="text" class="form-control" name="fasilitas[]" id="lainnya"
+              value="<?= implode(', ', $fasilitasLain) ?>">
             <small class="text-muted">Pisahkan fasilitas lainnya dengan koma (,)</small>
           </div>
         </div>
         <hr>
+        <?php $listAgen = explode(',', $data['agen']) ?>
         <div class="col-6 col-md-4">
           <div class="form-group">
             <label for="agen" class="form-label">Agen</label>
-            <select class="form-select multiple-select" id="agen" name="agen">
-              <?php if (session('role') == 'agen'): ?>
-                <option value="<?= session('id') ?>" selected><?= session('name') ?></option>
-              <?php else: ?>
-                <?php foreach ($agens as $row): ?>
-                  <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
-                <?php endforeach ?>
-              <?php endif ?>
+            <select class="form-select multiple-select" id="agen" name="agen" multiple="multiple"
+              <?= session('role') == 'agen' ? 'disabled' : '' ?>>
+              <?php foreach ($agens as $row): ?>
+                <option value="<?= $row['id'] ?>" <?= in_array($row['name'], $listAgen) ? 'selected="selected"' : '' ?>>
+                  <?= $row['name'] ?>
+                </option>
+              <?php endforeach ?>
             </select>
           </div>
         </div>
@@ -236,44 +239,51 @@
           </div>
         </div>
         <hr>
-        <div class="row mb-3">
-          <div class="col-12">
-            <h6 class="m-0">Foto Properti</h6>
-            <p class="text-muted">Unggah foto-foto properti Anda. Foto pertama akan ditampilkan sebagai banner iklan.
-              Kami sarankan unggah foto yang jelas dan menarik untuk menarik minat calon pembeli.</p>
+        <div class="col-12 mb-3">
+          <h6 class="m-0">Foto Properti</h6>
+          <p class="text-muted">Unggah foto-foto properti Anda. Foto pertama akan ditampilkan sebagai banner iklan.
+            Kami sarankan unggah foto yang jelas dan menarik untuk menarik minat calon pembeli.</p>
+        </div>
+        <div class="col-12">
+          <div class="row" id="upload-container">
+            <?php if (!empty($data['images'])): ?>
+              <?php foreach ($data['images'] as $image): ?>
+                <div class="col-3">
+                  <div class="form-group">
+                    <input type="file" class="dropify" name="images[]"
+                      data-default-file="<?= base_url($image['image_url']) ?>" data-allowed-file-extensions="jpg jpeg png"
+                      data-max-file-size="3M">
+                  </div>
+                </div>
+              <?php endforeach ?>
+            <?php endif ?>
+            <div class="col-3">
+              <div class="form-group">
+                <input type="file" class="dropify" name="images[]" data-allowed-file-extensions="jpg jpeg png"
+                  data-max-file-size="3M">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row" id="upload-container">
-          <?php if (!empty($data['images'])): ?>
-            <?php foreach ($data['images'] as $image): ?>
-              <div class="col-3">
-                <div class="form-group">
-                  <input type="file" class="dropify" name="images[]" data-default-file="<?= base_url($image) ?>"
-                    data-allowed-file-extensions="jpg jpeg png" data-max-file-size="3M">
-                </div>
-              </div>
-            <?php endforeach ?>
-          <?php endif ?>
-          <div class="col-3">
-            <div class="form-group">
-              <input type="file" class="dropify" name="images[]" data-allowed-file-extensions="jpg jpeg png"
-                data-max-file-size="3M">
-            </div>
+        <hr>
+        <div class="col-3">
+          <?= $data['publish'] == 0 ? 'Publikasi' : 'Draft' ?>
+          <button class="btn btn-<?= $data['publish'] == 0 ? 'success' : 'danger' ?> btn-sm btn-disable"
+            data-id="<?= $data['id'] ?>" data-value="<?= $data['publish'] ?>">
+            <i class="fas fa-eye<?= $data['publish'] == 0 ? '' : '-slash' ?>"></i>
+          </button>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <td class="text-center fs-4 favorite" data-id="<?= $data['id'] ?>">
+              <i class="<?= $data['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i> Favorite
+            </td>
           </div>
         </div>
 
-        <?php foreach ($data as $key => $value):
-          if (in_array($key, ['id', 'image', 'created_at', 'updated_at']) || is_array($value)) {
-            continue;
-          }
-          ?>
-          <div class="col-6 col-md-4">
-            <div class="form-group">
-              <label for="<?= $key ?>"><?= ucwords(str_replace('_', ' ', $key)) ?></label>
-              <input type="text" class="form-control" id="<?= $key ?>" name="<?= $key ?>" value="<?= $value ?>">
-            </div>
-          </div>
-        <?php endforeach ?>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
       </div>
     </form>
   </div>
@@ -291,6 +301,68 @@
     $('#province').val(province);
     optionKota(id);
   });
+
+  $(document).on('click', '.favorite', function () {
+    let $this = $(this).find('i');
+    let id = $(this).data('id');
+    let value = $this.hasClass('fa-regular') ? 1 : 0;
+    $.ajax({
+      url: `<?= base_url('dashboard/properti/favorite/') ?>${id}`,
+      type: 'POST',
+      data: {
+        value: value,
+      },
+      success: function (res) {
+        if (value == 1) {
+          $this.removeClass('fa-regular');
+          $this.addClass('fa-solid');
+        } else {
+          $this.removeClass('fa-solid');
+          $this.addClass('fa-regular');
+        }
+      },
+      error: function (err) {
+        console.error(err);
+      }
+    });
+  })
+
+  $(document).on('click', '.btn-disable', function () {
+    let id = $(this).data('id');
+    let value = $(this).data('value');
+    if (value == 1) {
+      Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin ingin menonaktifkan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, nonaktifkan!',
+        cancelButtonText: 'Tidak, batalkan!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setPublish(id, 0);
+        }
+      });
+    } else {
+      setPublish(id, 1);
+    }
+  });
+
+  function setPublish(id, value) {
+    $.ajax({
+      url: `<?= base_url('dashboard/properti/disabled/') ?>${id}`,
+      type: 'POST',
+      data: {
+        value: value,
+      },
+      success: function (res) {
+        location.reload();
+      },
+      error: function (err) {
+        console.error(err);
+      }
+    });
+  }
 
   function optionKota(id) {
     let selectedKota = '<?= $data['city'] ?>';
