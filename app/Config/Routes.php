@@ -39,8 +39,8 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
 
   $routes->group('transaksi', function ($routes) {
     $routes->get('/', 'Transaksi::index');
-    $routes->get('(:num)', 'Transaksi::detail/$1');
     $routes->post('store', 'Transaksi::store');
+    $routes->get('(:num)', 'Transaksi::detail/$1');
     $routes->post('update/(:num)', 'Transaksi::update/$1');
     $routes->post('validation/(:num)', 'Transaksi::validation/$1');
     $routes->get('delete/(:num)', 'Transaksi::delete/$1');
@@ -48,6 +48,8 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
 
   $routes->group('artikel', function ($routes) {
     $routes->get('/', 'Artikel::index');
+    $routes->post('get_ajax', 'Artikel::get_ajax');
+    $routes->get('create', 'Artikel::create');
     $routes->get('(:num)', 'Artikel::detail/$1');
     $routes->post('store', 'Artikel::store');
     $routes->post('update/(:num)', 'Artikel::update/$1');
@@ -56,16 +58,16 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
 
   $routes->group('kategori', function ($routes) {
     $routes->get('/', 'Kategori::index');
-    $routes->get('(:num)', 'Kategori::detail/$1');
     $routes->post('store', 'Kategori::store');
+    $routes->get('(:num)', 'Kategori::detail/$1');
     $routes->post('update/(:num)', 'Kategori::update/$1');
     $routes->get('disabled/(:num)', 'Kategori::disabled/$1');
   });
 
   $routes->group('agen', function ($routes) {
     $routes->get('/', 'Agen::index');
-    $routes->get('(:num)', 'Agen::detail/$1');
     $routes->post('store', 'Agen::store');
+    $routes->get('(:num)', 'Agen::detail/$1');
     $routes->post('update/(:num)', 'Agen::update/$1');
     $routes->get('disabled/(:num)', 'Agen::disabled/$1');
   });

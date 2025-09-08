@@ -140,8 +140,6 @@
         value: value,
       },
       success: function (res) {
-        console.log(res);
-
         if (value == 1) {
           $this.removeClass('fa-regular');
           $this.addClass('fa-solid');
@@ -185,7 +183,6 @@
         value: value,
       },
       success: function (res) {
-        console.log(res);
         location.reload();
       },
       error: function (err) {

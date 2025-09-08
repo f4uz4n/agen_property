@@ -210,21 +210,15 @@
   }
 </style>
 
-<!-- Dashboard Header -->
-<div class="dashboard-header">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <h1 class="page-title">Kelola Artikel</h1>
-        <p class="page-subtitle">Manajemen artikel dan konten website</p>
-      </div>
-      <div class="col-md-6 text-md-end">
-        <button class="btn btn-primary" onclick="openArticleForm()">
-          <i class="fas fa-plus me-2"></i>
-          Tambah Artikel Baru
-        </button>
-      </div>
-    </div>
+<div class="row align-items-center justify-content-between mb-5">
+  <div class="col">
+    <h3><?= $title ?></h3>
+    <p class="text-muted"><?= $subtitle ?></p>
+  </div>
+  <div class="col text-end">
+    <a href="<?= base_url('dashboard/artikel/create') ?>" class="btn btn-primary" target="_blank">
+      <i class="fas fa-plus"></i> Tambah Data
+    </a>
   </div>
 </div>
 
@@ -259,396 +253,247 @@
 </div>
 
 <!-- Articles Table -->
-<div class="container">
-  <div class="card">
-    <div class="card-header">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <h5 class="card-title">Daftar Artikel</h5>
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select class="form-select" id="status" name="status">
+            <option value="">Semua</option>
+            <option value="publikasi">Publikasi</option>
+            <option value="draft">Draft</option>
+            <option value="arsip">Arsip</option>
+          </select>
         </div>
-        <div class="col-md-6">
-          <div class="search-box">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="form-control" placeholder="Cari artikel...">
-          </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="user">Penulis</label>
+          <select class="form-select multi-select" id="user" name="user">
+            <option value="">Semua</option>
+            <?php foreach ($users as $user): ?>
+              <option value="<?= $user['id'] ?>"><?= $user['name'] ?></option>
+            <?php endforeach ?>
+          </select>
         </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="tag">Tag</label>
+          <select class="form-select multiple-select" id="tag" name="tag">
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <button type="submit" class="btn btn-primary mt-4" id="btn-cari">Cari</button>
       </div>
     </div>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-            <tr>
-              <th>Judul Artikel</th>
-              <th>Kategori</th>
-              <th>Penulis</th>
-              <th>Status</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div>
-                  <strong>Cara Memilih Lokasi Properti yang Tepat</strong>
-                  <br>
-                  <small class="text-muted">Memilih lokasi properti adalah salah satu keputusan terpenting...</small>
-                </div>
-              </td>
-              <td><span class="category-badge">Tips Properti</span></td>
-              <td>Admin Sampro</td>
-              <td><span class="status-badge status-published">Dipublikasi</span></td>
-              <td>15 Des 2024</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-outline-primary btn-sm" onclick="editArticle(1)">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(1)">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(1)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <strong>Strategi Investasi Properti di Era Digital</strong>
-                  <br>
-                  <small class="text-muted">Teknologi digital telah mengubah cara kita berinvestasi properti...</small>
-                </div>
-              </td>
-              <td><span class="category-badge">Investasi</span></td>
-              <td>Tim Investasi</td>
-              <td><span class="status-badge status-published">Dipublikasi</span></td>
-              <td>12 Des 2024</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-outline-primary btn-sm" onclick="editArticle(2)">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(2)">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(2)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <strong>Tren Harga Properti Jakarta 2024</strong>
-                  <br>
-                  <small class="text-muted">Analisis mendalam tentang pergerakan harga properti di Jakarta...</small>
-                </div>
-              </td>
-              <td><span class="category-badge">Market Update</span></td>
-              <td>Analis Pasar</td>
-              <td><span class="status-badge status-published">Dipublikasi</span></td>
-              <td>10 Des 2024</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-outline-primary btn-sm" onclick="editArticle(3)">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(3)">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(3)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <strong>Perubahan Regulasi Properti 2024</strong>
-                  <br>
-                  <small class="text-muted">Update terbaru tentang perubahan regulasi properti yang berlaku...</small>
-                </div>
-              </td>
-              <td><span class="category-badge">Legal</span></td>
-              <td>Tim Legal</td>
-              <td><span class="status-badge status-draft">Draft</span></td>
-              <td>8 Des 2024</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-outline-primary btn-sm" onclick="editArticle(4)">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(4)">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(4)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <strong>Tips Mengajukan KPR yang Disetujui</strong>
-                  <br>
-                  <small class="text-muted">Panduan lengkap cara mengajukan KPR agar cepat disetujui bank...</small>
-                </div>
-              </td>
-              <td><span class="category-badge">KPR</span></td>
-              <td>Tim Finansial</td>
-              <td><span class="status-badge status-pending">Menunggu Review</span></td>
-              <td>5 Des 2024</td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn btn-outline-primary btn-sm" onclick="editArticle(5)">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(5)">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(5)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Pagination -->
-  <nav aria-label="Article pagination">
-    <ul class="pagination">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1">Previous</a>
-      </li>
-      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
-      </li>
-    </ul>
-  </nav>
-</div>
-
-<!-- Article Form Modal -->
-<div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="articleModalLabel">Tambah Artikel Baru</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="articleForm">
-          <div class="row">
-            <div class="col-md-8">
-              <div class="mb-3">
-                <label for="articleTitle" class="form-label">Judul Artikel *</label>
-                <input type="text" class="form-control" id="articleTitle" name="title" required>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover" id="basic-table">
+        <thead>
+          <tr>
+            <th>Judul Artikel</th>
+            <th>Kategori</th>
+            <th>Penulis</th>
+            <th>Status</th>
+            <th>Tanggal</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div>
+                <strong>Cara Memilih Lokasi Properti yang Tepat</strong>
+                <br>
+                <small class="text-muted">Memilih lokasi properti adalah salah satu keputusan terpenting...</small>
               </div>
-
-              <div class="mb-3">
-                <label for="articleExcerpt" class="form-label">Ringkasan Artikel</label>
-                <textarea class="form-control" id="articleExcerpt" name="excerpt" rows="3"
-                  placeholder="Ringkasan singkat artikel..."></textarea>
+            </td>
+            <td><span class="category-badge">Tips Properti</span></td>
+            <td>Admin Sampro</td>
+            <td><span class="status-badge status-published">Dipublikasi</span></td>
+            <td>15 Des 2024</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-outline-primary btn-sm" onclick="editArticle(1)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(1)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(1)">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-
-              <div class="mb-3">
-                <label for="articleContent" class="form-label">Konten Artikel *</label>
-                <textarea class="form-control" id="articleContent" name="content" rows="10" required
-                  placeholder="Tulis konten artikel lengkap..."></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>
+                <strong>Strategi Investasi Properti di Era Digital</strong>
+                <br>
+                <small class="text-muted">Teknologi digital telah mengubah cara kita berinvestasi properti...</small>
               </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="articleCategory" class="form-label">Kategori *</label>
-                <select class="form-select" id="articleCategory" name="category" required>
-                  <option value="">Pilih Kategori</option>
-                  <option value="tips-properti">Tips Properti</option>
-                  <option value="investasi">Investasi</option>
-                  <option value="market-update">Market Update</option>
-                  <option value="legal">Legal</option>
-                  <option value="kpr">KPR</option>
-                  <option value="finansial">Finansial</option>
-                  <option value="pajak">Pajak</option>
-                </select>
+            </td>
+            <td><span class="category-badge">Investasi</span></td>
+            <td>Tim Investasi</td>
+            <td><span class="status-badge status-published">Dipublikasi</span></td>
+            <td>12 Des 2024</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-outline-primary btn-sm" onclick="editArticle(2)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(2)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(2)">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-
-              <div class="mb-3">
-                <label for="articleAuthor" class="form-label">Penulis *</label>
-                <input type="text" class="form-control" id="articleAuthor" name="author" required>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>
+                <strong>Tren Harga Properti Jakarta 2024</strong>
+                <br>
+                <small class="text-muted">Analisis mendalam tentang pergerakan harga properti di Jakarta...</small>
               </div>
-
-              <div class="mb-3">
-                <label for="articleStatus" class="form-label">Status *</label>
-                <select class="form-select" id="articleStatus" name="status" required>
-                  <option value="draft">Draft</option>
-                  <option value="pending">Menunggu Review</option>
-                  <option value="published">Dipublikasi</option>
-                </select>
+            </td>
+            <td><span class="category-badge">Market Update</span></td>
+            <td>Analis Pasar</td>
+            <td><span class="status-badge status-published">Dipublikasi</span></td>
+            <td>10 Des 2024</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-outline-primary btn-sm" onclick="editArticle(3)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(3)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(3)">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-
-              <div class="mb-3">
-                <label for="articleImage" class="form-label">Gambar Artikel</label>
-                <input type="file" class="form-control" id="articleImage" name="image" accept="image/*">
-                <small class="text-muted">Format: JPG, PNG, GIF. Maksimal 2MB</small>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>
+                <strong>Perubahan Regulasi Properti 2024</strong>
+                <br>
+                <small class="text-muted">Update terbaru tentang perubahan regulasi properti yang berlaku...</small>
               </div>
-
-              <div class="mb-3">
-                <label for="articleTags" class="form-label">Tag</label>
-                <input type="text" class="form-control" id="articleTags" name="tags"
-                  placeholder="properti, investasi, jakarta">
-                <small class="text-muted">Pisahkan tag dengan koma</small>
+            </td>
+            <td><span class="category-badge">Legal</span></td>
+            <td>Tim Legal</td>
+            <td><span class="status-badge status-draft">Draft</span></td>
+            <td>8 Des 2024</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-outline-primary btn-sm" onclick="editArticle(4)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(4)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(4)">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-
-              <div class="mb-3">
-                <label for="articlePublishDate" class="form-label">Tanggal Publikasi</label>
-                <input type="datetime-local" class="form-control" id="articlePublishDate" name="publish_date">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>
+                <strong>Tips Mengajukan KPR yang Disetujui</strong>
+                <br>
+                <small class="text-muted">Panduan lengkap cara mengajukan KPR agar cepat disetujui bank...</small>
               </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-primary" onclick="saveArticle()">Simpan Artikel</button>
-      </div>
+            </td>
+            <td><span class="category-badge">KPR</span></td>
+            <td>Tim Finansial</td>
+            <td><span class="status-badge status-pending">Menunggu Review</span></td>
+            <td>5 Des 2024</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-outline-primary btn-sm" onclick="editArticle(5)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="viewArticle(5)">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteArticle(5)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+
 
 <?= $this->section('js') ?>
 <script>
-  let currentArticleId = null;
-  let isEditMode = false;
+  let data = {};
 
-  // Open article form modal
-  function openArticleForm(articleId = null) {
-    currentArticleId = articleId;
-    isEditMode = articleId !== null;
+  let status = $('#status').find('option:selected').val();
+  let user = $('#user').find('option:selected').val();
+  let tag = $('#tag').find('option:selected').val();
+  getData(status, user, tag);
 
-    const modal = new bootstrap.Modal(document.getElementById('articleModal'));
-    const modalTitle = document.getElementById('articleModalLabel');
-    const form = document.getElementById('articleForm');
+  $(document).on('click', '#btn-cari', function () {
+    status = $('#status').find('option:selected').val();
+    user = $('#user').find('option:selected').val();
+    tag = $('#tag').find('option:selected').val();
+    getData(status, user, tag);
+  })
 
-    if (isEditMode) {
-      modalTitle.textContent = 'Edit Artikel';
-      // Load article data for editing
-      loadArticleData(articleId);
+  $(document).on('click', '.btn-disable', function () {
+    let id = $(this).data('id');
+    let value = $(this).data('value');
+    if (value == 1) {
+      Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Apakah Anda yakin ingin menonaktifkan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, nonaktifkan!',
+        cancelButtonText: 'Tidak, batalkan!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setPublish(id, 0);
+        }
+      });
     } else {
-      modalTitle.textContent = 'Tambah Artikel Baru';
-      form.reset();
+      setPublish(id, 1);
     }
+  });
 
-    modal.show();
-  }
-
-  // Load article data for editing
-  function loadArticleData(articleId) {
-    // Simulate loading article data
-    // In real implementation, this would fetch data from server
-    const sampleData = {
-      title: 'Cara Memilih Lokasi Properti yang Tepat',
-      excerpt: 'Memilih lokasi properti adalah salah satu keputusan terpenting dalam investasi properti.',
-      content: 'Konten artikel lengkap akan dimuat di sini...',
-      category: 'tips-properti',
-      author: 'Admin Sampro',
-      status: 'published',
-      tags: 'properti, investasi, lokasi',
-      publish_date: '2024-12-15T10:00'
-    };
-
-    // Populate form fields
-    document.getElementById('articleTitle').value = sampleData.title;
-    document.getElementById('articleExcerpt').value = sampleData.excerpt;
-    document.getElementById('articleContent').value = sampleData.content;
-    document.getElementById('articleCategory').value = sampleData.category;
-    document.getElementById('articleAuthor').value = sampleData.author;
-    document.getElementById('articleStatus').value = sampleData.status;
-    document.getElementById('articleTags').value = sampleData.tags;
-    document.getElementById('articlePublishDate').value = sampleData.publish_date;
-  }
-
-  // Save article (create or update)
-  function saveArticle() {
-    const form = document.getElementById('articleForm');
-    const formData = new FormData(form);
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    // Add article ID if editing
-    if (isEditMode) {
-      formData.append('id', currentArticleId);
-    }
-
-    // Simulate API call
-    console.log('Saving article:', Object.fromEntries(formData));
-
-    // Show success message
-    alert(isEditMode ? 'Artikel berhasil diperbarui!' : 'Artikel berhasil ditambahkan!');
-
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('articleModal'));
-    modal.hide();
-
-    // Reload page or update table
-    location.reload();
-  }
-
-  // Edit article
-  function editArticle(articleId) {
-    openArticleForm(articleId);
-  }
-
-  // View article
-  function viewArticle(articleId) {
-    // Redirect to article view page
-    window.open(`/artikel/${articleId}`, '_blank');
-  }
-
-  // Delete article
-  function deleteArticle(articleId) {
-    if (confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
-      // Simulate API call
-      console.log('Deleting article:', articleId);
-
-      // Show success message
-      alert('Artikel berhasil dihapus!');
-
-      // Reload page or update table
-      location.reload();
-    }
-  }
-
-  // Search functionality
-  document.querySelector('.search-box input').addEventListener('input', function (e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const tableRows = document.querySelectorAll('tbody tr');
-
-    tableRows.forEach(row => {
-      const title = row.querySelector('td:first-child strong').textContent.toLowerCase();
-      const excerpt = row.querySelector('td:first-child small').textContent.toLowerCase();
-
-      if (title.includes(searchTerm) || excerpt.includes(searchTerm)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
+  function getData(status, user, tag) {
+    $.ajax({
+      url: '<?= base_url('dashboard/properti/get_ajax') ?>',
+      type: 'POST',
+      data: {
+        status: status,
+        user: user,
+        tag: tag,
+      },
+      success: function (res) {
+        console.log(res);
+        data = res;
+        tableInit('#basic-table');
+      },
+      error: function (err) {
+        console.error(err);
       }
     });
-  });
+  }
 </script>
 <?= $this->endSection() ?>
