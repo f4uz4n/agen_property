@@ -40,18 +40,18 @@ class PropertyModel extends Model
   public function getData($agent_id = null, $status = null, $kategori = null)
   {
     $builder = $this->db->table($this->table . ' p');
-    $builder->select('p.*, c.name AS kategori,
+    $builder->select('p.*, c.name AS kategori, t.status AS transaksi,
       (CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS favorite');
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('favorites f', 'p.id = f.property_id', 'left');
     $builder->where('t.property_id IS NULL');
+    if ($agent_id != null) {
+      $builder->join('agents a', 'p.id = a.property_id');
+      $builder->where('a.agent_id', $agent_id);
+    }
     if ($status != null) {
       $builder->where('p.status', $status);
-    }
-    if ($agent_id != null) {
-      $builder->join('agent a', 'p.id = a.property_id');
-      $builder->where('a.agent_id', $agent_id);
     }
     if ($kategori != null) {
       $builder->where('p.type', $kategori);
@@ -71,7 +71,7 @@ class PropertyModel extends Model
       $query = $builder->get();
       $tempAgents = $query->getResultArray();
       $agents = array_column($tempAgents, 'name');
-      $data[$key]['agen'] = implode(', ', $agents);
+      $data[$key]['agen'] = implode(';', $agents);
 
       $builder = $this->db->table('property_images pi');
       $builder->select('pi.*');
@@ -104,7 +104,7 @@ class PropertyModel extends Model
     $query = $builder->get();
     $tempAgents = $query->getResultArray();
     $agents = array_column($tempAgents, 'name');
-    $data['agen'] = implode(',', $agents);
+    $data['agen'] = implode(';', $agents);
 
     $builder = $this->db->table('property_images pi');
     $builder->select('pi.*');

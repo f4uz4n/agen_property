@@ -20,8 +20,6 @@
             <option value="">Semua</option>
             <option value="dijual">Dijual</option>
             <option value="disewakan">Disewakan</option>
-            <option value="terjual">Terjual</option>
-            <option value="tersewa">Tersewa</option>
           </select>
         </div>
       </div>
@@ -99,6 +97,11 @@
                   <button class="btn btn-<?= $row['publish'] == 0 ? 'success' : 'danger' ?> btn-sm btn-disable"
                     data-id="<?= $row['id'] ?>" data-value="<?= $row['publish'] ?>">
                     <i class="fas fa-eye<?= $row['publish'] == 0 ? '' : '-slash' ?>"></i>
+                  </button>
+                <?php else: ?>
+                  <button class="btn btn-info btn-sm btn-jual" data-bs-toggle="modal" data-bs-target="#myModal"
+                    data-id="<?= $row['id'] ?>">
+                    <i class="fas fa-dollar"></i>
                   </button>
                 <?php endif ?>
               </td>

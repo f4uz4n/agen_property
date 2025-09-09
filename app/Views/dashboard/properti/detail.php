@@ -216,11 +216,11 @@
           </div>
         </div>
         <hr>
-        <?php $listAgen = explode(',', $data['agen']) ?>
-        <div class="col-6 col-md-4">
+        <?php $listAgen = explode(';', $data['agen']) ?>
+        <div class="col-6 col-md-6">
           <div class="form-group">
             <label for="agen" class="form-label">Agen</label>
-            <select class="form-select multiple-select" id="agen" name="agen" multiple="multiple"
+            <select class="form-select multiple-select" id="agen" name="agen[]" multiple="multiple"
               <?= session('role') == 'agen' ? 'disabled' : '' ?>>
               <?php foreach ($agens as $row): ?>
                 <option value="<?= $row['id'] ?>" <?= in_array($row['name'], $listAgen) ? 'selected="selected"' : '' ?>>
@@ -264,34 +264,36 @@
             </div>
           </div>
         </div>
-        <hr>
-        <div class="col-3">
-          <div class="form-group m-0">
-            <label for="publish">Publikasi</label>
-            <select class="form-select" name="publish" id="publish">
-              <option value="1" <?= $data['publish'] == 1 ? 'selected' : '' ?>>Publik</option>
-              <option value="0" <?= $data['publish'] == 0 ? 'selected' : '' ?>>Draft</option>
-            </select>
+        <?php if (session('role') != 'agen'): ?>
+          <hr>
+          <div class="col-3">
+            <div class="form-group m-0">
+              <label for="publish">Publikasi</label>
+              <select class="form-select" name="publish" id="publish">
+                <option value="1" <?= $data['publish'] == 1 ? 'selected' : '' ?>>Publik</option>
+                <option value="0" <?= $data['publish'] == 0 ? 'selected' : '' ?>>Draft</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="col-3">
-          <div class="form-group m-0">
-            <label for="favorite">Prioritas</label>
-            <select class="form-select" name="favorite" id="favorite">
-              <option value="1" <?= $data['favorite'] == 1 ? 'selected' : '' ?>>Favorite</option>
-              <option value="0" <?= $data['favorite'] == 0 ? 'selected' : '' ?>>Reguler</option>
-            </select>
+          <div class="col-3">
+            <div class="form-group m-0">
+              <label for="favorite">Prioritas</label>
+              <select class="form-select" name="favorite" id="favorite">
+                <option value="1" <?= $data['favorite'] == 1 ? 'selected' : '' ?>>Favorite</option>
+                <option value="0" <?= $data['favorite'] == 0 ? 'selected' : '' ?>>Reguler</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="col-6 text-end">
-          <?php if ($data['transaksi'] != null): ?>
-            <p class="align-self-end">Properti ini tidak dapat dihapus karena telah terjadi transaksi.</p>
-          <?php endif ?>
-          <button type="button" class="btn btn-danger btn-icon-text btn-delete
+          <div class="col-6 text-end">
+            <?php if ($data['transaksi'] != null): ?>
+              <p class="align-self-end">Properti ini tidak dapat dihapus karena telah terjadi transaksi.</p>
+            <?php endif ?>
+            <button type="button" class="btn btn-danger btn-icon-text btn-delete
             <?= $data['transaksi'] != null ? 'disabled' : '' ?>" data-id="<?= $data['id'] ?>">
-            <i class="fa-solid fa-trash btn-icon-prepend"></i> Hapus
-          </button>
-        </div>
+              <i class="fa-solid fa-trash btn-icon-prepend"></i> Hapus
+            </button>
+          </div>
+        <?php endif ?>
 
         <div class="col-12 text-end mt-5">
           <a href="<?= base_url('dashboard/properti') ?>" class="btn btn-secondary">Batal</a>
@@ -334,7 +336,7 @@
           data: {},
           success: function (res) {
             console.log(res);
-            
+
             Swal.fire({
               title: res.title,
               icon: res.icon,

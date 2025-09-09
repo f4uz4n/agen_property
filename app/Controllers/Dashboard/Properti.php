@@ -167,7 +167,6 @@ class Properti extends BaseController
             'city' => 'required',
             'address' => 'required',
             'certificate' => 'required',
-            'user_id' => 'required|numeric',
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -211,6 +210,10 @@ class Properti extends BaseController
 
     public function detail($id)
     {
+        if (!$this->propertyModel->find($id)) {
+            return redirect()->to('not-found');
+        }
+
         $data = [
             'title' => 'Detail Properti',
             'subtitle' => 'Kelola detail properti Anda di Sini.',
@@ -231,6 +234,112 @@ class Properti extends BaseController
         ];
 
         return $this->template->display('dashboard/properti/detail', $data);
+    }
+
+    public function update($id)
+    {
+        // step 1
+        $title = $this->request->getPost('title');
+        $price = str_replace('.', '', $this->request->getPost('price'));
+        $type = $this->request->getPost('type');
+        $status = $this->request->getPost('status');
+        $province = $this->request->getPost('province');
+        $city = $this->request->getPost('city');
+        $address = $this->request->getPost('address');
+        $certificate = $this->request->getPost('certificate');
+        // step 2
+        $bedrooms = defaultValue($this->request->getPost('bedrooms'), 0);
+        $bathrooms = defaultValue($this->request->getPost('bathrooms'), 0);
+        $carport = defaultValue($this->request->getPost('carport'), 0);
+        $building_area = defaultValue($this->request->getPost('building_area'), 0);
+        $land_area = defaultValue($this->request->getPost('land_area'), 0);
+        $floors = defaultValue($this->request->getPost('floors'), 0);
+        // step 3
+        $tempFasilitas = defaultValue($this->request->getPost('fasilitas'), []);
+        $facilities = implode(',', $tempFasilitas);
+        $images = defaultValue($this->request->getFileMultiple('images'), []);
+        // step 4
+        $agen = $this->request->getPost('agen');
+        $description = $this->request->getPost('description');
+        $publish = $this->request->getPost('publish');
+        $favorite = $this->request->getPost('favorite');
+
+        $data = [
+            'title' => $title,
+            'price' => $price,
+            'type' => $type,
+            'status' => $status,
+            'province' => $province,
+            'city' => $city,
+            'address' => $address,
+            'certificate' => $certificate,
+            'bedrooms' => $bedrooms,
+            'bathrooms' => $bathrooms,
+            'carport' => $carport,
+            'building_area' => $building_area,
+            'land_area' => $land_area,
+            'floors' => $floors,
+            'facilities' => $facilities,
+            'description' => $description,
+            'agen' => $agen,
+        ];
+        if (session('role') != 'agen') {
+            $data['publish'] = $publish;
+            $data['favorite'] = $favorite;
+        }
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'title' => 'required|min_length[3]',
+            'type' => 'required',
+            'status' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+            'certificate' => 'required',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'Validasi gagal',
+                'text' => $validation->getErrors()
+            ]);
+        }
+
+        try {
+            $this->propertyModel->update($id, $data);
+
+            foreach ($agen as $user) {
+                $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();
+                $tempAgen != null ? $this->agentModel->update($tempAgen['id'],['agent_id'=> $user,'property_id'=> $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
+            }
+
+            $fileName = $this->request->getPost('tipe');
+            $uploaded = uploadPropertyImages($images, $id, $fileName);
+
+            // simpan gambar ke DB
+            foreach ($uploaded as $key => $imgUrl) {
+                $this->propertyImageModel->insert([
+                    'property_id' => $id,
+                    'image_url' => $imgUrl,
+                    'is_primary' => $key == 0 ? 1 : 0,
+                ]);
+            }
+
+            session()->setFlashdata([
+                'title' => 'Berhasil',
+                'icon' => 'success',
+                'text' => 'Properti berhasil ditambahkan'
+            ]);
+        } catch (\Exception $e) {
+            session()->setFlashdata([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Gagal menambahkan properti: ' . $e->getMessage()
+            ]);
+        }
+        return redirect()->to('/dashboard/properti');
     }
 
     public function disabled($id)
@@ -290,7 +399,7 @@ class Properti extends BaseController
         $this->agentModel->where('property_id', $id)->delete();
         $this->propertyImageModel->where('property_id', $id)->delete();
         $this->propertyModel->delete($id);
-        
+
         return $this->response->setJSON([
             'title' => 'Berhasil',
             'icon' => 'success',

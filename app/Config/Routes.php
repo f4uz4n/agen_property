@@ -19,6 +19,7 @@ $routes->post('user_login', 'Login::process');
 $routes->get('logout', 'Login::logout');
 
 $routes->get('unauthorized', 'Error::unauthorized');
+$routes->get('not-found', 'Error::notfound');
 
 // dashboard group
 $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter' => 'auth'], function ($routes) {
