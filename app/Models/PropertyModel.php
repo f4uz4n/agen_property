@@ -88,12 +88,11 @@ class PropertyModel extends Model
   public function getDataById($id)
   {
     $builder = $this->db->table($this->table . ' p');
-    $builder->select('p.*, c.name AS kategori,
+    $builder->select('p.*, c.name AS kategori, t.status AS transaksi,
       (CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS favorite');
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('favorites f', 'p.id = f.property_id', 'left');
-    $builder->where('t.property_id IS NULL');
     $builder->where('p.id', $id);
     $query = $builder->get();
     $data = $query->getRowArray();

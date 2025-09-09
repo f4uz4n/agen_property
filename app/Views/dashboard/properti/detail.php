@@ -4,14 +4,13 @@
     <p class="text-muted"><?= $subtitle ?></p>
   </div>
 </div>
-<?php echo '<pre>', var_dump($data), '</pre>'; ?>
 
 <div class="card">
   <div class="card-body">
     <form action="<?= base_url('dashboard/properti/update/' . $data['id']) ?>" method="post"
       enctype="multipart/form-data">
       <?= csrf_field() ?>
-      <div class="row">
+      <div class="row align-items-end">
         <div class="col-12 mb-3">
           <h3>Informasi Properti</h3>
         </div>
@@ -267,22 +266,38 @@
         </div>
         <hr>
         <div class="col-3">
-          <?= $data['publish'] == 0 ? 'Publikasi' : 'Draft' ?>
-          <button class="btn btn-<?= $data['publish'] == 0 ? 'success' : 'danger' ?> btn-sm btn-disable"
-            data-id="<?= $data['id'] ?>" data-value="<?= $data['publish'] ?>">
-            <i class="fas fa-eye<?= $data['publish'] == 0 ? '' : '-slash' ?>"></i>
-          </button>
-        </div>
-        <div class="col-3">
-          <div class="form-group">
-            <td class="text-center fs-4 favorite" data-id="<?= $data['id'] ?>">
-              <i class="<?= $data['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i> Favorite
-            </td>
+          <div class="form-group m-0">
+            <label for="publish">Publikasi</label>
+            <select class="form-select" name="publish" id="publish">
+              <option value="1" <?= $data['publish'] == 1 ? 'selected' : '' ?>>Publik</option>
+              <option value="0" <?= $data['publish'] == 0 ? 'selected' : '' ?>>Draft</option>
+            </select>
           </div>
         </div>
+        <div class="col-3">
+          <div class="form-group m-0">
+            <label for="favorite">Prioritas</label>
+            <select class="form-select" name="favorite" id="favorite">
+              <option value="1" <?= $data['favorite'] == 1 ? 'selected' : '' ?>>Favorite</option>
+              <option value="0" <?= $data['favorite'] == 0 ? 'selected' : '' ?>>Reguler</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-6 text-end">
+          <?php if ($data['transaksi'] != null): ?>
+            <p class="align-self-end">Properti ini tidak dapat dihapus karena telah terjadi transaksi.</p>
+          <?php endif ?>
+          <button type="button" class="btn btn-danger btn-icon-text btn-delete
+            <?= $data['transaksi'] != null ? 'disabled' : '' ?>" data-id="<?= $data['id'] ?>">
+            <i class="fa-solid fa-trash btn-icon-prepend"></i> Hapus
+          </button>
+        </div>
 
-        <div class="col-12 text-end">
-          <button type="submit" class="btn btn-primary">Simpan</button>
+        <div class="col-12 text-end mt-5">
+          <a href="<?= base_url('dashboard/properti') ?>" class="btn btn-secondary">Batal</a>
+          <button type="submit" class="btn btn-primary btn-icon-text">
+            <i class="fa-solid fa-floppy-disk btn-icon-prepend"></i> Simpan
+          </button>
         </div>
       </div>
     </form>
@@ -302,67 +317,39 @@
     optionKota(id);
   });
 
-  $(document).on('click', '.favorite', function () {
-    let $this = $(this).find('i');
+  $(document).on('click', '.btn-delete', function () {
     let id = $(this).data('id');
-    let value = $this.hasClass('fa-regular') ? 1 : 0;
-    $.ajax({
-      url: `<?= base_url('dashboard/properti/favorite/') ?>${id}`,
-      type: 'POST',
-      data: {
-        value: value,
-      },
-      success: function (res) {
-        if (value == 1) {
-          $this.removeClass('fa-regular');
-          $this.addClass('fa-solid');
-        } else {
-          $this.removeClass('fa-solid');
-          $this.addClass('fa-regular');
-        }
-      },
-      error: function (err) {
-        console.error(err);
+    Swal.fire({
+      title: 'Konfirmasi',
+      text: 'Apakah Anda yakin ingin menghapus data ini?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `<?= base_url('dashboard/properti/delete/') ?>${id}`,
+          type: 'GET',
+          data: {},
+          success: function (res) {
+            console.log(res);
+            
+            Swal.fire({
+              title: res.title,
+              icon: res.icon,
+              text: res.text,
+            }).then(() => {
+              window.location.href = '<?= base_url('dashboard/properti') ?>';
+            })
+          },
+          error: function (err) {
+            console.error(err);
+          }
+        });
       }
     });
-  })
-
-  $(document).on('click', '.btn-disable', function () {
-    let id = $(this).data('id');
-    let value = $(this).data('value');
-    if (value == 1) {
-      Swal.fire({
-        title: 'Konfirmasi',
-        text: 'Apakah Anda yakin ingin menonaktifkan?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, nonaktifkan!',
-        cancelButtonText: 'Tidak, batalkan!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setPublish(id, 0);
-        }
-      });
-    } else {
-      setPublish(id, 1);
-    }
   });
-
-  function setPublish(id, value) {
-    $.ajax({
-      url: `<?= base_url('dashboard/properti/disabled/') ?>${id}`,
-      type: 'POST',
-      data: {
-        value: value,
-      },
-      success: function (res) {
-        location.reload();
-      },
-      error: function (err) {
-        console.error(err);
-      }
-    });
-  }
 
   function optionKota(id) {
     let selectedKota = '<?= $data['city'] ?>';

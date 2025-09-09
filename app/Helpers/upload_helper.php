@@ -44,3 +44,43 @@ function uploadPropertyImages(array $images, int $propertyId, string $fileName):
 
   return $uploadedFiles;
 }
+
+function folder_delete($path)
+{
+  // Validasi dasar
+  if (empty($path) || !file_exists($path)) {
+    return true; // Dianggap berhasil jika tidak ada
+  }
+
+  if (!is_dir($path)) {
+    return false;
+  }
+
+  $files = @scandir($path);
+  if ($files === false) {
+    return false;
+  }
+
+  $files = array_diff($files, ['.', '..']);
+
+  foreach ($files as $file) {
+    $filePath = $path . DIRECTORY_SEPARATOR . $file;
+
+    // Skip jika tidak ada
+    if (!file_exists($filePath)) {
+      continue;
+    }
+
+    if (is_dir($filePath)) {
+      // Rekursif, tapi continue jika gagal
+      if (!folder_delete($filePath)) {
+        continue;
+      }
+    } else {
+      // Hapus file, continue jika gagal
+      @unlink($filePath);
+    }
+  }
+
+  return @rmdir($path);
+}

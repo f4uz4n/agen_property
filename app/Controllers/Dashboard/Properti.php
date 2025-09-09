@@ -3,6 +3,7 @@
 namespace App\Controllers\Dashboard;
 
 use App\Models\UserModel;
+use App\Models\AgentModel;
 use App\Models\WilayahModel;
 use App\Models\CategoryModel;
 use App\Models\FacilityModel;
@@ -14,6 +15,7 @@ use App\Controllers\BaseController;
 class Properti extends BaseController
 {
     protected $userModel;
+    protected $agentModel;
     protected $wilayahModel;
     protected $propertyModel;
     protected $categoryModel;
@@ -24,6 +26,7 @@ class Properti extends BaseController
     public function __construct()
     {
         $this->userModel = new UserModel();
+        $this->agentModel = new AgentModel();
         $this->wilayahModel = new WilayahModel();
         $this->favoriteModel = new FavoriteModel();
         $this->facilityModel = new FacilityModel();
@@ -278,7 +281,16 @@ class Properti extends BaseController
                 'text' => 'Properti tidak ditemukan'
             ]);
         }
+        // hapus folder $id di uploads/properties
+        $path = FCPATH . 'public/uploads/properties/' . $id;
+        if (file_exists($path)) {
+            folder_delete($path);
+        }
+        $this->favoriteModel->where('property_id', $id)->delete();
+        $this->agentModel->where('property_id', $id)->delete();
+        $this->propertyImageModel->where('property_id', $id)->delete();
         $this->propertyModel->delete($id);
+        
         return $this->response->setJSON([
             'title' => 'Berhasil',
             'icon' => 'success',
