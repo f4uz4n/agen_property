@@ -43,7 +43,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('store', 'Transaksi::store');
     $routes->post('get_ajax', 'Transaksi::get_ajax');
     $routes->post('update/(:num)', 'Transaksi::update/$1');
-    $routes->post('validation/(:num)', 'Transaksi::validation/$1');
+    $routes->post('validasi/(:num)', 'Transaksi::validasi/$1');
     $routes->post('delete/(:num)', 'Transaksi::delete/$1');
   });
 

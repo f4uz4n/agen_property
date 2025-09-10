@@ -51,13 +51,9 @@
   </div>
 </div>
 
-<button class="btn btn-info btn-sm btn-validasi" data-bs-toggle="modal" data-bs-target="#myModal" data-id="">
-  <i class="fas fa-check"></i>
-</button>
-
 <!-- Modal -->
 <div class="modal fade" id="validasiModal" tabindex="-1" aria-labelledby="validasiModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 70%;">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 50%;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="validasiModalLabel">Validasi Transaksi</h5>
@@ -101,12 +97,13 @@
   $(document).on('click', '.btn-validasi', function () {
     let id = $(this).data('id');
     let res = data.find(e => e.id == id);
-    $('#myModalLabel').html(`Validasi Transaksi ${res.kategori}`);
-    $('#validateForm').attr('action', `<?= base_url('dashboard/properti/validation/') ?>${id}`);
+    console.log(res);
+
+    $('#validateForm').attr('action', `<?= base_url('dashboard/transaksi/validasi/') ?>${id}`);
     let isiTable = {
       'Judul Iklan': res.title,
-      'Harga Asli': res.price,
-      'Harga Terjual': res.jual,
+      'Harga Asli': formatAngka(res.price),
+      'Harga Terjual': formatAngka(res.jual),
       'Agen': res.agen,
       'Pembeli': res.buyer,
       'Whatsapp Pembeli': res.wa_buyer,
@@ -124,18 +121,48 @@
       `
     })
     html += `
-        <tr>
+      <input type="hidden" name="property_id" value="${res.id}"><tr>
           <td>Catatan</td>
           <td>:</td>
           <td>
-            <input type="hidden" name="validation" value="${id}">
             <textarea class="form-control" name="note" rows="3" placeholder="Catatan untuk transaksi ini..."></textarea>
           </td>
         </tr>
       `;
     $('#tbody-validasi').html(html);
-    $('#myModal').modal('show');
   })
+
+  $(document).on('click', '.btn-delete', function () {
+    let id = $(this).data('id');
+    Swal.fire({
+      title: 'Konfirmasi',
+      text: 'Apakah Anda yakin ingin menghapus data ini?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `<?= base_url('dashboard/transaksi/delete/') ?>${id}`,
+          type: 'POST',
+          data: {},
+          success: function (res) {
+            Swal.fire({
+              title: res.title,
+              icon: res.icon,
+              text: res.text,
+            }).then(() => {
+              location.reload();
+            })
+          },
+          error: function (err) {
+            console.error(err);
+          }
+        });
+      }
+    });
+  });
 
   function getData(kategori, status, agen) {
     $.ajax({
@@ -147,7 +174,7 @@
         agen: agen,
       },
       success: function (res) {
-        // console.log(res);
+        console.log(res);
         data = res;
         generateTable(res);
       },
@@ -167,11 +194,9 @@
             <th>Judul</th>
             <th>Kategori</th>
             <th>Harga</th>
-            <th>Provinsi</th>
-            <th>Kota</th>
+            <th>Pembeli</th>
+            <th>Whatsapp Pembeli</th>
             <th>Status</th>
-            <th>Publikasi</th>
-            ${role != 'agen' ? '<th>Favorit</th>' : ''}
             <th class="text-center">Aksi</th>
           </tr>
         </thead>
@@ -180,37 +205,32 @@
     let no = 1;
     $.each(res, function (key, row) {
       html += `<tr>
-      <td class="text-center">${no++}</td>
+      <td class="text-center fit-column">${no++}</td>
       <td>${row.title}</td>
       <td>${row.kategori}</td>
       <td>${shortNumber(row.price)}</td>
-      <td>${row.province}</td>
-      <td>${row.city}</td>
-      <td class="text-capitalize">${row.status}</td>
-      <td>
-        <span class="badge badge-${row.publish == 1 ? 'success' : 'danger'}">
-          ${row.publish == 1 ? 'Publikasi' : 'Draft'}</span>
-      </td>`;
-      if (role != 'agen') {
-        html += `<td>
-          <i class="${row.favorite == 1 ? 'fa-solid' : 'fa-regular'} fa-star text-warning"></i>
-        </td>`;
-      }
+      <td>${row.buyer}</td>
+      <td>${row.wa_buyer}</td>
+      <td class="text-capitalize">
+        <span class="badge badge-${row.transaksi == 'Valid' ? 'success' : 'danger'}">
+          ${row.transaksi}</span>
+      </td>
+      <td class="d-flex justify-content-center gap-1">`;
 
-      html += `<td class="d-flex text-center gap-1">
-        <a href="<?= base_url('dashboard/properti/') ?>${row.id}" class="btn btn-light btn-sm">
-          <i class="fas fa-edit"></i>
-        </a>`;
-
-      if (role != 'agen') {
-        html += `<button button class="btn btn-${row.publish == 0 ? 'success' : 'danger'} btn-sm btn-disable"
-          data-id="${row.id}" data-value="${row.publish}" ><i class="fas fa-eye${row.publish == 0 ? '' : '-slash'}"></i>
+      if (role == 'agen') {
+        html += `<button type="button" class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
+            data-id="${row.id}"><i class="fas fa-edit"></i>
           </button>`;
-        // } else {
-        html += `<button button class="btn btn-info btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
-          data-id="${row.id}" ><i class="fas fa-dollar"></i>
-          </button>`
+      } else {
+        if (row.transaksi != 'Valid') {
+          html += `<button type="button" class="btn btn-info btn-sm btn-validasi" data-bs-toggle="modal" data-bs-target="#validasiModal"
+            data-id="${row.id}"><i class="fas fa-check"></i>
+          </button>`;
+        }
+        html +=`<button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i>
+        </button>`;
       }
+
       html += `</td></tr>`;
     });
 

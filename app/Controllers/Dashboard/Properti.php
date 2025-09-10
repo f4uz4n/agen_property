@@ -62,13 +62,13 @@ class Properti extends BaseController
         $agen = session()->get('role') == 'agen' ? (int) (session()->get('id')) : $agen;
         $kategori = defaultValue($this->request->getPost('kategori'), null);
 
-        $key = 'properti_' . $agen . '_' . $status . '_' . $kategori;
-        $res = $this->cache->get($key);
-        if (!$res) {
-            $res = $this->propertyModel->getData($agen, $status, $kategori);
-            $detik = 60 * 60;
-            $this->cache->save($key, $res, $detik);
-        }
+        $res = $this->propertyModel->getData($agen, $status, $kategori);
+        // $key = 'properti_' . $agen . '_' . $status . '_' . $kategori;
+        // $res = $this->cache->get($key);
+        // if (!$res) {
+        //     $detik = 60 * 60;
+        //     $this->cache->save($key, $res, $detik);
+        // }
         return $this->response->setJSON($res);
     }
 

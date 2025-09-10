@@ -29,8 +29,7 @@ class Transaksi extends BaseController
         $data = [
             'title' => 'Daftar Transaksi',
             'subtitle' => 'Kelola semua daftar transaksi Anda di Sini.',
-            'transaksi' => $this->transactionModel->getData($agen_id),
-            'data' => $this->propertyModel->getData($agen_id),
+            'data' => $this->transactionModel->getData($agen_id),
             'kategori' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')
@@ -51,13 +50,8 @@ class Transaksi extends BaseController
         $agen = session()->get('role') == 'agen' ? (int) (session()->get('id')) : $agen;
         $kategori = defaultValue($this->request->getPost('kategori'), null);
 
-        $key = 'properti_' . $agen . '_' . $status . '_' . $kategori;
-        $res = $this->cache->get($key);
-        if (!$res) {
-            $res = $this->transactionModel->getData($agen, $status, $kategori);
-            $detik = 60 * 60;
-            $this->cache->save($key, $res, $detik);
-        }
+        $res = $this->transactionModel->getData($agen, $status, $kategori);
+        
         return $this->response->setJSON($res);
     }
 
@@ -184,17 +178,15 @@ class Transaksi extends BaseController
         return redirect()->to(base_url('dashboard/transaksi'));
     }
 
-    public function validation($id)
+    public function validasi($id)
     {
+        $validator = session('id');
         $property_id = $this->request->getPost('property_id');
-        $status = $this->request->getPost('status');
-        $validator = $this->request->getPost('validator');
         $note = $this->request->getPost('note');
-        $jualSewa = $this->request->getPost('jualSewa');
 
         $data = [
             'property_id' => $property_id,
-            'status' => $status,
+            'status' => 'Valid',
             'validator' => $validator,
             'note' => $note,
         ];
@@ -224,4 +216,24 @@ class Transaksi extends BaseController
         return redirect()->to(base_url('dashboard/transaksi'));
     }
 
+    public function delete($id)
+    {
+        $transaksi = $this->transactionModel->find($id);
+        if (!$transaksi) {
+            return $this->response->setJSON([
+                'title' => 'Gagal',
+                'icon' => 'error',
+                'text' => 'Transaksi tidak ditemukan'
+            ]);
+        }
+
+        $this->transactionModel->delete($id);
+        $this->propertyModel->update($transaksi['property_id'], ['publish' => 1]);
+
+        return $this->response->setJSON([
+            'title' => 'Berhasil',
+            'icon' => 'success',
+            'text' => 'Transaksi berhasil dihapus'
+        ]);
+    }
 }

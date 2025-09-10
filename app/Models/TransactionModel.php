@@ -31,7 +31,8 @@ class TransactionModel extends Model
   public function getData($agent_id = null, $status = null, $kategori = null)
   {
     $builder = $this->db->table('properties p');
-    $builder->select('p.*, c.name AS kategori, t.status AS transaksi,
+    $builder->select('p.*, c.name AS kategori, t.status AS transaksi, t.id AS transaksi_id,
+      t.buyer, t.wa_buyer, t.price AS jual, t.tanggal_penjualan, t.tanggal_serah_terima,
       (CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS favorite');
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');

@@ -332,11 +332,9 @@
       if (result.isConfirmed) {
         $.ajax({
           url: `<?= base_url('dashboard/properti/delete/') ?>${id}`,
-          type: 'GET',
+          type: 'POST',
           data: {},
           success: function (res) {
-            console.log(res);
-
             Swal.fire({
               title: res.title,
               icon: res.icon,
