@@ -1,0 +1,161 @@
+<div class="row align-items-center justify-content-between mb-5">
+  <div class="col">
+    <h3><?= $title ?></h3>
+    <p class="text-muted"><?= $subtitle ?></p>
+  </div>
+  <div class="col text-end">
+    <button class="btn btn-primary btn-modal" data-bs-toggle="modal" data-bs-target="#myModal">
+      <i class="fas fa-plus"></i> Tambah Data
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover table-striped" id="basic-table">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th>Nama</th>
+            <th>Deskripsi</th>
+            <th>Status</th>
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php $no = 1 ?>
+          <?php foreach ($data as $row): ?>
+            <tr>
+              <td class="text-center"><?= $no++ ?></td>
+              <td><?= $row['name'] ?></td>
+              <td><?= $row['description'] ?></td>
+              <td>
+                <span class="badge badge-<?= $row['status'] == 'aktif' ? 'success' : 'danger' ?>">
+                  <?= ucfirst($row['status']) ?></span>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
+                  data-id="<?= $row['id'] ?>">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-sm btn-disable" data-id="<?= $row['id'] ?>"
+                  data-name="<?= $row['name'] ?>">
+                  <i class="fas fa-eye-slash"></i>
+                </button>
+              </td>
+            </tr>
+          <?php endforeach ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold" id="myModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post">
+        <?= csrf_field() ?>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">Nama <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="description">Deskripsi <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="description" name="description" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status" required>
+                  <option value="aktif">Aktif</option>
+                  <option value="nonaktif">Nonaktif</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-inverse-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<?= $this->section('js') ?>
+<script>
+  const title = '<?= $title ?>';
+  let data = <?= json_encode($data) ?>;
+
+  tableInit('#basic-table');
+
+  $(document).on('click', '.btn-disable', function () {
+    const id = $(this).data('id');
+    const name = $(this).data('name');
+    Swal.fire({
+      title: 'Non Aktifkan User',
+      text: 'Apakah Anda yakin ingin menonaktifkan ' + name + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Nonaktifkan',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '<?= base_url('dashboard/user/disabled/') ?>' + id,
+          type: 'POST',
+          data: {},
+          success: function (res) {
+            console.log(res);
+            Swal.fire({
+              title: res.title,
+              text: res.text,
+              icon: res.icon,
+            }).then((result) => {
+              location.reload();
+            })
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+    });
+  })
+
+  handleModalClick({
+    selector: '.btn-modal',
+    modalTitle: 'Kategori',
+    formActionUrl: id => '<?= base_url('dashboard/kategori/') ?>' + (id ? 'update/' : 'store'),
+    findData: id => data.find(item => item.id == id),
+    defaultValues: {
+    },
+    fieldMap: {
+      inputs: [{
+        name: 'name',
+      }, {
+        name: 'description',
+      },],
+      selects: [{
+        name: 'status',
+      },],
+    }
+  });
+</script>
+<?= $this->endSection() ?>

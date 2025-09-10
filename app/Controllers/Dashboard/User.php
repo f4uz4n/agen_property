@@ -3,15 +3,18 @@
 namespace App\Controllers\Dashboard;
 
 use App\Models\UserModel;
+use App\Models\WilayahModel;
 use App\Controllers\BaseController;
 
 class User extends BaseController
 {
   protected $userModel;
+  protected $wilayahModel;
 
   public function __construct()
   {
     $this->userModel = new UserModel();
+    $this->wilayahModel = new WilayahModel();
   }
 
   public function index()
@@ -20,36 +23,41 @@ class User extends BaseController
       ->orderBy('status', 'ASC')
       ->orderBy('name', 'ASC')
       ->findAll();
-      
+
     $data = [
       'title' => 'Kelola User',
       'subtitle' => 'Data user yang terdaftar di dalam sistem.',
       'data' => $users,
+      'provinsi' => $this->wilayahModel->where('level', 'provinsi')->findAll(),
+      'kota' => $this->wilayahModel->where('level', 'kabupaten')->findAll(),
     ];
     return $this->template->display('dashboard/user', $data);
   }
 
   public function store()
   {
-    $name = $this->request->getPost('nama');
+    $name = $this->request->getPost('name');
     $email = $this->request->getPost('email');
     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
     $phone = $this->request->getPost('whatsapp');
     $role = $this->request->getPost('role');
     $status = $this->request->getPost('status');
+    $province = $this->request->getPost('province');
+    $city = $this->request->getPost('city');
 
     $data = [
       'name' => $name,
       'email' => $email,
       'password' => $password,
       'phone' => $phone,
+      'location' => $city . ', ' . $province,
       'role' => $role,
       'status' => $status,
     ];
 
     $validation = \Config\Services::validation();
     $validation->setRules([
-      'nama' => 'required|min_length[3]',
+      'name' => 'required|min_length[3]',
       'email' => 'required|valid_email|is_unique[users.email]',
       'password' => 'required|min_length[8]',
       'whatsapp' => 'required|regex_match[/^628\d+$/]|numeric',
@@ -102,17 +110,20 @@ class User extends BaseController
       return redirect()->to(base_url('dashboard/user'));
     }
 
-    $name = $this->request->getPost('nama');
+    $name = $this->request->getPost('name');
     $email = $this->request->getPost('email');
     $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
     $phone = trim($this->request->getPost('whatsapp'));
     $role = $this->request->getPost('role');
     $status = $this->request->getPost('status');
+    $province = $this->request->getPost('province');
+    $city = $this->request->getPost('city');
 
     $data = [
       'name' => $name,
       'email' => $email,
       'phone' => $phone,
+      'location' => $city . ', ' . $province,
       'role' => $role,
       'status' => $status,
     ];
@@ -124,7 +135,7 @@ class User extends BaseController
 
     $validation = \Config\Services::validation();
     $validation->setRules([
-      'nama' => 'required|min_length[3]',
+      'name' => 'required|min_length[3]',
       'email' => 'required|valid_email|is_unique[users.email,id,' . $id . ']',
       'password' => 'permit_empty|min_length[8]',
       'whatsapp' => 'required|regex_match[/^628\d+$/]|numeric',
@@ -146,7 +157,7 @@ class User extends BaseController
     try {
       $this->userModel->update($id, $data);
       log_message('info', '{user} mengubah data user {id}', [
-        'user' => 'diki',
+        'user' => session('name'),
         'id' => $id
       ]);
 
@@ -174,13 +185,21 @@ class User extends BaseController
         'text' => 'ID user tidak ditemukan'
       ]);
     }
-    // TODO: handle tidak bisa disable diri sendiri dan owner
+
     $user = $this->userModel->find($id);
-    if (!$user) {
+    if (!$user || $user['role'] == 'owner') {
       return $this->response->setJSON([
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'User tidak ditemukan'
+      ]);
+    }
+
+    if ($id == session('id')) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'Tidak bisa menonaktifkan diri sendiri.'
       ]);
     }
 

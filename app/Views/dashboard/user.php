@@ -58,7 +58,6 @@
   </div>
 </div>
 
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -73,10 +72,10 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="nama" name="nama" required>
-                <?php if (isset(session('errors')['nama'])): ?>
-                  <small class="text-danger"><?= session('errors')['nama'] ?></small>
+                <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required>
+                <?php if (isset(session('errors')['name'])): ?>
+                  <small class="text-danger"><?= session('errors')['name'] ?></small>
                 <?php endif ?>
               </div>
             </div>
@@ -103,11 +102,26 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <!-- TODO: PROVINSI -->
+              <div class="form-group">
+                <label for="provinsi">Provinsi</label>
+                <input type="hidden" name="province" id="province">
+                <select class="form-select steps-select" name="provinsi" id="provinsi">
+                  <option value="">--Pilih Provinsi--</option>
+                  <?php foreach ($provinsi as $p): ?>
+                    <option value="<?= $p['kode'] ?>" <?= (old('provinsi') == $p['kode']) ? 'selected' : '' ?>>
+                      <?= $p['name'] ?>
+                    </option>
+                  <?php endforeach ?>
+                </select>
+              </div>
             </div>
             <div class="col-md-6">
-              <!-- TODO: KOTA -->
-
+              <div class="form-group">
+                <label for="city">Kabupaten/Kota</label>
+                <select class="form-select steps-select" name="city" id="city">
+                  <option value="">--Pilih Kabupaten/Kota--</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="row">
@@ -153,6 +167,20 @@
 
   tableInit('#basic-table');
 
+  let kabupatens = <?= json_encode($kota) ?>;
+  $(document).on('change', '#provinsi', function () {
+    const id = $(this).find('option:selected').val();
+    const province = $(this).find('option:selected').text().trim();
+    $('#province').val(province);
+
+    let filteredKabupatens = kabupatens.filter(kabupaten => kabupaten.parent === id);
+    let opt = `<option value="">--Pilih Kabupaten/Kota--</option>`;
+    filteredKabupatens.forEach(kabupaten => {
+      opt += `<option value="${kabupaten.name}">${kabupaten.name}</option>`;
+    });
+    $('#city').html(opt);
+  });
+  
   $(document).on('click', '.btn-disable', function () {
     const id = $(this).data('id');
     const name = $(this).data('name');
