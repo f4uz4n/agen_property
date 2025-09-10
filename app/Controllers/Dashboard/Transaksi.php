@@ -2,23 +2,37 @@
 
 namespace App\Controllers\Dashboard;
 
+use App\Models\UserModel;
+use App\Models\PropertyModel;
 use App\Models\TransactionModel;
 use App\Controllers\BaseController;
 
 class Transaksi extends BaseController
 {
+    protected $userModel;
+    protected $propertyModel;
     protected $transactionModel;
 
     public function __construct()
     {
+        $this->userModel = new UserModel();
+        $this->propertyModel = new PropertyModel();
         $this->transactionModel = new TransactionModel();
     }
 
     public function index()
     {
+        $agen_id = session()->get('role') == 'agen' ? (int) (session()->get('id')) : null;
         $data = [
             'title' => 'Daftar Transaksi',
             'subtitle' => 'Kelola semua daftar transaksi Anda di Sini.',
+            'transaksi' => $this->transactionModel->getData($agen_id),
+            'data' => $this->propertyModel->getData($agen_id),
+            'agens' => $this->userModel
+                ->where('status', 'aktif')
+                ->where('role', 'agen')
+                ->orderBy('name', 'ASC')
+                ->findAll(),
         ];
         return $this->template->display('dashboard/transaksi', $data);
     }

@@ -8778,6 +8778,13 @@ table {
   border-collapse: collapse;
 }
 
+table .fit-column {
+  min-width: 30px;
+  max-width: 150px;
+  width: 5vw; /* atau width: auto jika dinamis */
+  white-space: nowrap;
+}
+
 caption {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;

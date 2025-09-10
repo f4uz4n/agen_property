@@ -35,6 +35,22 @@ function formatAngka(angka, prefix = "") {
   );
 }
 
+function shortNumber(number) {
+  const satuan = ['', 'Ribu', 'Juta', 'Miliyar', 'Triliun'];
+  let nilai = Math.trunc(number);
+  let i = 0;
+  while (nilai >= 1000) {
+    nilai /= 1000;
+    i++;
+  }
+
+  return `Rp. ${nilai.toFixed(2)} ${satuan[i]}`;
+}
+
+function defaultValue(value, defaultValue = '') {
+  return value === undefined || value === null || value === '' ? defaultValue : value;
+}
+
 function formatDate(sourceDate, format = "DD-MM-YYYY") {
   if (!sourceDate) return "-";
   const d = new Date(sourceDate);

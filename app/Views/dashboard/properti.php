@@ -51,72 +51,15 @@
         <button type="submit" class="btn btn-primary mt-4" id="btn-cari">Cari</button>
       </div>
     </div>
-    <div class="table-responsive">
-      <table class="table table-hover table-striped" id="basic-table">
-        <thead>
-          <tr>
-            <th class="text-center">No</th>
-            <th>Judul</th>
-            <th>Kategori</th>
-            <th>Harga</th>
-            <th>Provinsi</th>
-            <th>Kota</th>
-            <th>Status</th>
-            <th>Publikasi</th>
-            <?php if (session('role') != 'agen'): ?>
-              <th>Favorit</th>
-            <?php endif ?>
-            <th class="text-center">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php $no = 1 ?>
-          <?php foreach ($data as $row): ?>
-            <tr>
-              <td class="text-center"><?= $no++ ?></td>
-              <td><?= $row['title'] ?></td>
-              <td><?= $row['kategori'] ?></td>
-              <td><?= shortNumber($row['price']) ?></td>
-              <td><?= $row['province'] ?></td>
-              <td><?= $row['city'] ?></td>
-              <td><?= ucfirst($row['status']) ?></td>
-              <td>
-                <span class="badge badge-<?= $row['publish'] == 1 ? 'success' : 'danger' ?>">
-                  <?= $row['publish'] == 1 ? 'Publikasi' : 'Draft' ?></span>
-              </td>
-              <?php if (session('role') != 'agen'): ?>
-                <td class="text-center fs-4 favorite" data-id="<?= $row['id'] ?>">
-                  <i class="<?= $row['favorite'] == 1 ? 'fa-solid' : 'fa-regular' ?> fa-star text-warning"></i>
-                </td>
-              <?php endif ?>
-              <td class="text-center">
-                <a href="<?= base_url('dashboard/properti/' . $row['id']) ?>" class="btn btn-light btn-sm">
-                  <i class="fas fa-edit"></i>
-                </a>
-                <?php if (session('role') != 'agen'): ?>
-                  <button class="btn btn-<?= $row['publish'] == 0 ? 'success' : 'danger' ?> btn-sm btn-disable"
-                    data-id="<?= $row['id'] ?>" data-value="<?= $row['publish'] ?>">
-                    <i class="fas fa-eye<?= $row['publish'] == 0 ? '' : '-slash' ?>"></i>
-                  </button>
-                <?php else: ?>
-                  <button class="btn btn-info btn-sm btn-jual" data-bs-toggle="modal" data-bs-target="#myModal"
-                    data-id="<?= $row['id'] ?>">
-                    <i class="fas fa-dollar"></i>
-                  </button>
-                <?php endif ?>
-              </td>
-            </tr>
-          <?php endforeach ?>
-        </tbody>
-      </table>
-    </div>
+    <div class="table-responsive" id="fetch-data"></div>
   </div>
 </div>
+
+<?= $this->include('dashboard/properti/modal_sell') ?>
 
 <?= $this->section('js') ?>
 <script>
   $('.favorite').css('cursor', 'pointer');
-  tableInit('#basic-table');
 
   let data = {};
 
@@ -204,14 +147,77 @@
         agen: agen,
       },
       success: function (res) {
-        console.log(res);
+        // console.log(res);
         data = res;
-        tableInit('#basic-table');
+        generateTable(res);
       },
       error: function (err) {
         console.error(err);
       }
     });
+  }
+
+  let role = '<?= session('role') ?>';
+  function generateTable(res) {
+    let html = `
+    <table class="table table-hover table-striped" id="basic-table">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th>Judul</th>
+            <th>Kategori</th>
+            <th>Harga</th>
+            <th>Provinsi</th>
+            <th>Kota</th>
+            <th>Status</th>
+            <th>Publikasi</th>
+            ${role != 'agen' ? '<th>Favorit</th>' : ''}
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    let no = 1;
+    $.each(res, function (key, row) {
+      html += `<tr>
+      <td class="text-center">${no++}</td>
+      <td>${row.title}</td>
+      <td>${row.kategori}</td>
+      <td>${shortNumber(row.price)}</td>
+      <td>${row.province}</td>
+      <td>${row.city}</td>
+      <td class="text-capitalize">${row.status}</td>
+      <td>
+        <span class="badge badge-${row.publish == 1 ? 'success' : 'danger'}">
+          ${row.publish == 1 ? 'Publikasi' : 'Draft'}</span>
+      </td>`;
+      if (role != 'agen') {
+        html += `<td>
+          <i class="${row.favorite == 1 ? 'fa-solid' : 'fa-regular'} fa-star text-warning"></i>
+        </td>`;
+      }
+
+      html += `<td class="d-flex text-center gap-1">
+        <a href="<?= base_url('dashboard/properti/') ?>${row.id}" class="btn btn-light btn-sm">
+          <i class="fas fa-edit"></i>
+        </a>`;
+
+      if (role != 'agen') {
+        html += `<button button class="btn btn-${row.publish == 0 ? 'success' : 'danger'} btn-sm btn-disable"
+          data-id="${row.id}" data-value="${row.publish}" ><i class="fas fa-eye${row.publish == 0 ? '' : '-slash'}"></i>
+          </button>`;
+        // } else {
+        html += `<button button class="btn btn-info btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
+          data-id="${row.id}" ><i class="fas fa-dollar"></i>
+          </button>`
+      }
+      html += `</td></tr>`;
+    });
+
+    html += `</tbody ></table >`;
+
+    $('#fetch-data').html(html);
+    tableInit('#basic-table');
   }
 </script>
 <?= $this->endSection() ?>
