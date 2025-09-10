@@ -5,6 +5,52 @@
   </div>
 </div>
 
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select class="form-select" id="status" name="status">
+            <option value="">Semua</option>
+            <option value="pending">Pending</option>
+            <option value="tervalidasi">Tervalidasi</option>
+            <option value="batal">Batal</option>
+          </select>
+        </div>
+      </div>
+      <?php if (session('role') != 'agen'): ?>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label for="agen">Agen</label>
+            <select class="form-select multi-select" id="agen" name="agen">
+              <option value="">Semua</option>
+              <?php foreach ($agens as $agen): ?>
+                <option value="<?= $agen['id'] ?>"><?= $agen['name'] ?></option>
+              <?php endforeach ?>
+            </select>
+          </div>
+        </div>
+      <?php endif ?>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="kategori">Kategori</label>
+          <select class="form-select multi-select" id="kategori" name="kategori">
+            <option value="">Semua</option>
+            <?php foreach ($kategori as $row): ?>
+              <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+            <?php endforeach ?>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <button type="submit" class="btn btn-primary mt-4" id="btn-cari">Cari</button>
+      </div>
+    </div>
+    <div class="table-responsive" id="fetch-data"></div>
+  </div>
+</div>
+
 <button class="btn btn-info btn-sm btn-validasi" data-bs-toggle="modal" data-bs-target="#myModal" data-id="">
   <i class="fas fa-check"></i>
 </button>
@@ -90,10 +136,10 @@
     $('#tbody-validasi').html(html);
     $('#myModal').modal('show');
   })
-  
+
   function getData(kategori, status, agen) {
     $.ajax({
-      url: '<?= base_url('dashboard/properti/get_ajax') ?>',
+      url: '<?= base_url('dashboard/transaksi/get_ajax') ?>',
       type: 'POST',
       data: {
         kategori: kategori,

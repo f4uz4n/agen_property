@@ -103,7 +103,7 @@
     <div class="col-12 col-md-6">
       <div class="form-group">
         <label for="certificate">Sertifikat</label>
-        <select class="form-select" name="certificate" id="certificate">
+        <select class="form-select steps-select" name="certificate" id="certificate">
           <option value="">-- Pilih Sertifikat --</option>
           <option value="SHM" <?= (old('certificate') == 'SHM') ? 'selected' : '' ?>>SHM (Sertifikat Hak Milik)
           </option>

@@ -52,6 +52,12 @@
           <span class="menu-title">User</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('dashboard/kontak') ?>" data-page="kontak">
+          <i class="fa-solid fa-phone menu-icon"></i>
+          <span class="menu-title">Kontak</span>
+        </a>
+      </li>
     <?php endif ?>
     <li class="nav-item">
       <a class="nav-link" href="<?= base_url('dashboard/setting') ?>" data-page="setting">

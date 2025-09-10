@@ -42,7 +42,7 @@ class TransactionModel extends Model
       $builder->where('a.agent_id', $agent_id);
     }
     if ($status != null) {
-      $builder->where('p.status', $status);
+      $builder->where('t.status', $status);
     }
     if ($kategori != null) {
       $builder->where('p.type', $kategori);

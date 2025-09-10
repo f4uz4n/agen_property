@@ -206,7 +206,7 @@
         html += `<button button class="btn btn-${row.publish == 0 ? 'success' : 'danger'} btn-sm btn-disable"
           data-id="${row.id}" data-value="${row.publish}" ><i class="fas fa-eye${row.publish == 0 ? '' : '-slash'}"></i>
           </button>`;
-        // } else {
+      } else {
         html += `<button button class="btn btn-info btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
           data-id="${row.id}" ><i class="fas fa-dollar"></i>
           </button>`

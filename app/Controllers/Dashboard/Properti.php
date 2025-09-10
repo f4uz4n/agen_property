@@ -131,7 +131,7 @@ class Properti extends BaseController
         $facilities = implode(',', $tempFasilitas);
         $images = defaultValue($this->request->getFileMultiple('images'), []);
         // step 4
-        $user_id = $this->request->getPost('user_id');
+        $agen = $this->request->getPost('agen');
         $description = $this->request->getPost('description');
 
         $data = [
@@ -151,7 +151,6 @@ class Properti extends BaseController
             'floors' => $floors,
             'facilities' => $facilities,
             'description' => $description,
-            'user_id' => $user_id,
         ];
 
         if (session()->get('role') == 'agen') {
@@ -180,6 +179,11 @@ class Properti extends BaseController
         try {
             $this->propertyModel->insert($data);
             $id = $this->propertyModel->insertID();
+
+            foreach ($agen as $user) {
+                $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();
+                $tempAgen != null ? $this->agentModel->update($tempAgen['id'], ['agent_id' => $user, 'property_id' => $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
+            }
 
             $fileName = $this->request->getPost('tipe');
             $uploaded = uploadPropertyImages($images, $id, $fileName);
@@ -312,7 +316,7 @@ class Properti extends BaseController
 
             foreach ($agen as $user) {
                 $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();
-                $tempAgen != null ? $this->agentModel->update($tempAgen['id'],['agent_id'=> $user,'property_id'=> $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
+                $tempAgen != null ? $this->agentModel->update($tempAgen['id'], ['agent_id' => $user, 'property_id' => $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
             }
 
             $fileName = $this->request->getPost('tipe');

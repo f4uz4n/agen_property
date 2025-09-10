@@ -13,7 +13,7 @@
     <div class="col-12">
       <div class="form-group">
         <label for="agen" class="form-label">Agen</label>
-        <select class="form-select steps-selects" id="agen" name="agen">
+        <select class="form-select steps-selects" name="agen[]" id="agen" multiple="multiple">
           <?php if (session('role') == 'agen'): ?>
             <option value="<?= session('id') ?>" selected><?= session('name') ?></option>
           <?php else: ?>
