@@ -20,10 +20,8 @@ class Login extends BaseController
 
     public function process()
     {
-        $email = $this->request->getPost('email')
-            ? filter_var($this->request->getPost('email'), FILTER_SANITIZE_EMAIL) : '';
-        $password = $this->request->getPost('password')
-            ? filter_var($this->request->getPost('password'), FILTER_SANITIZE_STRING) : '';
+        $email = htmlspecialchars($this->request->getPost('email'));
+        $password = htmlspecialchars($this->request->getPost('password'));
         $user = $this->UserModel->where('email', $email)->first();
 
         if ($user && password_verify($password, $user['password'])) {
