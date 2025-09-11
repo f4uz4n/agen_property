@@ -32,7 +32,7 @@ $routes->get('not-found', 'Error::notfound');
 $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter' => 'auth'], function ($routes) {
   $routes->get('/', 'Home::index');
 
-  $routes->group('laporan', function ($routes) {
+  $routes->group('laporan', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'Laporan::index');
     $routes->get('penjualan', 'Laporan::penjualan');
     $routes->get('performa-agen', 'Laporan::performaAgen');
@@ -76,7 +76,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('delete/(:num)', 'Artikel::delete/$1');
   });
 
-  $routes->group('kategori', function ($routes) {
+  $routes->group('kategori', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'Kategori::index');
     $routes->post('store', 'Kategori::store');
     $routes->get('(:num)', 'Kategori::detail/$1');
@@ -96,6 +96,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->get('/', 'User::index');
     $routes->post('store', 'User::store');
     $routes->post('update/(:num)', 'User::update/$1');
+    $routes->post('reset_password/(:num)', 'User::reset_password/$1');
     $routes->post('disabled/(:num)', 'User::disabled/$1');
   });
 
@@ -105,7 +106,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('password/(:num)', 'Setting::password/$1');
   });
 
-  $routes->group('kontak', function ($routes) {
+  $routes->group('kontak', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'Contact::index');
     $routes->post('update', 'Contact::update');
   });

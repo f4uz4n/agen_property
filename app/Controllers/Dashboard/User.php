@@ -223,6 +223,42 @@ class User extends BaseController
     }
   }
 
+  public function reset_password($id)
+  {
+    if (!$id) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'ID user tidak ditemukan'
+      ]);
+    }
+
+    $user = $this->userModel->find($id);
+    if (!$user) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'User tidak ditemukan'
+      ]);
+    }
+
+    try {
+      $password = password_hash('12345678', PASSWORD_DEFAULT);
+      $this->userModel->update($id, ['password' => $password]);
+      return $this->response->setJSON([
+        'title' => 'Berhasil',
+        'icon' => 'success',
+        'text' => 'Password berhasil direset ke: "12345678"'
+      ]);
+    } catch (\Exception $e) {
+      return $this->response->setJSON([
+        'title' => 'Gagal',
+        'icon' => 'error',
+        'text' => 'Gagal mereset password: ' . $e->getMessage()
+      ]);
+    }
+  }
+
   public function delete($id)
   {
     if (!$id) {

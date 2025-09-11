@@ -35,6 +35,13 @@ class Login extends BaseController
                 'isLoggedIn' => TRUE
             ];
             session()->set($session_data);
+            if ($password == '12345678') {
+                session()->setFlashdata([
+                    'title' => 'Password Default',
+                    'icon' => 'warning',
+                    'text' => 'Password Anda masih default. Silahkan ganti password lebih aman.',
+                ]);
+            }
             return redirect()->to(base_url('dashboard'));
         } else {
             session()->setFlashdata([

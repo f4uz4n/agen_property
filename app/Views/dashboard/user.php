@@ -63,7 +63,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-semibold" id="myModalLabel">Tambah User Baru</h5>
+        <h5 class="modal-title fw-semibold" id="myModalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="post" id="userForm">
@@ -149,6 +149,10 @@
                 <?php endif ?>
               </div>
             </div>
+            <div class="col-12 text-end">
+              <button type="button" class="btn btn-danger btn-sm btn-icon-text" id="btn-reset-password">
+                <i class="fa-solid fa-unlock btn-icon-prepend"></i> Reset Password</button>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -180,7 +184,7 @@
     });
     $('#city').html(opt);
   });
-  
+
   $(document).on('click', '.btn-disable', function () {
     const id = $(this).data('id');
     const name = $(this).data('name');
@@ -194,9 +198,45 @@
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: '<?= base_url('dashboard/user/disabled/') ?>' + id,
+          url: `<?= base_url('dashboard/user/disabled/') ?>${id}`,
           type: 'POST',
           data: {},
+          success: function (res) {
+            console.log(res);
+            Swal.fire({
+              title: res.title,
+              text: res.text,
+              icon: res.icon,
+            }).then((result) => {
+              location.reload();
+            })
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+    });
+  })
+
+  $(document).on('click', '#btn-reset-password', function () {
+    const id = $('#userForm').attr('action').split('/').pop();
+    const name = $('#name').val();
+    Swal.fire({
+      title: 'Reset Password',
+      text: 'Apakah Anda yakin ingin mereset password ' + name + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Reset',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `<?= base_url('dashboard/user/reset_password/') ?>${id}`,
+          type: 'POST',
+          data: {
+            id: id,
+          },
           success: function (res) {
             console.log(res);
             Swal.fire({
@@ -224,8 +264,7 @@
     },
     fieldMap: {
       inputs: [{
-        name: 'nama',
-        valueKey: 'name',
+        name: 'name',
       }, {
         name: 'email',
       }, {
