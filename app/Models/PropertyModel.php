@@ -128,6 +128,202 @@ class PropertyModel extends Model
     $property_ids = array_column($tempProperties, 'property_id');
     $properties = $this->getDataWhereIn('id', $property_ids);
   }
+
+  /**
+   * Mendapatkan data properti untuk halaman landing jual
+   */
+  public function getDataForLanding($limit = 6, $offset = 0, $filters = [])
+  {
+    $builder = $this->db->table($this->table . ' p');
+    $builder->select('p.*, c.name AS kategori');
+    $builder->join('categories c', 'p.type = c.id', 'left');
+    $builder->where('p.status', 'aktif');
+    $builder->where('p.publish', 1);
+
+    // Filter berdasarkan lokasi
+    if (!empty($filters['location'])) {
+      $builder->groupStart();
+      $builder->like('p.address', $filters['location']);
+      $builder->orLike('p.city', $filters['location']);
+      $builder->orLike('p.province', $filters['location']);
+      $builder->groupEnd();
+    }
+
+    // Filter berdasarkan tipe properti
+    if (!empty($filters['type'])) {
+      $builder->where('p.type', $filters['type']);
+    }
+
+    // Filter berdasarkan kamar tidur
+    if (!empty($filters['bedrooms'])) {
+      if ($filters['bedrooms'] == '4+') {
+        $builder->where('p.bedrooms >=', 4);
+      } else {
+        $builder->where('p.bedrooms', $filters['bedrooms']);
+      }
+    }
+
+    // Filter berdasarkan rentang harga
+    if (!empty($filters['min_price'])) {
+      $builder->where('p.price >=', $filters['min_price']);
+    }
+    if (!empty($filters['max_price'])) {
+      $builder->where('p.price <=', $filters['max_price']);
+    }
+
+    $builder->orderBy('p.created_at', 'DESC');
+    $builder->limit($limit, $offset);
+
+    $query = $builder->get();
+    $data = $query->getResultArray();
+
+    // Ambil gambar utama untuk setiap properti
+    foreach ($data as $key => $value) {
+      $builder = $this->db->table('property_images pi');
+      $builder->select('pi.*');
+      $builder->where('pi.property_id', $value['id']);
+      $builder->where('pi.is_primary', 1);
+      $builder->limit(1);
+      $query = $builder->get();
+      $image = $query->getRowArray();
+      $data[$key]['primary_image'] = $image ? $image['image_path'] : 'default.jpg';
+    }
+
+    return $data;
+  }
+
+  /**
+   * Mendapatkan data kategori untuk filter
+   */
+  public function getCategoriesForFilter()
+  {
+    $builder = $this->db->table('categories c');
+    $builder->select('c.*, COUNT(p.id) as property_count');
+    $builder->join('properties p', 'c.id = p.type', 'left');
+    $builder->where('c.status', 'aktif');
+    $builder->where('p.status', 'aktif');
+    $builder->where('p.publish', 1);
+    $builder->groupBy('c.id, c.name, c.status');
+    $builder->orderBy('c.name', 'ASC');
+
+    return $builder->get()->getResultArray();
+  }
+
+  /**
+   * Mendapatkan statistik properti untuk halaman jual
+   */
+  public function getPropertyStats()
+  {
+    $builder = $this->db->table($this->table);
+    $builder->select('
+      COUNT(*) as total_properties,
+      AVG(price) as average_price,
+      MIN(price) as min_price,
+      MAX(price) as max_price
+    ');
+    $builder->where('status', 'aktif');
+    $builder->where('publish', 1);
+
+    return $builder->get()->getRowArray();
+  }
+
+  /**
+   * Mendapatkan data properti untuk halaman sewa (disewakan)
+   */
+  public function getDataForRental($limit = 6, $offset = 0, $filters = [])
+  {
+    $builder = $this->db->table($this->table . ' p');
+    $builder->select('p.*, c.name AS kategori');
+    $builder->join('categories c', 'p.type = c.id', 'left');
+    $builder->where('p.status', 'disewakan');
+    $builder->where('p.publish', 1);
+
+    // Filter berdasarkan lokasi
+    if (!empty($filters['location'])) {
+      $builder->groupStart();
+      $builder->like('p.address', $filters['location']);
+      $builder->orLike('p.city', $filters['location']);
+      $builder->orLike('p.province', $filters['location']);
+      $builder->groupEnd();
+    }
+
+    // Filter berdasarkan tipe properti
+    if (!empty($filters['type'])) {
+      $builder->where('p.type', $filters['type']);
+    }
+
+    // Filter berdasarkan kamar tidur
+    if (!empty($filters['bedrooms'])) {
+      if ($filters['bedrooms'] == '4+') {
+        $builder->where('p.bedrooms >=', 4);
+      } else {
+        $builder->where('p.bedrooms', $filters['bedrooms']);
+      }
+    }
+
+    // Filter berdasarkan rentang harga
+    if (!empty($filters['min_price'])) {
+      $builder->where('p.price >=', $filters['min_price']);
+    }
+    if (!empty($filters['max_price'])) {
+      $builder->where('p.price <=', $filters['max_price']);
+    }
+
+    $builder->orderBy('p.created_at', 'DESC');
+    $builder->limit($limit, $offset);
+
+    $query = $builder->get();
+    $data = $query->getResultArray();
+
+    // Ambil gambar utama untuk setiap properti
+    foreach ($data as $key => $value) {
+      $builder = $this->db->table('property_images pi');
+      $builder->select('pi.*');
+      $builder->where('pi.property_id', $value['id']);
+      $builder->where('pi.is_primary', 1);
+      $builder->limit(1);
+      $query = $builder->get();
+      $image = $query->getRowArray();
+      $data[$key]['primary_image'] = $image ? $image['image_path'] : 'default.jpg';
+    }
+
+    return $data;
+  }
+
+  /**
+   * Mendapatkan data kategori untuk filter sewa
+   */
+  public function getCategoriesForRentalFilter()
+  {
+    $builder = $this->db->table('categories c');
+    $builder->select('c.*, COUNT(p.id) as property_count');
+    $builder->join('properties p', 'c.id = p.type', 'left');
+    $builder->where('c.status', 'aktif');
+    $builder->where('p.status', 'disewakan');
+    $builder->where('p.publish', 1);
+    $builder->groupBy('c.id, c.name, c.status');
+    $builder->orderBy('c.name', 'ASC');
+
+    return $builder->get()->getResultArray();
+  }
+
+  /**
+   * Mendapatkan statistik properti sewa
+   */
+  public function getRentalStats()
+  {
+    $builder = $this->db->table($this->table);
+    $builder->select('
+      COUNT(*) as total_properties,
+      AVG(price) as average_price,
+      MIN(price) as min_price,
+      MAX(price) as max_price
+    ');
+    $builder->where('status', 'disewakan');
+    $builder->where('publish', 1);
+
+    return $builder->get()->getRowArray();
+  }
 }
 
 

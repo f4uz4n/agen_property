@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\PropertyModel;
 use App\Models\CategoryModel;
 
-class Jual extends BaseController
+class Sewa extends BaseController
 {
   protected $PropertyModel;
   protected $CategoryModel;
@@ -27,14 +27,14 @@ class Jual extends BaseController
       'max_price' => $this->request->getGet('max_price')
     ];
 
-    // Ambil data properti
-    $properties = $this->PropertyModel->getDataForLanding(6, 0, $filters);
+    // Ambil data properti untuk disewakan
+    $properties = $this->PropertyModel->getDataForRental(6, 0, $filters);
 
     // Ambil data kategori untuk filter
-    $categories = $this->PropertyModel->getCategoriesForFilter();
+    $categories = $this->PropertyModel->getCategoriesForRentalFilter();
 
-    // Ambil statistik properti
-    $stats = $this->PropertyModel->getPropertyStats();
+    // Ambil statistik properti sewa
+    $stats = $this->PropertyModel->getRentalStats();
 
     $data = [
       'properties' => $properties,
@@ -43,7 +43,7 @@ class Jual extends BaseController
       'filters' => $filters
     ];
 
-    return $this->template->displayLanding('jual', $data);
+    return $this->template->displayLanding('sewa', $data);
   }
 
   public function get_ajax()
@@ -61,8 +61,8 @@ class Jual extends BaseController
     $limit = 6;
     $offset = ($page - 1) * $limit;
 
-    // Ambil data properti
-    $properties = $this->PropertyModel->getDataForLanding($limit, $offset, $filters);
+    // Ambil data properti untuk disewakan
+    $properties = $this->PropertyModel->getDataForRental($limit, $offset, $filters);
 
     return $this->response->setJSON([
       'success' => true,
@@ -83,11 +83,11 @@ class Jual extends BaseController
       'max_price' => $this->request->getGet('max_price')
     ];
 
-    // Ambil data properti dengan filter
-    $properties = $this->PropertyModel->getDataForLanding(12, 0, $filters);
+    // Ambil data properti untuk disewakan dengan filter
+    $properties = $this->PropertyModel->getDataForRental(12, 0, $filters);
 
     // Ambil data kategori untuk filter
-    $categories = $this->PropertyModel->getCategoriesForFilter();
+    $categories = $this->PropertyModel->getCategoriesForRentalFilter();
 
     $data = [
       'properties' => $properties,
@@ -96,6 +96,6 @@ class Jual extends BaseController
       'search_results' => true
     ];
 
-    return $this->template->displayLanding('jual', $data);
+    return $this->template->displayLanding('sewa', $data);
   }
 }

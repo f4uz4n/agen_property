@@ -1,6 +1,6 @@
 <style>
   :root {
-    --primary-color: #4c80ae;
+    --primary-color: #28a745;
     --secondary-color: #2c3e50;
     --light-blue: #f8f9fa;
     --text-dark: #2c3e50;
@@ -38,8 +38,8 @@
   }
 
   .btn-primary:hover {
-    background-color: #3d6b95;
-    border-color: #3d6b95;
+    background-color: #218838;
+    border-color: #1e7e34;
   }
 
   .btn-outline-primary {
@@ -53,7 +53,7 @@
   }
 
   .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #5a8bc0 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, #34ce57 100%);
     color: white;
     padding: 80px 0 60px;
     text-align: center;
@@ -90,7 +90,7 @@
 
   .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(76, 128, 174, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
   }
 
   .form-select {
@@ -101,11 +101,11 @@
 
   .form-select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(76, 128, 174, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
   }
 
   .search-btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #5a8bc0 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, #34ce57 100%);
     border: none;
     border-radius: 10px;
     padding: 12px 30px;
@@ -115,7 +115,7 @@
 
   .search-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(76, 128, 174, 0.4);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
   }
 
   .category-section {
@@ -297,7 +297,6 @@
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    height: 100%;
   }
 
   .article-card:hover {
@@ -307,11 +306,9 @@
 
   .article-image {
     height: 200px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, #5a8bc0 100%);
+    background: linear-gradient(45deg, #e9ecef, #f8f9fa);
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
   }
 
   .article-category {
@@ -367,7 +364,7 @@
   }
 
   .article-link:hover {
-    color: #3d6b95;
+    color: #218838;
     transform: translateX(5px);
   }
 
@@ -377,6 +374,15 @@
 
   .article-link:hover i {
     transform: translateX(3px);
+  }
+
+  .rental-badge {
+    background: linear-gradient(135deg, #28a745, #34ce57);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
   @media (max-width: 768px) {
@@ -400,15 +406,15 @@
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container">
-    <h1 class="hero-title">Jual Properti Anda</h1>
-    <p class="hero-subtitle">Platform #1 untuk menjual properti di Indonesia</p>
+    <h1 class="hero-title">Sewa Properti Impian</h1>
+    <p class="hero-subtitle">Temukan properti sewa terbaik dengan harga terjangkau</p>
   </div>
 </section>
 
 <!-- Search Form -->
 <div class="container">
   <div class="search-card">
-    <form method="GET" action="<?= base_url('jual/search') ?>">
+    <form method="GET" action="<?= base_url('sewa/search') ?>">
       <div class="row g-3">
         <div class="col-md-3">
           <label class="form-label">
@@ -448,15 +454,15 @@
         <div class="col-md-3">
           <label class="form-label">
             <i class="fas fa-money-bill text-primary me-2"></i>
-            Rentang Harga
+            Rentang Harga Sewa
           </label>
           <div class="price-range">
-            <input type="range" class="range-slider" min="0" max="<?= $stats['max_price'] ?? 20000000000 ?>"
-              value="<?= $filters['max_price'] ?? ($stats['max_price'] ?? 20000000000) / 2 ?>" id="priceRange"
+            <input type="range" class="range-slider" min="0" max="<?= $stats['max_price'] ?? 50000000 ?>"
+              value="<?= $filters['max_price'] ?? ($stats['max_price'] ?? 50000000) / 2 ?>" id="priceRange"
               name="max_price">
             <div class="price-display">
               <span>Rp 0</span>
-              <span id="maxPriceDisplay">Rp <?= number_format($stats['max_price'] ?? 20000000000, 0, ',', '.') ?></span>
+              <span id="maxPriceDisplay">Rp <?= number_format($stats['max_price'] ?? 50000000, 0, ',', '.') ?></span>
             </div>
             <input type="hidden" name="min_price" value="0">
           </div>
@@ -504,8 +510,8 @@
           <div class="category-icon">
             <i class="fas fa-calculator"></i>
           </div>
-          <h5 class="category-title">Simulasi KPR</h5>
-          <p class="category-desc">Hitung cicilan properti</p>
+          <h5 class="category-title">Simulasi Sewa</h5>
+          <p class="category-desc">Hitung biaya sewa bulanan</p>
         </div>
       </div>
       <div class="col-md-3 col-sm-6">
@@ -513,7 +519,7 @@
           <div class="category-icon">
             <i class="fas fa-handshake"></i>
           </div>
-          <h5 class="category-title">Titip Jual</h5>
+          <h5 class="category-title">Titip Sewa</h5>
           <p class="category-desc">Serahkan ke agen kami</p>
         </div>
       </div>
@@ -526,13 +532,13 @@
   <div class="container">
     <div class="section-header">
       <div>
-        <h2 class="section-title"><?= isset($search_results) ? 'Hasil Pencarian' : 'Proyek Terbaru' ?></h2>
+        <h2 class="section-title"><?= isset($search_results) ? 'Hasil Pencarian' : 'Properti Sewa Terbaru' ?></h2>
         <p class="section-subtitle">
-          <?= isset($search_results) ? 'Ditemukan ' . count($properties) . ' properti sesuai kriteria Anda' : 'Rekomendasi terbaik untuk Anda. Dapatkan informasi proyek terkini.' ?>
+          <?= isset($search_results) ? 'Ditemukan ' . count($properties) . ' properti sewa sesuai kriteria Anda' : 'Temukan properti sewa terbaik dengan harga terjangkau.' ?>
         </p>
       </div>
       <?php if (!isset($search_results)): ?>
-        <a href="<?= base_url('jual/search') ?>" class="btn btn-dark">Lihat Semua</a>
+        <a href="<?= base_url('sewa/search') ?>" class="btn btn-dark">Lihat Semua</a>
       <?php endif; ?>
     </div>
 
@@ -547,12 +553,12 @@
                     alt="<?= $property['title'] ?>" style="width: 100%; height: 250px; object-fit: cover;">
                 <?php else: ?>
                   <div
-                    style="width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                    style="width: 100%; height: 250px; background: linear-gradient(135deg, #28a745 0%, #34ce57 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                     <i class="fas fa-home"></i>
                   </div>
                 <?php endif; ?>
                 <div class="project-badge">
-                  <span class="badge bg-primary"><?= $property['kategori'] ?></span>
+                  <span class="rental-badge">Sewa</span>
                 </div>
               </div>
               <div class="project-content">
@@ -577,7 +583,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="project-price">Rp <?= number_format($property['price'], 0, ',', '.') ?></p>
+                <p class="project-price">Rp <?= number_format($property['price'], 0, ',', '.') ?>/bulan</p>
                 <a href="<?= base_url('properti/detail/' . $property['id']) ?>"
                   class="btn btn-outline-primary btn-sm w-100">
                   Lihat Detail
@@ -590,9 +596,9 @@
         <div class="col-12 text-center">
           <div class="py-5">
             <i class="fas fa-search fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">Tidak ada properti ditemukan</h4>
+            <h4 class="text-muted">Tidak ada properti sewa ditemukan</h4>
             <p class="text-muted">Coba ubah kriteria pencarian Anda</p>
-            <a href="<?= base_url('jual') ?>" class="btn btn-primary">Lihat Semua Properti</a>
+            <a href="<?= base_url('sewa') ?>" class="btn btn-primary">Lihat Semua Properti Sewa</a>
           </div>
         </div>
       <?php endif; ?>
@@ -613,17 +619,17 @@
   <div class="container">
     <div class="section-header">
       <div>
-        <h2 class="section-title">Artikel Terbaru</h2>
-        <p class="section-subtitle">Tips dan informasi terkini seputar properti dan investasi</p>
+        <h2 class="section-title">Tips Sewa Properti</h2>
+        <p class="section-subtitle">Panduan lengkap untuk menyewa properti yang tepat</p>
       </div>
-      <a href="#" class="btn btn-dark">Lihat Semua Artikel</a>
+      <a href="#" class="btn btn-dark">Lihat Semua Tips</a>
     </div>
 
     <div class="row g-4">
       <div class="col-lg-4 col-md-6">
         <div class="article-card">
           <div class="article-image">
-            <div class="article-category">Tips Properti</div>
+            <div class="article-category">Tips Sewa</div>
           </div>
           <div class="article-content">
             <div class="article-meta">
@@ -636,10 +642,10 @@
                 Admin Sampro
               </span>
             </div>
-            <h5 class="article-title">Cara Memilih Lokasi Properti yang Tepat</h5>
+            <h5 class="article-title">Cara Memilih Lokasi Sewa yang Strategis</h5>
             <p class="article-excerpt">
-              Memilih lokasi properti adalah salah satu keputusan terpenting dalam investasi properti.
-              Berikut tips memilih lokasi yang strategis...
+              Memilih lokasi sewa yang strategis sangat penting untuk kenyamanan dan aksesibilitas.
+              Berikut tips memilih lokasi sewa yang tepat...
             </p>
             <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
           </div>
@@ -649,7 +655,7 @@
       <div class="col-lg-4 col-md-6">
         <div class="article-card">
           <div class="article-image">
-            <div class="article-category">Investasi</div>
+            <div class="article-category">Budget</div>
           </div>
           <div class="article-content">
             <div class="article-meta">
@@ -659,13 +665,13 @@
               </span>
               <span class="article-author">
                 <i class="fas fa-user text-primary me-1"></i>
-                Tim Investasi
+                Tim Finance
               </span>
             </div>
-            <h5 class="article-title">Strategi Investasi Properti di Era Digital</h5>
+            <h5 class="article-title">Mengatur Budget Sewa Properti</h5>
             <p class="article-excerpt">
-              Teknologi digital telah mengubah cara kita berinvestasi properti.
-              Pelajari strategi terbaru untuk memaksimalkan return investasi...
+              Mengatur budget sewa yang tepat sangat penting untuk keuangan yang sehat.
+              Pelajari cara mengalokasikan budget sewa yang ideal...
             </p>
             <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
           </div>
@@ -675,7 +681,7 @@
       <div class="col-lg-4 col-md-6">
         <div class="article-card">
           <div class="article-image">
-            <div class="article-category">Market Update</div>
+            <div class="article-category">Legal</div>
           </div>
           <div class="article-content">
             <div class="article-meta">
@@ -685,13 +691,13 @@
               </span>
               <span class="article-author">
                 <i class="fas fa-user text-primary me-1"></i>
-                Analis Pasar
+                Tim Legal
               </span>
             </div>
-            <h5 class="article-title">Tren Harga Properti Jakarta 2024</h5>
+            <h5 class="article-title">Aspek Legal dalam Sewa Properti</h5>
             <p class="article-excerpt">
-              Analisis mendalam tentang pergerakan harga properti di Jakarta sepanjang tahun 2024.
-              Temukan peluang investasi terbaik...
+              Memahami aspek legal dalam sewa properti sangat penting untuk melindungi hak Anda.
+              Pelajari dokumen dan perjanjian yang perlu diperhatikan...
             </p>
             <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
           </div>
@@ -758,7 +764,7 @@
     }
     params.append('page', currentPage);
 
-    fetch(`<?= base_url('jual/get_ajax') ?>?${params.toString()}`)
+    fetch(`<?= base_url('sewa/get_ajax') ?>?${params.toString()}`)
       .then(response => response.json())
       .then(data => {
         if (data.success && data.data.length > 0) {
@@ -797,7 +803,7 @@
 
     const imageHtml = imageUrl
       ? `<img src="${imageUrl}" alt="${property.title}" style="width: 100%; height: 250px; object-fit: cover;">`
-      : `<div style="width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;"><i class="fas fa-home"></i></div>`;
+      : `<div style="width: 100%; height: 250px; background: linear-gradient(135deg, #28a745 0%, #34ce57 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;"><i class="fas fa-home"></i></div>`;
 
     return `
       <div class="col-lg-4 col-md-6">
@@ -805,7 +811,7 @@
           <div class="project-image">
             ${imageHtml}
             <div class="project-badge">
-              <span class="badge bg-primary">${property.kategori}</span>
+              <span class="rental-badge">Sewa</span>
             </div>
           </div>
           <div class="project-content">
@@ -830,7 +836,7 @@
                 </div>
               </div>
             </div>
-            <p class="project-price">Rp ${new Intl.NumberFormat('id-ID').format(property.price)}</p>
+            <p class="project-price">Rp ${new Intl.NumberFormat('id-ID').format(property.price)}/bulan</p>
             <a href="<?= base_url('properti/detail/') ?>${property.id}" class="btn btn-outline-primary btn-sm w-100">
               Lihat Detail
             </a>

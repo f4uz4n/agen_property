@@ -11,8 +11,15 @@ $routes->get('agen', 'Home::agen');
 $routes->get('kontak', 'Home::kontak');
 
 $routes->get('jual', 'Jual::index');
+$routes->get('jual/search', 'Jual::search');
+$routes->get('jual/get_ajax', 'Jual::get_ajax');
 $routes->get('sewa', 'Sewa::index');
+$routes->get('sewa/search', 'Sewa::search');
+$routes->get('sewa/get_ajax', 'Sewa::get_ajax');
 $routes->get('artikel', 'Artikel::index');
+$routes->get('artikel/search', 'Artikel::search');
+$routes->get('artikel/get_ajax', 'Artikel::get_ajax');
+$routes->get('artikel/(:any)', 'Artikel::detail/$1');
 
 $routes->get('login', 'Login::index');
 $routes->post('user_login', 'Login::process');
@@ -24,7 +31,19 @@ $routes->get('not-found', 'Error::notfound');
 // dashboard group
 $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter' => 'auth'], function ($routes) {
   $routes->get('/', 'Home::index');
-  $routes->get('laporan-penjualan', 'Laporan::index');
+
+  $routes->group('laporan', function ($routes) {
+    $routes->get('/', 'Laporan::index');
+    $routes->get('penjualan', 'Laporan::penjualan');
+    $routes->get('performa-agen', 'Laporan::performaAgen');
+    $routes->get('detail-agen/(:num)', 'Laporan::detailAgen/$1');
+    $routes->get('export-penjualan-pdf', 'Laporan::exportPenjualanPdf');
+    $routes->get('export-penjualan-excel', 'Laporan::exportPenjualanExcel');
+    $routes->get('export-performa-agen-pdf', 'Laporan::exportPerformaAgenPdf');
+    $routes->get('export-performa-agen-excel', 'Laporan::exportPerformaAgenExcel');
+    $routes->get('get-data-penjualan', 'Laporan::getDataPenjualan');
+    $routes->get('get-data-performa-agen', 'Laporan::getDataPerformaAgen');
+  });
 
   $routes->group('properti', function ($routes) {
     $routes->get('/', 'Properti::index');

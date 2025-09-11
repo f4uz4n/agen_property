@@ -376,27 +376,28 @@
 <section class="search-section">
   <div class="container">
     <div class="search-form">
-      <form>
+      <form method="GET" action="<?= base_url('artikel/search') ?>">
         <div class="row g-3">
           <div class="col-md-4">
             <label class="form-label">
               <i class="fas fa-search text-primary me-2"></i>
               Cari Artikel
             </label>
-            <input type="text" class="form-control" placeholder="Kata kunci artikel...">
+            <input type="text" class="form-control" name="search" placeholder="Kata kunci artikel..."
+              value="<?= $filters['search'] ?? '' ?>">
           </div>
           <div class="col-md-3">
             <label class="form-label">
               <i class="fas fa-tag text-primary me-2"></i>
               Kategori
             </label>
-            <select class="form-select">
-              <option>Semua Kategori</option>
-              <option>Tips Properti</option>
-              <option>Investasi</option>
-              <option>Market Update</option>
-              <option>Legal</option>
-              <option>Finansial</option>
+            <select class="form-select" name="category">
+              <option value="">Semua Kategori</option>
+              <?php foreach ($categories as $category): ?>
+                <option value="<?= $category['category'] ?>" <?= ($filters['category'] ?? '') == $category['category'] ? 'selected' : '' ?>>
+                  <?= $category['category'] ?> (<?= $category['article_count'] ?>)
+                </option>
+              <?php endforeach; ?>
             </select>
           </div>
           <div class="col-md-3">
@@ -404,12 +405,13 @@
               <i class="fas fa-calendar text-primary me-2"></i>
               Periode
             </label>
-            <select class="form-select">
-              <option>Semua Waktu</option>
-              <option>Hari Ini</option>
-              <option>Minggu Ini</option>
-              <option>Bulan Ini</option>
-              <option>3 Bulan Terakhir</option>
+            <select class="form-select" name="period">
+              <option value="">Semua Waktu</option>
+              <option value="today" <?= ($filters['period'] ?? '') == 'today' ? 'selected' : '' ?>>Hari Ini</option>
+              <option value="week" <?= ($filters['period'] ?? '') == 'week' ? 'selected' : '' ?>>Minggu Ini</option>
+              <option value="month" <?= ($filters['period'] ?? '') == 'month' ? 'selected' : '' ?>>Bulan Ini</option>
+              <option value="quarter" <?= ($filters['period'] ?? '') == 'quarter' ? 'selected' : '' ?>>3 Bulan Terakhir
+              </option>
             </select>
           </div>
           <div class="col-md-2 d-flex align-items-end">
@@ -429,14 +431,14 @@
   <div class="container">
     <div class="text-center">
       <h5 class="mb-3">Filter Kategori:</h5>
-      <button class="btn filter-btn active">Semua</button>
-      <button class="btn filter-btn">Tips Properti</button>
-      <button class="btn filter-btn">Investasi</button>
-      <button class="btn filter-btn">Market Update</button>
-      <button class="btn filter-btn">Legal</button>
-      <button class="btn filter-btn">Finansial</button>
-      <button class="btn filter-btn">KPR</button>
-      <button class="btn filter-btn">Pajak</button>
+      <button class="btn filter-btn <?= empty($filters['category']) ? 'active' : '' ?>"
+        onclick="filterByCategory('')">Semua</button>
+      <?php foreach ($categories as $category): ?>
+        <button class="btn filter-btn <?= ($filters['category'] ?? '') == $category['category'] ? 'active' : '' ?>"
+          onclick="filterByCategory('<?= $category['category'] ?>')">
+          <?= $category['category'] ?>
+        </button>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
@@ -449,178 +451,86 @@
       <div class="col-lg-8">
         <div class="section-header">
           <div>
-            <h2 class="section-title">Artikel Terbaru</h2>
-            <p class="section-subtitle">Ditemukan <span class="stats-badge">24 artikel</span> untuk Anda</p>
+            <h2 class="section-title"><?= isset($search_results) ? 'Hasil Pencarian' : 'Artikel Terbaru' ?></h2>
+            <p class="section-subtitle">
+              Ditemukan <span class="stats-badge"><?= count($articles) ?> artikel</span> untuk Anda
+            </p>
           </div>
           <div class="d-flex align-items-center">
             <label class="me-2">Urutkan:</label>
-            <select class="form-select form-select-sm" style="width: auto;">
-              <option>Terbaru</option>
-              <option>Terpopuler</option>
-              <option>A-Z</option>
-              <option>Z-A</option>
+            <select class="form-select form-select-sm" style="width: auto;" onchange="sortArticles(this.value)">
+              <option value="latest" <?= ($filters['sort'] ?? 'latest') == 'latest' ? 'selected' : '' ?>>Terbaru</option>
+              <option value="popular" <?= ($filters['sort'] ?? '') == 'popular' ? 'selected' : '' ?>>Terpopuler</option>
+              <option value="alphabetical" <?= ($filters['sort'] ?? '') == 'alphabetical' ? 'selected' : '' ?>>A-Z</option>
+              <option value="reverse_alphabetical" <?= ($filters['sort'] ?? '') == 'reverse_alphabetical' ? 'selected' : '' ?>>Z-A</option>
             </select>
           </div>
         </div>
 
         <!-- Article Cards -->
-        <div class="row">
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">Tips Properti</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    15 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Admin Sampro
-                  </span>
+        <div class="row" id="articlesContainer">
+          <?php if (!empty($articles)): ?>
+            <?php foreach ($articles as $article): ?>
+              <div class="col-md-6">
+                <div class="article-card">
+                  <div class="article-image">
+                    <?php if ($article['thumbnail'] && $article['thumbnail'] != 'default.jpg'): ?>
+                      <img src="<?= base_url('public/uploads/articles/' . $article['thumbnail']) ?>"
+                        alt="<?= $article['title'] ?>" style="width: 100%; height: 200px; object-fit: cover;">
+                    <?php else: ?>
+                      <div
+                        style="width: 100%; height: 200px; background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-newspaper"></i>
+                      </div>
+                    <?php endif; ?>
+                    <div class="article-category"><?= $article['category'] ?? 'Umum' ?></div>
+                  </div>
+                  <div class="article-content">
+                    <div class="article-meta">
+                      <span class="article-date">
+                        <i class="fas fa-calendar-alt text-primary me-1"></i>
+                        <?= date('d F Y', strtotime($article['created_at'])) ?>
+                      </span>
+                      <span class="article-author">
+                        <i class="fas fa-user text-primary me-1"></i>
+                        <?= $article['author_name'] ?? 'Admin' ?>
+                      </span>
+                    </div>
+                    <h5 class="article-title"><?= $article['title'] ?></h5>
+                    <p class="article-excerpt">
+                      <?= $article['excerpt'] ?: substr(strip_tags($article['content']), 0, 150) . '...' ?>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <a href="<?= base_url('artikel/' . $article['slug']) ?>" class="article-link">
+                        Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
+                      </a>
+                      <small class="text-muted">
+                        <i class="fas fa-eye me-1"></i><?= $article['views'] ?? 0 ?>
+                      </small>
+                    </div>
+                  </div>
                 </div>
-                <h5 class="article-title">Cara Memilih Lokasi Properti yang Tepat</h5>
-                <p class="article-excerpt">
-                  Memilih lokasi properti adalah salah satu keputusan terpenting dalam investasi properti.
-                  Berikut tips memilih lokasi yang strategis dan menguntungkan...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <div class="col-12 text-center">
+              <div class="py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Tidak ada artikel ditemukan</h4>
+                <p class="text-muted">Coba ubah kriteria pencarian Anda</p>
+                <a href="<?= base_url('artikel') ?>" class="btn btn-primary">Lihat Semua Artikel</a>
               </div>
             </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">Investasi</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    12 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Tim Investasi
-                  </span>
-                </div>
-                <h5 class="article-title">Strategi Investasi Properti di Era Digital</h5>
-                <p class="article-excerpt">
-                  Teknologi digital telah mengubah cara kita berinvestasi properti.
-                  Pelajari strategi terbaru untuk memaksimalkan return investasi...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">Market Update</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    10 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Analis Pasar
-                  </span>
-                </div>
-                <h5 class="article-title">Tren Harga Properti Jakarta 2024</h5>
-                <p class="article-excerpt">
-                  Analisis mendalam tentang pergerakan harga properti di Jakarta sepanjang tahun 2024.
-                  Temukan peluang investasi terbaik...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">Legal</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    8 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Tim Legal
-                  </span>
-                </div>
-                <h5 class="article-title">Perubahan Regulasi Properti 2024</h5>
-                <p class="article-excerpt">
-                  Update terbaru tentang perubahan regulasi properti yang berlaku di tahun 2024.
-                  Penting untuk diketahui investor...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">KPR</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    5 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Tim Finansial
-                  </span>
-                </div>
-                <h5 class="article-title">Tips Mengajukan KPR yang Disetujui</h5>
-                <p class="article-excerpt">
-                  Panduan lengkap cara mengajukan KPR agar cepat disetujui bank.
-                  Simak tips dan triknya di sini...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="article-card">
-              <div class="article-image">
-                <div class="article-category">Finansial</div>
-              </div>
-              <div class="article-content">
-                <div class="article-meta">
-                  <span class="article-date">
-                    <i class="fas fa-calendar-alt text-primary me-1"></i>
-                    3 Desember 2024
-                  </span>
-                  <span class="article-author">
-                    <i class="fas fa-user text-primary me-1"></i>
-                    Konsultan Finansial
-                  </span>
-                </div>
-                <h5 class="article-title">Cara Menghitung ROI Properti</h5>
-                <p class="article-excerpt">
-                  Pelajari cara menghitung Return on Investment (ROI) properti dengan benar.
-                  Metode yang akurat untuk analisis investasi...
-                </p>
-                <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-              </div>
-            </div>
-          </div>
+          <?php endif; ?>
         </div>
+
+        <?php if (!isset($search_results) && !empty($articles)): ?>
+          <div class="text-center mt-4">
+            <button class="btn btn-outline-primary" id="loadMoreBtn" onclick="loadMoreArticles()">
+              <i class="fas fa-plus me-2"></i>Muat Lebih Banyak
+            </button>
+          </div>
+        <?php endif; ?>
 
         <!-- Pagination -->
         <nav aria-label="Article pagination">
@@ -643,68 +553,52 @@
         <div class="sidebar">
           <h5 class="sidebar-title">Artikel Populer</h5>
 
-          <div class="popular-article">
-            <div class="popular-article-image"></div>
-            <div class="popular-article-content">
-              <h6>Cara Memilih Lokasi Properti yang Tepat</h6>
-              <p>15 Desember 2024</p>
+          <?php if (!empty($popularArticles)): ?>
+            <?php foreach ($popularArticles as $popularArticle): ?>
+              <div class="popular-article">
+                <div class="popular-article-image">
+                  <?php if ($popularArticle['thumbnail'] && $popularArticle['thumbnail'] != 'default.jpg'): ?>
+                    <img src="<?= base_url('public/uploads/articles/' . $popularArticle['thumbnail']) ?>"
+                      alt="<?= $popularArticle['title'] ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                  <?php else: ?>
+                    <div
+                      style="width: 100%; height: 100%; background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%); display: flex; align-items: center; justify-content: center; color: white;">
+                      <i class="fas fa-newspaper"></i>
+                    </div>
+                  <?php endif; ?>
+                </div>
+                <div class="popular-article-content">
+                  <h6><a href="<?= base_url('artikel/' . $popularArticle['slug']) ?>"
+                      class="text-decoration-none text-dark"><?= $popularArticle['title'] ?></a></h6>
+                  <p><?= date('d F Y', strtotime($popularArticle['created_at'])) ?></p>
+                  <small class="text-muted">
+                    <i class="fas fa-eye me-1"></i><?= $popularArticle['views'] ?? 0 ?> views
+                  </small>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <div class="text-center py-3">
+              <p class="text-muted">Belum ada artikel populer</p>
             </div>
-          </div>
-
-          <div class="popular-article">
-            <div class="popular-article-image"></div>
-            <div class="popular-article-content">
-              <h6>Strategi Investasi Properti di Era Digital</h6>
-              <p>12 Desember 2024</p>
-            </div>
-          </div>
-
-          <div class="popular-article">
-            <div class="popular-article-image"></div>
-            <div class="popular-article-content">
-              <h6>Tren Harga Properti Jakarta 2024</h6>
-              <p>10 Desember 2024</p>
-            </div>
-          </div>
-
-          <div class="popular-article">
-            <div class="popular-article-image"></div>
-            <div class="popular-article-content">
-              <h6>Tips Mengajukan KPR yang Disetujui</h6>
-              <p>5 Desember 2024</p>
-            </div>
-          </div>
-
-          <div class="popular-article">
-            <div class="popular-article-image"></div>
-            <div class="popular-article-content">
-              <h6>Cara Menghitung ROI Properti</h6>
-              <p>3 Desember 2024</p>
-            </div>
-          </div>
+          <?php endif; ?>
         </div>
 
         <div class="sidebar mt-4">
           <h5 class="sidebar-title">Kategori</h5>
           <div class="d-grid gap-2">
-            <a href="#" class="btn btn-outline-primary text-start">
-              Tips Properti <span class="badge bg-primary ms-2">8</span>
-            </a>
-            <a href="#" class="btn btn-outline-primary text-start">
-              Investasi <span class="badge bg-primary ms-2">6</span>
-            </a>
-            <a href="#" class="btn btn-outline-primary text-start">
-              Market Update <span class="badge bg-primary ms-2">5</span>
-            </a>
-            <a href="#" class="btn btn-outline-primary text-start">
-              Legal <span class="badge bg-primary ms-2">4</span>
-            </a>
-            <a href="#" class="btn btn-outline-primary text-start">
-              KPR <span class="badge bg-primary ms-2">3</span>
-            </a>
-            <a href="#" class="btn btn-outline-primary text-start">
-              Finansial <span class="badge bg-primary ms-2">3</span>
-            </a>
+            <?php if (!empty($categories)): ?>
+              <?php foreach ($categories as $category): ?>
+                <a href="<?= base_url('artikel?category=' . urlencode($category['category'])) ?>"
+                  class="btn btn-outline-primary text-start">
+                  <?= $category['category'] ?> <span class="badge bg-primary ms-2"><?= $category['article_count'] ?></span>
+                </a>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="text-center py-3">
+                <p class="text-muted">Belum ada kategori</p>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
@@ -714,6 +608,130 @@
 
 <?= $this->section('js') ?>
 <script>
+  let currentPage = 1;
+  const limit = 6;
+
+  // Category filter functionality
+  function filterByCategory(category) {
+    const form = document.querySelector('form');
+    const categorySelect = form.querySelector('select[name="category"]');
+    categorySelect.value = category;
+    form.submit();
+  }
+
+  // Sort articles
+  function sortArticles(sort) {
+    const form = document.querySelector('form');
+    const sortInput = document.createElement('input');
+    sortInput.type = 'hidden';
+    sortInput.name = 'sort';
+    sortInput.value = sort;
+    form.appendChild(sortInput);
+    form.submit();
+  }
+
+  // Load more articles
+  function loadMoreArticles() {
+    currentPage++;
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    if (loadMoreBtn) {
+      loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memuat...';
+      loadMoreBtn.disabled = true;
+    }
+
+    // Get current filters
+    const form = document.querySelector('form');
+    const formData = new FormData(form);
+    const params = new URLSearchParams();
+
+    for (let [key, value] of formData.entries()) {
+      if (value) params.append(key, value);
+    }
+    params.append('page', currentPage);
+
+    fetch(`<?= base_url('artikel/get_ajax') ?>?${params.toString()}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.data.length > 0) {
+          const container = document.getElementById('articlesContainer');
+          data.data.forEach(article => {
+            const articleCard = createArticleCard(article);
+            container.insertAdjacentHTML('beforeend', articleCard);
+          });
+
+          if (!data.has_more) {
+            loadMoreBtn.style.display = 'none';
+          } else {
+            loadMoreBtn.innerHTML = '<i class="fas fa-plus me-2"></i>Muat Lebih Banyak';
+            loadMoreBtn.disabled = false;
+          }
+        } else {
+          if (loadMoreBtn) {
+            loadMoreBtn.style.display = 'none';
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error loading more articles:', error);
+        if (loadMoreBtn) {
+          loadMoreBtn.innerHTML = '<i class="fas fa-plus me-2"></i>Muat Lebih Banyak';
+          loadMoreBtn.disabled = false;
+        }
+      });
+  }
+
+  // Create article card HTML
+  function createArticleCard(article) {
+    const imageUrl = article.thumbnail && article.thumbnail !== 'default.jpg'
+      ? `<?= base_url('public/uploads/articles/') ?>${article.thumbnail}`
+      : null;
+
+    const imageHtml = imageUrl
+      ? `<img src="${imageUrl}" alt="${article.title}" style="width: 100%; height: 200px; object-fit: cover;">`
+      : `<div style="width: 100%; height: 200px; background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;"><i class="fas fa-newspaper"></i></div>`;
+
+    const excerpt = article.excerpt || article.content.substring(0, 150) + '...';
+    const date = new Date(article.created_at).toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    return `
+      <div class="col-md-6">
+        <div class="article-card">
+          <div class="article-image">
+            ${imageHtml}
+            <div class="article-category">${article.category || 'Umum'}</div>
+          </div>
+          <div class="article-content">
+            <div class="article-meta">
+              <span class="article-date">
+                <i class="fas fa-calendar-alt text-primary me-1"></i>
+                ${date}
+              </span>
+              <span class="article-author">
+                <i class="fas fa-user text-primary me-1"></i>
+                ${article.author_name || 'Admin'}
+              </span>
+            </div>
+            <h5 class="article-title">${article.title}</h5>
+            <p class="article-excerpt">${excerpt}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="<?= base_url('artikel/') ?>${article.slug}" class="article-link">
+                Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+              <small class="text-muted">
+                <i class="fas fa-eye me-1"></i>${article.views || 0}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   // Category filter functionality
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -722,13 +740,6 @@
       // Add active class to clicked button
       this.classList.add('active');
     });
-  });
-
-  // Search form functionality
-  document.querySelector('.search-form form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    // Add your search logic here
-    console.log('Search submitted');
   });
 </script>
 <?= $this->endSection() ?>

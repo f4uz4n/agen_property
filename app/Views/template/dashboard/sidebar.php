@@ -9,9 +9,9 @@
     </li>
     <?php if (session('role') == 'owner'): ?>
       <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('dashboard/laporan-penjualan') ?>" data-page="laporan-penjualan">
-          <i class="fa-solid fa-file-invoice menu-icon"></i>
-          <span class="menu-title">Laporan Penjualan</span>
+        <a class="nav-link" href="<?= base_url('dashboard/laporan') ?>" data-page="laporan">
+          <i class="fa-solid fa-chart-line menu-icon"></i>
+          <span class="menu-title">Laporan</span>
         </a>
       </li>
     <?php endif ?>
