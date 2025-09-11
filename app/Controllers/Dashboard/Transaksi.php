@@ -29,7 +29,8 @@ class Transaksi extends BaseController
         $data = [
             'title' => 'Daftar Transaksi',
             'subtitle' => 'Kelola semua daftar transaksi Anda di Sini.',
-            'data' => $this->transactionModel->getData($agen_id),
+            'transaksi' => $this->transactionModel->getData($agen_id),
+            'data' => $this->propertyModel->getData($agen_id),
             'kategori' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')

@@ -45,6 +45,33 @@ function uploadPropertyImages(array $images, int $propertyId, string $fileName):
   return $uploadedFiles;
 }
 
+function uploadArticleImages($image, int $propertyId)
+{
+  $uploadPath = FCPATH . 'public/uploads/articles/' . $propertyId . '/';
+
+  // cek & buat folder jika belum ada
+  if (!is_dir($uploadPath)) {
+    mkdir($uploadPath, 0777, true);
+    activity_log('create', 'folder ' . $uploadPath);
+  }
+
+  // hapus semua isi folder jika ada
+  if (is_dir($uploadPath)) {
+    array_map('unlink', glob($uploadPath . '*'));
+  }
+
+  if ($image->isValid() && !$image->hasMoved()) {
+    $nameFile = $image->getClientName();
+    activity_log('upload', $nameFile);
+    $image->move($uploadPath, $nameFile);
+
+    $uploadedFiles = 'public/uploads/articles/' . $propertyId . '/' . $nameFile;
+    activity_log('terupload', 'public/uploads/articles/' . $propertyId . '/' . $nameFile);
+  }
+
+  return $uploadedFiles;
+}
+
 function folder_delete($path)
 {
   // Validasi dasar

@@ -3,6 +3,11 @@
     <h3><?= $title ?></h3>
     <p class="text-muted"><?= $subtitle ?></p>
   </div>
+  <div class="col text-end">
+    <button class="btn btn-primary btn-modal" data-bs-toggle="modal" data-bs-target="#myModal">
+      <i class="fas fa-plus"></i> Tambah Data
+    </button>
+  </div>
 </div>
 
 <div class="card">
@@ -80,7 +85,8 @@
 
 <?= $this->section('js') ?>
 <script>
-  let data = {};
+  let data = <?= json_encode($data) ?>;
+  let transaksi = {};
 
   let status = $('#status').find('option:selected').val();
   let agen = $('#agen').find('option:selected').val();
@@ -175,7 +181,7 @@
       },
       success: function (res) {
         console.log(res);
-        data = res;
+        transaksi = res;
         generateTable(res);
       },
       error: function (err) {
@@ -227,7 +233,7 @@
             data-id="${row.id}"><i class="fas fa-check"></i>
           </button>`;
         }
-        html +=`<button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i>
+        html += `<button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i>
         </button>`;
       }
 

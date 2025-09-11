@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="<?= base_url('public/vendors/sweetalert2/sweetalert2.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/jquery-steps/jquery.steps.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/dropify/css/dropify.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/quiljs/quill.snow.css') ?>">
 
   <!-- <link rel="stylesheet" href="<?= base_url('public/vendors/datetimepicker/bootstrap-material-datetimepicker.css') ?>"> -->
   <!-- End plugin css for this page -->

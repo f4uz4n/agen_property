@@ -12,7 +12,8 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="property_id">Properti</label>
-                <select class="form-select" name="property_id" id="property_id">
+                <select class="form-select modal-select" name="property_id" id="property_id">
+                  <option value="">Pilih Properti</option>
                   <?php foreach ($data as $property): ?>
                     <option value="<?= $property['id'] ?>"><?= $property['title'] ?></option>
                   <?php endforeach ?>
@@ -41,6 +42,7 @@
     formActionUrl: id => '<?= base_url('transaksi/') ?>' + (id ? 'update/' : 'store'),
     findData: id => data.find(item => item.id == id),
     defaultValues: {
+      property_id: '',
     },
     fieldMap: {
       inputs: [{

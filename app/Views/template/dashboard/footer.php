@@ -11,11 +11,11 @@
 <script src="<?= base_url('public/vendors/select2/select2.min.js') ?>"></script>
 <script src="<?= base_url('public/vendors/sweetalert2/sweetalert2.all.min.js') ?>"></script>
 <script src="<?= base_url('public/vendors/jquery-steps/jquery.steps.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/typeahead.js/typeahead.bundle.min.js') ?>"></script>
 
 <script src="<?= base_url('public/vendors/dropify/js/dropify.min.js') ?>"></script>
+<script src="<?= base_url('public/vendors/quiljs/quill.js') ?>"></script>
 
-<!-- <script src="<?= base_url('public/vendors/datetimepicker/bootstrap-material-datetimepicker.js') ?>"></script>
-<script src="<?= base_url('public/vendors/datetimepicker/moment-with-locales.min.js') ?>"></script> -->
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="<?= base_url('public/js/off-canvas.js') ?>"></script>

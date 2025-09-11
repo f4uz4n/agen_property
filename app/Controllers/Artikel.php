@@ -6,11 +6,11 @@ use App\Models\ArticleModel;
 
 class Artikel extends BaseController
 {
-  protected $ArticleModel;
+  protected $articleModel;
 
   public function __construct()
   {
-    $this->ArticleModel = new ArticleModel();
+    $this->articleModel = new ArticleModel();
   }
 
   public function index()
@@ -24,16 +24,16 @@ class Artikel extends BaseController
     ];
 
     // Ambil data artikel
-    $articles = $this->ArticleModel->getDataForLanding(6, 0, $filters);
+    $articles = $this->articleModel->getDataForLanding(6, 0, $filters);
 
     // Ambil data kategori
-    $categories = $this->ArticleModel->getCategories();
+    $categories = $this->articleModel->getCategories();
 
     // Ambil artikel populer
-    $popularArticles = $this->ArticleModel->getPopularArticles(5);
+    $popularArticles = $this->articleModel->getPopularArticles(5);
 
     // Ambil statistik artikel
-    $stats = $this->ArticleModel->getArticleStats();
+    $stats = $this->articleModel->getArticleStats();
 
     $data = [
       'articles' => $articles,
@@ -61,7 +61,7 @@ class Artikel extends BaseController
     $offset = ($page - 1) * $limit;
 
     // Ambil data artikel
-    $articles = $this->ArticleModel->getDataForLanding($limit, $offset, $filters);
+    $articles = $this->articleModel->getDataForLanding($limit, $offset, $filters);
 
     return $this->response->setJSON([
       'success' => true,
@@ -82,16 +82,16 @@ class Artikel extends BaseController
     ];
 
     // Ambil data artikel dengan filter
-    $articles = $this->ArticleModel->getDataForLanding(12, 0, $filters);
+    $articles = $this->articleModel->getDataForLanding(12, 0, $filters);
 
     // Ambil data kategori
-    $categories = $this->ArticleModel->getCategories();
+    $categories = $this->articleModel->getCategories();
 
     // Ambil artikel populer
-    $popularArticles = $this->ArticleModel->getPopularArticles(5);
+    $popularArticles = $this->articleModel->getPopularArticles(5);
 
     // Ambil statistik artikel
-    $stats = $this->ArticleModel->getArticleStats();
+    $stats = $this->articleModel->getArticleStats();
 
     $data = [
       'articles' => $articles,
@@ -108,22 +108,22 @@ class Artikel extends BaseController
   public function detail($slug)
   {
     // Ambil artikel berdasarkan slug
-    $article = $this->ArticleModel->getArticleBySlug($slug);
+    $article = $this->articleModel->getArticleBySlug($slug);
 
     if (!$article) {
       throw new \CodeIgniter\Exceptions\PageNotFoundException('Artikel tidak ditemukan');
     }
 
     // Tingkatkan view artikel
-    $this->ArticleModel->incrementViews($article['id']);
+    $this->articleModel->incrementViews($article['id']);
 
     // Ambil artikel terkait
-    $relatedArticles = $this->ArticleModel->getDataForLanding(3, 0, [
+    $relatedArticles = $this->articleModel->getDataForLanding(3, 0, [
       'category' => $article['category']
     ]);
 
     // Ambil artikel populer
-    $popularArticles = $this->ArticleModel->getPopularArticles(5);
+    $popularArticles = $this->articleModel->getPopularArticles(5);
 
     $data = [
       'article' => $article,

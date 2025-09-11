@@ -31,6 +31,67 @@ class ArticleModel extends Model
   protected $createdField = 'created_at';
   protected $updatedField = 'updated_at';
 
+  public function getData($filters = [])
+  {
+    $builder = $this->db->table($this->table . ' a');
+    $builder->select('a.*, u.name as author_name');
+    $builder->join('users u', 'a.user_id = u.id', 'left');
+
+    // Filter berdasarkan pencarian
+    // if (!empty($filters['search'])) {
+    //   $builder->groupStart();
+    //   $builder->like('a.title', $filters['search']);
+    //   $builder->orLike('a.content', $filters['search']);
+    //   $builder->orLike('a.excerpt', $filters['search']);
+    //   $builder->groupEnd();
+    // }
+
+    // Filter berdasarkan kategori
+    if (!empty($filters['status'])) {
+      $builder->where('a.status', $filters['status']);
+    }
+    if (!empty($filters['category'])) {
+      $builder->where('a.category', $filters['category']);
+    }
+
+    // Filter berdasarkan periode
+    // if (!empty($filters['period'])) {
+    //   switch ($filters['period']) {
+    //     case 'today':
+    //       $builder->where('DATE(a.created_at)', date('Y-m-d'));
+    //       break;
+    //     case 'week':
+    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-7 days')));
+    //       break;
+    //     case 'month':
+    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-30 days')));
+    //       break;
+    //     case 'quarter':
+    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-90 days')));
+    //       break;
+    //   }
+    // }
+
+    // Sorting
+    // $sort = $filters['sort'] ?? 'latest';
+    // switch ($sort) {
+    //   case 'popular':
+    //     $builder->orderBy('a.views', 'DESC');
+    //     break;
+    //   case 'alphabetical':
+    //     $builder->orderBy('a.title', 'ASC');
+    //     break;
+    //   case 'reverse_alphabetical':
+    //     $builder->orderBy('a.title', 'DESC');
+    //     break;
+    //   case 'latest':
+    //   default:
+    //     $builder->orderBy('a.created_at', 'DESC');
+    //     break;
+    // }
+
+    return $builder->get()->getResultArray();
+  }
   /**
    * Mendapatkan data artikel untuk halaman landing
    */
@@ -112,6 +173,20 @@ class ArticleModel extends Model
     return $builder->get()->getResultArray();
   }
 
+  public function getAllCategories()
+  {
+    $builder = $this->db->table($this->table);
+    $builder->select('category');
+    $builder->where('category IS NOT NULL');
+    $builder->where('category !=', '');
+    $builder->groupBy('category');
+    $builder->orderBy('category', 'ASC');
+
+    $res = $builder->get()->getResultArray();
+
+    return array_column($res, 'category');
+  }
+
   /**
    * Mendapatkan artikel populer
    */
@@ -180,6 +255,16 @@ class ArticleModel extends Model
     $builder->join('users u', 'a.user_id = u.id', 'left');
     $builder->where('a.slug', $slug);
     $builder->where('a.status', 'published');
+
+    return $builder->get()->getRowArray();
+  }
+
+  public function getArticleById($id)
+  {
+    $builder = $this->db->table($this->table . ' a');
+    $builder->select('a.*, u.name as author_name');
+    $builder->join('users u', 'a.user_id = u.id', 'left');
+    $builder->where('a.id', $id);
 
     return $builder->get()->getRowArray();
   }

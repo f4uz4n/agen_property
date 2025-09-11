@@ -84,14 +84,6 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('disabled/(:num)', 'Kategori::disabled/$1');
   });
 
-  $routes->group('agen', function ($routes) {
-    $routes->get('/', 'Agen::index');
-    $routes->post('store', 'Agen::store');
-    $routes->get('(:num)', 'Agen::detail/$1');
-    $routes->post('update/(:num)', 'Agen::update/$1');
-    $routes->post('disabled/(:num)', 'Agen::disabled/$1');
-  });
-
   $routes->group('user', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'User::index');
     $routes->post('store', 'User::store');
