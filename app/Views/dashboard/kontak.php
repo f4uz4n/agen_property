@@ -14,7 +14,7 @@
             <div class="form-group">
               <label for="<?= $item['type'] ?>"><?= ucfirst($item['type']) ?></label>
               <input type="text" class="form-control" id="<?= $item['type'] ?>" name="<?= $item['id'] ?>"
-                value="<?= $item['value'] ?>">
+                value="<?= esc($item['value']) ?>">
             </div>
           </div>
         <?php endforeach ?>

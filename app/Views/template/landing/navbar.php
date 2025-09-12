@@ -1,13 +1,13 @@
 <div class="container">
   <div class="row justify-content-end py-1 fw-semibold">
     <div class="col-auto me-3">
-      <a href="<?= base_url('tentang') ?>" class="text-decoration-none">Tentang Sampro</a>
+      <a href="#tentang" class="text-decoration-none">Tentang Sampro</a>
     </div>
     <div class="col-auto me-3">
       <a href="<?= base_url('artikel') ?>" class="text-decoration-none">Artikel</a>
     </div>
     <div class="col-auto">
-      <a href="<?= base_url('kontak') ?>" class="text-decoration-none">Kontak</a>
+      <a href="#kontak" class="text-decoration-none">Kontak</a>
     </div>
   </div>
 </div>
@@ -30,9 +30,6 @@
         </li>
         <li class="nav-item me-2">
           <a class="nav-link" href="<?= base_url('agen') ?>">Agen</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('properti') ?>">Properti Baru</a>
         </li>
       </ul>
       <ul class="navbar-nav mb-2 mb-lg-0">

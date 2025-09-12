@@ -1,15 +1,12 @@
-<?= $this->extend('template/dashboard') ?>
-
-<?= $this->section('content') ?>
 <div class="page-header">
   <h3 class="page-title">
-    <span class="page-title-icon bg-gradient-info text-white me-2">
-      <i class="mdi mdi-account"></i>
+    <span class="text-center bg-gradient-info text-white rounded p-1 me-2">
+      <i class="fas fa-user"></i>
     </span>
     Detail Penjualan Agen - <?= $agen['name'] ?>
   </h3>
-  <nav aria-label="breadcrumb">
-    <ul class="breadcrumb">
+  <nav class="mt-2" aria-label="breadcrumb">
+    <ul class="breadcrumb ps-0">
       <li class="breadcrumb-item"><a href="<?= base_url('dashboard/laporan') ?>">Laporan</a></li>
       <li class="breadcrumb-item"><a href="<?= base_url('dashboard/laporan/performa-agen') ?>">Performa Agen</a></li>
       <li class="breadcrumb-item active" aria-current="page">Detail Agen</li>
@@ -18,7 +15,7 @@
 </div>
 
 <!-- Filter Section -->
-<div class="row">
+<div class="row mt-3">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
@@ -32,33 +29,18 @@
                 <option value="<?= $tahun['tahun'] ?>" <?= $tahun['tahun'] == $tahun_terpilih ? 'selected' : '' ?>>
                   <?= $tahun['tahun'] ?>
                 </option>
-              <?php endforeach; ?>
+              <?php endforeach ?>
             </select>
           </div>
           <div class="col-md-4">
             <label for="bulan" class="form-label">Bulan</label>
             <select class="form-select" id="bulan" name="bulan" onchange="this.form.submit()">
               <option value="">Semua Bulan</option>
-              <?php
-              $bulan_names = [
-                1 => 'Januari',
-                2 => 'Februari',
-                3 => 'Maret',
-                4 => 'April',
-                5 => 'Mei',
-                6 => 'Juni',
-                7 => 'Juli',
-                8 => 'Agustus',
-                9 => 'September',
-                10 => 'Oktober',
-                11 => 'November',
-                12 => 'Desember'
-              ];
-              foreach ($bulan_tersedia as $bulan): ?>
+              <?php foreach ($bulan_tersedia as $bulan): ?>
                 <option value="<?= $bulan['bulan'] ?>" <?= $bulan['bulan'] == $bulan_terpilih ? 'selected' : '' ?>>
                   <?= $bulan_names[$bulan['bulan']] ?>
                 </option>
-              <?php endforeach; ?>
+              <?php endforeach ?>
             </select>
           </div>
           <div class="col-md-4">
@@ -76,7 +58,7 @@
 </div>
 
 <!-- Info Agen -->
-<div class="row">
+<div class="row mt-3">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
@@ -171,7 +153,7 @@
 </div>
 
 <!-- Detail Penjualan -->
-<div class="row">
+<div class="row mt-3">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
@@ -215,7 +197,7 @@
 </div>
 
 <!-- Back Button -->
-<div class="row">
+<div class="row mt-3">
   <div class="col-12">
     <a href="<?= base_url('dashboard/laporan/performa-agen?tahun=' . $tahun_terpilih . '&bulan=' . $bulan_terpilih) ?>"
       class="btn btn-secondary">
@@ -224,17 +206,12 @@
   </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
+<?= $this->section('js') ?>
 <script>
   $(document).ready(function () {
     $('#tableDetailPenjualan').DataTable({
       "pageLength": 25,
       "order": [[1, "desc"]], // Sort by Tanggal Penjualan
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
-      }
     });
   });
 </script>

@@ -85,19 +85,19 @@
             <h5 class="fw-semibold mb-3">Statistik Kami</h5>
             <div class="row g-3 text-center">
               <div class="col-6">
-                <div class="h3 fw-bold text-primary">500+</div>
+                <div class="h3 fw-bold text-primary"><?= $stat['transaksi'] ?></div>
                 <div class="small text-muted">Properti Terjual</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary">1000+</div>
+                <div class="h3 fw-bold text-primary"><?= $stat['klien'] ?></div>
                 <div class="small text-muted">Klien Puas</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary">15+</div>
+                <div class="h3 fw-bold text-primary"><?= $stat['tahun'] ?></div>
                 <div class="small text-muted">Tahun Pengalaman</div>
               </div>
               <div class="col-6">
-                <div class="h3 fw-bold text-primary">50+</div>
+                <div class="h3 fw-bold text-primary"><?= $stat['kota'] ?></div>
                 <div class="small text-muted">Kota Terjangkau</div>
               </div>
             </div>
@@ -180,7 +180,7 @@
               </div>
               <div>
                 <div class="fw-semibold">Terpercaya</div>
-                <div class="small text-muted">15+ tahun pengalaman</div>
+                <div class="small text-muted"><?= $stat['tahun'] ?> tahun pengalaman</div>
               </div>
             </div>
           </div>
@@ -254,24 +254,23 @@
       <p class="section-subtitle">Pengalaman nyata dari mereka yang telah menemukan propertinya</p>
     </div>
     <div class="row g-4">
-      <?php for ($i = 1; $i <= 3; $i++): ?>
+      <?php foreach ($testimoni as $key => $item): ?>
         <div class="col-md-6 col-lg-4">
           <div class="card h-100 border-0 shadow-sm">
             <div class="card-body">
               <div class="d-flex align-items-center mb-3">
-                <img src="<?= base_url('public/images/faces/face' . (10 + $i) . '.jpg') ?>" class="rounded-circle me-3"
+                <img src="<?= base_url('public/images/faces/face' . (10 + $key) . '.jpg') ?>" class="rounded-circle me-3"
                   width="48" height="48" alt="Klien">
                 <div>
-                  <div class="fw-semibold">Klien <?= $i ?></div>
-                  <div class="text-muted small">Jakarta</div>
+                  <div class="fw-semibold"><?= $item['name'] ?></div>
+                  <div class="text-muted small"><?= $item['alamat'] ?></div>
                 </div>
               </div>
-              <p class="mb-0">Layanan cepat, ramah, dan sangat membantu. Saya berhasil menemukan rumah yang sesuai budget
-                dalam waktu singkat. Sangat direkomendasikan!</p>
+              <p class="mb-0"><?= $item['text'] ?></p>
             </div>
           </div>
         </div>
-      <?php endfor; ?>
+      <?php endforeach ?>
     </div>
   </div>
 </section>
@@ -312,11 +311,10 @@
         <div class="h-100 p-4 bg-light rounded-3">
           <h5 class="fw-semibold mb-3">Kantor Pusat</h5>
           <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i><?= $contact['alamat'] ?></p>
-          <p class="mb-1"><i class="fas fa-phone me-2 text-primary"></i>(021) 123-4567</p>
+          <p class="mb-1"><i class="fas fa-phone me-2 text-primary"></i><?= $contact['telepon'] ?></p>
           <p class="mb-3"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></p>
           <div class="ratio ratio-16x9 rounded-3 overflow-hidden">
-            <iframe src="https://maps.google.com/maps?q=Jakarta&t=&z=12&ie=UTF8&iwloc=&output=embed" style="border:0;"
-              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <?= $contact['maps'] ?>
           </div>
         </div>
       </div>
@@ -332,15 +330,14 @@
         <h5 class="fw-semibold">Perusahaan Properti</h5>
         <p class="text-white-50 mb-3">Partner terpercaya untuk jual-beli dan sewa properti di seluruh Indonesia.</p>
         <div class="d-flex gap-3">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="<?= $contact['facebook'] ?>"><i class="fab fa-facebook"></i></a>
+          <a href="<?= $contact['instagram'] ?>"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
       <div class="col-6 col-lg-2">
         <h6 class="fw-semibold">Perusahaan</h6>
         <ul class="list-unstyled text-white-50 mb-0">
-          <li><a href="<?= base_url('tentang') ?>">Tentang</a></li>
+          <li><a href="#tentang">Tentang</a></li>
           <li><a href="<?= base_url('artikel') ?>">Artikel</a></li>
         </ul>
       </div>
@@ -354,11 +351,11 @@
       <div class="col-lg-4">
         <h6 class="fw-semibold">Kontak Cepat</h6>
         <ul class="list-unstyled text-white-50 mb-3">
-          <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i>(021) 123-4567</li>
+          <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i><?= $contact['telepon'] ?></li>
           <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></li>
           <li><i class="fas fa-clock me-2 text-primary"></i>Senin - Jumat, 09.00 - 17.00</li>
         </ul>
-        <a href="<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary w-100">
+        <a href="wa.me/<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary w-100">
           <i class="fab fa-whatsapp me-2"></i>Chat via WhatsApp
         </a>
       </div>

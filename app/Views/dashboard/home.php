@@ -1,1 +1,1 @@
-Ini dashboard
+<?= $this->include('dashboard/laporan/header') ?>

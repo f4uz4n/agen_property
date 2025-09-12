@@ -40,7 +40,7 @@ class LaporanModel extends Model
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('agents a', 't.property_id = a.property_id', 'left');
     $builder->join('users u', 'a.agent_id = u.id', 'left');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
     if ($tahun) {
@@ -69,7 +69,7 @@ class LaporanModel extends Model
             SUM(t.price) as total_penjualan,
             AVG(t.price) as rata_rata_harga
         ');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     if ($tahun) {
       $builder->where('YEAR(t.tanggal_penjualan)', $tahun);
@@ -79,6 +79,28 @@ class LaporanModel extends Model
     $builder->orderBy('bulan', 'ASC');
 
     return $builder->get()->getResultArray();
+  }
+
+  public function getStatistik()
+  {
+    $builder = $this->db->table('transactions t');
+    $builder->select('COUNT(t.id) as total_transaksi, COUNT(DISTINCT t.buyer) as total_buyer, COUNT(DISTINCT p.city) as total_kota');
+    $builder->join('properties p', 't.property_id = p.id', 'left');
+    $builder->where('t.status', 'Valid');
+    $transaksi = $builder->get()->getRowArray();
+
+    $transaksi['total_transaksi'] = (int) max(floor($transaksi['total_transaksi'] / 100) * 100, 500);
+    $transaksi['total_buyer'] = (int) max(floor($transaksi['total_buyer'] / 100) * 100, 400);
+    $transaksi['total_kota'] = (int) max(floor($transaksi['total_kota'] / 10) * 10, 50);
+    $tahunAwal = 2010;
+    $tahun = (int) floor((date('Y') - $tahunAwal) / 5) * 5;
+    $data = [
+      'transaksi' => $transaksi['total_transaksi'] . '+',
+      'klien' => $transaksi['total_buyer'] . '+',
+      'tahun' => $tahun . '+',
+      'kota' => $transaksi['total_kota'] . '+',
+    ];
+    return $data;
   }
 
   /**
@@ -99,7 +121,7 @@ class LaporanModel extends Model
         ');
     $builder->join('users u', 'a.agent_id = u.id', 'left');
     $builder->join('transactions t', 'a.property_id = t.property_id', 'left');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
     if ($tahun) {
@@ -138,7 +160,7 @@ class LaporanModel extends Model
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('agents a', 't.property_id = a.property_id', 'left');
     $builder->where('a.agent_id', $agent_id);
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
     if ($tahun) {
@@ -168,7 +190,7 @@ class LaporanModel extends Model
             MIN(t.price) as harga_terendah,
             MAX(t.price) as harga_tertinggi
         ');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
     if ($tahun) {
@@ -198,7 +220,7 @@ class LaporanModel extends Model
         ');
     $builder->join('properties p', 't.property_id = p.id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
     if ($tahun) {
@@ -223,7 +245,7 @@ class LaporanModel extends Model
   {
     $builder = $this->db->table('transactions t');
     $builder->select('DISTINCT YEAR(t.tanggal_penjualan) as tahun');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
     $builder->where('t.tanggal_penjualan IS NOT NULL');
     $builder->orderBy('tahun', 'DESC');
 
@@ -237,7 +259,7 @@ class LaporanModel extends Model
   {
     $builder = $this->db->table('transactions t');
     $builder->select('DISTINCT MONTH(t.tanggal_penjualan) as bulan');
-    $builder->where('t.status', 'selesai');
+    $builder->where('t.status', 'Valid');
     $builder->where('t.tanggal_penjualan IS NOT NULL');
 
     if ($tahun) {

@@ -2,29 +2,29 @@
 
 namespace App\Controllers\Dashboard;
 
-use App\Controllers\BaseController;
+use App\Models\UserModel;
 use App\Models\LaporanModel;
 use App\Models\CategoryModel;
-use App\Models\UserModel;
+use App\Controllers\BaseController;
 
 class Laporan extends BaseController
 {
+  protected $userModel;
   protected $laporanModel;
   protected $categoryModel;
-  protected $userModel;
 
   public function __construct()
   {
+    $this->userModel = new UserModel();
     $this->laporanModel = new LaporanModel();
     $this->categoryModel = new CategoryModel();
-    $this->userModel = new UserModel();
   }
 
   /**
    * Halaman utama laporan
    */
   public function index()
-  {
+  {    
     $data = [
       'title' => 'Laporan Penjualan & Performa Agen',
       'tahun_terpilih' => $this->request->getGet('tahun') ?? date('Y'),
@@ -37,10 +37,11 @@ class Laporan extends BaseController
       ),
       'statistik_per_bulan' => $this->laporanModel->getStatistikPenjualanPerBulan(
         $this->request->getGet('tahun') ?? date('Y')
-      )
+      ),
+      'bulan_names' => get_bulan(),
     ];
 
-    return view('dashboard/laporan/index', $data);
+    return $this->template->display('dashboard/laporan/index', $data);
   }
 
   /**
@@ -59,10 +60,11 @@ class Laporan extends BaseController
       'bulan_tersedia' => $this->laporanModel->getBulanTersedia($tahun),
       'laporan_penjualan' => $this->laporanModel->getLaporanPenjualan($tahun, $bulan),
       'laporan_by_kategori' => $this->laporanModel->getLaporanPenjualanByKategori($tahun, $bulan),
-      'total_statistik' => $this->laporanModel->getTotalStatistikPenjualan($tahun, $bulan)
+      'total_statistik' => $this->laporanModel->getTotalStatistikPenjualan($tahun, $bulan),
+      'bulan_names' => get_bulan(),
     ];
 
-    return view('dashboard/laporan/penjualan', $data);
+    return $this->template->display('dashboard/laporan/penjualan', $data);
   }
 
   /**
@@ -80,10 +82,11 @@ class Laporan extends BaseController
       'tahun_tersedia' => $this->laporanModel->getTahunTersedia(),
       'bulan_tersedia' => $this->laporanModel->getBulanTersedia($tahun),
       'laporan_performa' => $this->laporanModel->getLaporanPerformaAgen($tahun, $bulan),
-      'total_statistik' => $this->laporanModel->getTotalStatistikPenjualan($tahun, $bulan)
+      'total_statistik' => $this->laporanModel->getTotalStatistikPenjualan($tahun, $bulan),
+      'bulan_names' => get_bulan(),
     ];
 
-    return view('dashboard/laporan/performa_agen', $data);
+    return $this->template->display('dashboard/laporan/performa_agen', $data);
   }
 
   /**
@@ -107,10 +110,11 @@ class Laporan extends BaseController
       'tahun_tersedia' => $this->laporanModel->getTahunTersedia(),
       'bulan_tersedia' => $this->laporanModel->getBulanTersedia($tahun),
       'agen' => $agen,
-      'detail_penjualan' => $this->laporanModel->getDetailPenjualanAgen($agent_id, $tahun, $bulan)
+      'detail_penjualan' => $this->laporanModel->getDetailPenjualanAgen($agent_id, $tahun, $bulan),
+      'bulan_names' => get_bulan(),
     ];
 
-    return view('dashboard/laporan/detail_agen', $data);
+    return $this->template->display('dashboard/laporan/detail_agen', $data);
   }
 
   /**
