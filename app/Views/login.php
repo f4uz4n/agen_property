@@ -180,7 +180,7 @@
           <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
         </div>
         <div class="text-end">
-          <a href="#" class="forgot-password">Lupa password?</a>
+          <!-- <a href="#" class="forgot-password">Lupa password?</a> -->
         </div>
 
         <div class="mt-3 d-grid gap-2">
