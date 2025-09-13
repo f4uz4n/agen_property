@@ -2,17 +2,20 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
 use App\Models\ContactModel;
 use App\Models\LaporanModel;
 use App\Controllers\BaseController;
 
 class Home extends BaseController
 {
+    protected $userModel;
     protected $contactModel;
     protected $laporanModel;
 
     public function __construct()
     {
+        $this->userModel = new UserModel();
         $this->contactModel = new ContactModel();
         $this->laporanModel = new LaporanModel();
     }
@@ -30,5 +33,23 @@ class Home extends BaseController
             'testimoni' => $testimoni,
         ];
         return $this->template->displayLanding('home', $data);
+    }
+
+    public function agen()
+    {
+        $data = [
+            'data' => $this->userModel->getAgents(),
+        ];
+        return $this->template->displayLanding('agen', $data);
+    }
+
+    public function kebijakan()
+    {
+        return $this->template->displayLanding('kebijakan');
+    }
+
+    public function syarat()
+    {
+        return $this->template->displayLanding('syarat');
     }
 }

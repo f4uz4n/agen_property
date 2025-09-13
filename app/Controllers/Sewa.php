@@ -2,16 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\PropertyModel;
+use App\Models\ArticleModel;
+use App\Models\ContactModel;
 use App\Models\CategoryModel;
+use App\Models\PropertyModel;
+use App\Controllers\BaseController;
 
 class Sewa extends BaseController
 {
+  protected $articleModel;
+  protected $contactModel;
   protected $PropertyModel;
   protected $CategoryModel;
 
   public function __construct()
   {
+    $this->articleModel = new ArticleModel();
+    $this->contactModel = new ContactModel();
     $this->PropertyModel = new PropertyModel();
     $this->CategoryModel = new CategoryModel();
   }
@@ -35,12 +42,16 @@ class Sewa extends BaseController
 
     // Ambil statistik properti sewa
     $stats = $this->PropertyModel->getRentalStats();
+    $articles = $this->articleModel->getDataForLanding(3, 0, []);
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'properties' => $properties,
       'categories' => $categories,
       'stats' => $stats,
-      'filters' => $filters
+      'filters' => $filters,
+      'articles' => $articles,
+      'page' => 1
     ];
 
     return $this->template->displayLanding('sewa', $data);
@@ -90,6 +101,7 @@ class Sewa extends BaseController
     $categories = $this->PropertyModel->getCategoriesForRentalFilter();
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'properties' => $properties,
       'categories' => $categories,
       'filters' => $filters,

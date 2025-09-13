@@ -3,13 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\ArticleModel;
+use App\Models\ContactModel;
+use App\Controllers\BaseController;
 
 class Artikel extends BaseController
 {
+  protected $contactModel;
   protected $articleModel;
 
   public function __construct()
   {
+    $this->contactModel = new ContactModel();
     $this->articleModel = new ArticleModel();
   }
 
@@ -36,6 +40,7 @@ class Artikel extends BaseController
     $stats = $this->articleModel->getArticleStats();
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'articles' => $articles,
       'categories' => $categories,
       'popularArticles' => $popularArticles,
@@ -94,6 +99,7 @@ class Artikel extends BaseController
     $stats = $this->articleModel->getArticleStats();
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'articles' => $articles,
       'categories' => $categories,
       'popularArticles' => $popularArticles,
@@ -126,6 +132,7 @@ class Artikel extends BaseController
     $popularArticles = $this->articleModel->getPopularArticles(5);
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'article' => $article,
       'relatedArticles' => $relatedArticles,
       'popularArticles' => $popularArticles

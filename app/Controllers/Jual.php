@@ -2,16 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\PropertyModel;
+use App\Models\ArticleModel;
+use App\Models\ContactModel;
 use App\Models\CategoryModel;
+use App\Models\PropertyModel;
+use App\Controllers\BaseController;
 
 class Jual extends BaseController
 {
+  protected $contactModel;
+  protected $articleModel;
   protected $PropertyModel;
   protected $CategoryModel;
 
   public function __construct()
   {
+    $this->contactModel = new ContactModel();
+    $this->articleModel = new ArticleModel();
     $this->PropertyModel = new PropertyModel();
     $this->CategoryModel = new CategoryModel();
   }
@@ -36,11 +43,16 @@ class Jual extends BaseController
     // Ambil statistik properti
     $stats = $this->PropertyModel->getPropertyStats();
 
+    $articles = $this->articleModel->getDataForLanding(3, 0, []);
+
     $data = [
+      'contact' => $this->contactModel->getData(),
       'properties' => $properties,
       'categories' => $categories,
       'stats' => $stats,
-      'filters' => $filters
+      'filters' => $filters,
+      'articles' => $articles,
+      'page' => 1
     ];
 
     return $this->template->displayLanding('jual', $data);
@@ -90,6 +102,7 @@ class Jual extends BaseController
     $categories = $this->PropertyModel->getCategoriesForFilter();
 
     $data = [
+      'contact' => $this->contactModel->getData(),
       'properties' => $properties,
       'categories' => $categories,
       'filters' => $filters,
@@ -97,5 +110,15 @@ class Jual extends BaseController
     ];
 
     return $this->template->displayLanding('jual', $data);
+  }
+
+  public function detail($id)
+  {
+    $property = $this->PropertyModel->getDataById($id);
+    $data = [
+      'contact' => $this->contactModel->getData(),
+      'data' => $property,
+    ];
+    return $this->template->displayLanding('detail', $data);
   }
 }

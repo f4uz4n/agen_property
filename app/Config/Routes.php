@@ -6,16 +6,20 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->get('tentang', 'Home::tentang');
 $routes->get('agen', 'Home::agen');
-$routes->get('kontak', 'Home::kontak');
+$routes->get('kebijakan', 'Home::kebijakan');
+$routes->get('syarat', 'Home::syarat');
 
 $routes->get('jual', 'Jual::index');
 $routes->get('jual/search', 'Jual::search');
 $routes->get('jual/get_ajax', 'Jual::get_ajax');
+$routes->get('jual/detail/(:num)', 'Jual::detail/$1');
+
 $routes->get('sewa', 'Sewa::index');
 $routes->get('sewa/search', 'Sewa::search');
 $routes->get('sewa/get_ajax', 'Sewa::get_ajax');
+$routes->get('sewa/detail/(:num)', 'Sewa::detail/$1');
+
 $routes->get('artikel', 'Artikel::index');
 $routes->get('artikel/search', 'Artikel::search');
 $routes->get('artikel/get_ajax', 'Artikel::get_ajax');

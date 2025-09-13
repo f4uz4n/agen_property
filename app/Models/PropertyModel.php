@@ -98,13 +98,14 @@ class PropertyModel extends Model
     $data = $query->getRowArray();
 
     $builder = $this->db->table('agents a');
-    $builder->select('u.name');
+    $builder->select('u.name, u.phone, u.location, u.email');
     $builder->join('users u', 'a.agent_id = u.id', 'left');
     $builder->where('a.property_id', $data['id']);
     $query = $builder->get();
     $tempAgents = $query->getResultArray();
     $agents = array_column($tempAgents, 'name');
     $data['agen'] = implode(';', $agents);
+    $data['agents'] = $tempAgents;
 
     $builder = $this->db->table('property_images pi');
     $builder->select('pi.*');
@@ -137,7 +138,7 @@ class PropertyModel extends Model
     $builder = $this->db->table($this->table . ' p');
     $builder->select('p.*, c.name AS kategori');
     $builder->join('categories c', 'p.type = c.id', 'left');
-    $builder->where('p.status', 'aktif');
+    $builder->where('p.status', 'dijual');
     $builder->where('p.publish', 1);
 
     // Filter berdasarkan lokasi
@@ -186,7 +187,7 @@ class PropertyModel extends Model
       $builder->limit(1);
       $query = $builder->get();
       $image = $query->getRowArray();
-      $data[$key]['primary_image'] = $image ? $image['image_path'] : 'default.jpg';
+      $data[$key]['primary_image'] = $image ? $image['image_url'] : 'default.jpg';
     }
 
     return $data;
@@ -201,7 +202,6 @@ class PropertyModel extends Model
     $builder->select('c.*, COUNT(p.id) as property_count');
     $builder->join('properties p', 'c.id = p.type', 'left');
     $builder->where('c.status', 'aktif');
-    $builder->where('p.status', 'aktif');
     $builder->where('p.publish', 1);
     $builder->groupBy('c.id, c.name, c.status');
     $builder->orderBy('c.name', 'ASC');
@@ -221,7 +221,7 @@ class PropertyModel extends Model
       MIN(price) as min_price,
       MAX(price) as max_price
     ');
-    $builder->where('status', 'aktif');
+    $builder->where('status', 'dijual');
     $builder->where('publish', 1);
 
     return $builder->get()->getRowArray();
@@ -284,7 +284,7 @@ class PropertyModel extends Model
       $builder->limit(1);
       $query = $builder->get();
       $image = $query->getRowArray();
-      $data[$key]['primary_image'] = $image ? $image['image_path'] : 'default.jpg';
+      $data[$key]['primary_image'] = $image ? $image['image_url'] : 'default.jpg';
     }
 
     return $data;

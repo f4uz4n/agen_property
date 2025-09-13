@@ -327,7 +327,7 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-md-6 col-lg-4">
-        <h5 class="fw-semibold">Perusahaan Properti</h5>
+        <h5 class="fw-semibold">Sampro Indonesia</h5>
         <p class="text-white-50 mb-3">Partner terpercaya untuk jual-beli dan sewa properti di seluruh Indonesia.</p>
         <div class="d-flex gap-3">
           <a href="<?= $contact['facebook'] ?>"><i class="fab fa-facebook"></i></a>
@@ -364,8 +364,8 @@
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
       <span>© <?= date('Y') ?> Perusahaan Properti. All rights reserved.</span>
       <div class="d-flex gap-3">
-        <a href="#">Kebijakan Privasi</a>
-        <a href="#">Syarat & Ketentuan</a>
+        <a href="<?= base_url('kebijakan') ?>">Kebijakan Privasi</a>
+        <a href="<?= base_url('syarat') ?>">Syarat & Ketentuan</a>
       </div>
     </div>
   </div>

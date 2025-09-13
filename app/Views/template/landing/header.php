@@ -7,6 +7,9 @@
   <title>Sampro Indonesia</title>
   <link rel="stylesheet" href="<?= base_url('public/css/bootstrap.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/font-awesome/css/all.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.theme.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.carousel.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.transitions.css') ?>">
 </head>
 
 <body style="background-color: #f1f5f9">

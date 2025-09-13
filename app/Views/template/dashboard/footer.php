@@ -61,25 +61,6 @@
     });
   <?php endif ?>
 
-  // ~inisiasi datetimepicker
-  // $('.datetimepicker').DateTimePicker({
-  //   time: false,
-  //   lang: 'id',
-  //   format: 'yyyy-MM-DD'
-  // });
-
-  // ~file upload
-  $(document).on("click", ".file-upload-browse", function () {
-    const file = $(this).parent().parent().parent().find(".file-upload-default");
-    file.trigger("click");
-  });
-  $(document).on("change", ".file-upload-default", function () {
-    const fileName = $(this)
-      .val()
-      .replace(/C:\\fakepath\\/i, "");
-    $(this).closest(".form-group").find(".file-upload-info").val(fileName);
-  });
-
   $(document).on('show.tab', 'a[data-toggle="tab"]', function (e) {
     localStorage.setItem('activeTab', $(e.target).attr('href'));
   });

@@ -12,26 +12,6 @@
     background-color: var(--light-blue);
   }
 
-  .navbar-brand {
-    font-weight: 700;
-    color: var(--primary-color) !important;
-  }
-
-  .navbar-brand i {
-    color: var(--primary-color);
-    margin-right: 8px;
-  }
-
-  .nav-link {
-    color: var(--text-dark) !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-
-  .nav-link:hover {
-    color: var(--primary-color) !important;
-  }
-
   .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -415,117 +395,74 @@
 <div class="container">
   <div class="search-card">
     <form method="GET" action="<?= base_url('sewa/search') ?>">
-      <div class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label">
-            <i class="fas fa-map-marker-alt text-primary me-2"></i>
-            Lokasi
-          </label>
-          <input type="text" class="form-control" name="location" placeholder="cth., Jakarta, Bali"
-            value="<?= $filters['location'] ?? '' ?>">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">
-            <i class="fas fa-home text-primary me-2"></i>
-            Tipe Properti
-          </label>
-          <select class="form-select" name="type">
-            <option value="">Semua Tipe</option>
-            <?php foreach ($categories as $category): ?>
-              <option value="<?= $category['id'] ?>" <?= ($filters['type'] ?? '') == $category['id'] ? 'selected' : '' ?>>
-                <?= $category['name'] ?> (<?= $category['property_count'] ?>)
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">
-            <i class="fas fa-bed text-primary me-2"></i>
-            Kamar Tidur
-          </label>
-          <select class="form-select" name="bedrooms">
-            <option value="">Berapapun</option>
-            <option value="1" <?= ($filters['bedrooms'] ?? '') == '1' ? 'selected' : '' ?>>1</option>
-            <option value="2" <?= ($filters['bedrooms'] ?? '') == '2' ? 'selected' : '' ?>>2</option>
-            <option value="3" <?= ($filters['bedrooms'] ?? '') == '3' ? 'selected' : '' ?>>3</option>
-            <option value="4+" <?= ($filters['bedrooms'] ?? '') == '4+' ? 'selected' : '' ?>>4+</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">
-            <i class="fas fa-money-bill text-primary me-2"></i>
-            Rentang Harga Sewa
-          </label>
-          <div class="price-range">
-            <input type="range" class="range-slider" min="0" max="<?= $stats['max_price'] ?? 50000000 ?>"
-              value="<?= $filters['max_price'] ?? ($stats['max_price'] ?? 50000000) / 2 ?>" id="priceRange"
-              name="max_price">
-            <div class="price-display">
-              <span>Rp 0</span>
-              <span id="maxPriceDisplay">Rp <?= number_format($stats['max_price'] ?? 50000000, 0, ',', '.') ?></span>
+      <div class="row g-3 align-items-start">
+        <div class="col-lg-10">
+          <div class="row g-3">
+            <div class="col-md-4 ps-0">
+              <label class="form-label">
+                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                Lokasi
+              </label>
+              <input type="text" class="form-control" name="location" placeholder="cth., Jakarta, Bali"
+                value="<?= $filters['location'] ?? '' ?>">
             </div>
-            <input type="hidden" name="min_price" value="0">
+            <div class="col-md-4">
+              <label class="form-label">
+                <i class="fas fa-home text-primary me-2"></i>
+                Tipe Properti
+              </label>
+              <select class="form-select" name="type">
+                <option value="">Semua Tipe</option>
+                <?php foreach ($categories as $category): ?>
+                  <option value="<?= $category['id'] ?>" <?= ($filters['type'] ?? '') == $category['id'] ? 'selected' : '' ?>>
+                    <?= $category['name'] ?> (<?= $category['property_count'] ?>)
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="col-md-4 pe-0">
+              <label class="form-label">
+                <i class="fas fa-bed text-primary me-2"></i>
+                Kamar Tidur
+              </label>
+              <select class="form-select" name="bedrooms">
+                <option value="">Berapapun</option>
+                <option value="1" <?= ($filters['bedrooms'] ?? '') == '1' ? 'selected' : '' ?>>1</option>
+                <option value="2" <?= ($filters['bedrooms'] ?? '') == '2' ? 'selected' : '' ?>>2</option>
+                <option value="3" <?= ($filters['bedrooms'] ?? '') == '3' ? 'selected' : '' ?>>3</option>
+                <option value="4+" <?= ($filters['bedrooms'] ?? '') == '4+' ? 'selected' : '' ?>>4+</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">
+                <i class="fas fa-money-bill text-primary me-2"></i>
+                Rentang Harga
+              </label>
+              <div class="row price-range align-items-center">
+                <div class="col">
+                  <label for="min_price" class="form-label">Harga Minimum</label>
+                  <input type="number" class="form-control" id="min_price" name="min_price" placeholder="min"
+                    value="<?= $filters['min_price'] ?? '' ?>">
+                </div>
+                <div class="col-auto pt-4">s/d</div>
+                <div class="col">
+                  <label for="max_price" class="form-label">Harga Maksimum</label>
+                  <input type="number" class="form-control" id="max_price" name="max_price" placeholder="max"
+                    value="<?= $filters['max_price'] ?? '' ?>">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn search-btn w-100">
-            <i class="fas fa-search me-2"></i>
-            Cari
+        <div class="col-lg-2">
+          <button type="submit" class="btn btn-primary btn-icon-text w-100" style="margin-top: 2.3rem;">
+            <i class="fas fa-search btn-icon-prepand"></i> Cari
           </button>
         </div>
       </div>
     </form>
   </div>
 </div>
-
-<!-- Property Categories -->
-<section class="category-section">
-  <div class="container">
-    <div class="row g-4">
-      <?php
-      $category_icons = [
-        'Rumah' => 'fas fa-home',
-        'Apartemen' => 'fas fa-building',
-        'Ruko' => 'fas fa-store',
-        'Tanah' => 'fas fa-map',
-        'Villa' => 'fas fa-home',
-        'Kontrakan' => 'fas fa-door-open'
-      ];
-      ?>
-      <?php foreach ($categories as $category): ?>
-        <div class="col-md-3 col-sm-6">
-          <div class="category-item" onclick="filterByCategory(<?= $category['id'] ?>)">
-            <div class="category-icon">
-              <i class="<?= $category_icons[$category['name']] ?? 'fas fa-home' ?>"></i>
-            </div>
-            <h5 class="category-title"><?= $category['name'] ?></h5>
-            <p class="category-desc"><?= $category['property_count'] ?> properti tersedia</p>
-          </div>
-        </div>
-      <?php endforeach; ?>
-
-      <!-- Layanan Tambahan -->
-      <div class="col-md-3 col-sm-6">
-        <div class="category-item">
-          <div class="category-icon">
-            <i class="fas fa-calculator"></i>
-          </div>
-          <h5 class="category-title">Simulasi Sewa</h5>
-          <p class="category-desc">Hitung biaya sewa bulanan</p>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="category-item">
-          <div class="category-icon">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <h5 class="category-title">Titip Sewa</h5>
-          <p class="category-desc">Serahkan ke agen kami</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- New Projects Section -->
 <section class="projects-section">
@@ -584,8 +521,7 @@
                   </div>
                 </div>
                 <p class="project-price">Rp <?= number_format($property['price'], 0, ',', '.') ?>/bulan</p>
-                <a href="<?= base_url('properti/detail/' . $property['id']) ?>"
-                  class="btn btn-outline-primary btn-sm w-100">
+                <a href="<?= base_url('jual/detail/' . $property['id']) ?>" class="btn btn-outline-primary btn-sm w-100">
                   Lihat Detail
                 </a>
               </div>
@@ -619,89 +555,114 @@
   <div class="container">
     <div class="section-header">
       <div>
-        <h2 class="section-title">Tips Sewa Properti</h2>
-        <p class="section-subtitle">Panduan lengkap untuk menyewa properti yang tepat</p>
+        <h2 class="section-title">Artikel Terbaru</h2>
+        <p class="section-subtitle">Tips dan informasi terkini seputar properti dan investasi</p>
       </div>
-      <a href="#" class="btn btn-dark">Lihat Semua Tips</a>
+      <a href="<?= base_url('artikel') ?>" class="btn btn-dark">Lihat Semua Tips</a>
     </div>
 
     <div class="row g-4">
-      <div class="col-lg-4 col-md-6">
-        <div class="article-card">
-          <div class="article-image">
-            <div class="article-category">Tips Sewa</div>
-          </div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-date">
-                <i class="fas fa-calendar-alt text-primary me-1"></i>
-                15 Desember 2024
-              </span>
-              <span class="article-author">
-                <i class="fas fa-user text-primary me-1"></i>
-                Admin Sampro
-              </span>
+      <?php if (!empty($articles)): ?>
+        <?php foreach ($articles as $article): ?>
+          <div class="col-md-4 mb-3">
+            <div class="article-card">
+              <div class="article-image">
+                <?php if ($article['thumbnail'] && $article['thumbnail'] != 'default.jpg'): ?>
+                  <img src="<?= base_url($article['thumbnail']) ?>" alt="<?= $article['title'] ?>"
+                    style="width: 100%; height: 200px; object-fit: cover;">
+                <?php else: ?>
+                  <div
+                    style="width: 100%; height: 200px; background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                    <i class="fas fa-newspaper"></i>
+                  </div>
+                <?php endif; ?>
+                <div class="article-category"><?= $article['category'] ?? 'Umum' ?></div>
+              </div>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="article-date">
+                    <i class="fas fa-calendar-alt text-primary me-1"></i>
+                    <?= date('d F Y', strtotime($article['created_at'])) ?>
+                  </span>
+                  <span class="article-author">
+                    <i class="fas fa-user text-primary me-1"></i>
+                    <?= $article['author_name'] ?? 'Admin' ?>
+                  </span>
+                </div>
+                <h5 class="article-title"><?= $article['title'] ?></h5>
+                <p class="article-excerpt">
+                  <?= $article['excerpt'] ?: substr(strip_tags($article['content']), 0, 150) . '...' ?>
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <a href="<?= base_url('artikel/' . $article['slug']) ?>" class="article-link">
+                    Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
+                  </a>
+                  <small class="text-muted">
+                    <i class="fas fa-eye me-1"></i><?= $article['views'] ?? 0 ?>
+                  </small>
+                </div>
+              </div>
             </div>
-            <h5 class="article-title">Cara Memilih Lokasi Sewa yang Strategis</h5>
-            <p class="article-excerpt">
-              Memilih lokasi sewa yang strategis sangat penting untuk kenyamanan dan aksesibilitas.
-              Berikut tips memilih lokasi sewa yang tepat...
-            </p>
-            <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
           </div>
+        <?php endforeach ?>
+      <?php else: ?>
+        <div class="col-12 text-center">
+          <div class="py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">Tidak ada artikel ditemukan</h4>
+            <p class="text-muted">Coba ubah kriteria pencarian Anda</p>
+            <a href="<?= base_url('artikel') ?>" class="btn btn-primary">Lihat Semua Artikel</a>
+          </div>
+        </div>
+      <?php endif ?>
+    </div>
+  </div>
+</section>
+
+<!-- Footer konten -->
+<section class="pt-5 pb-4 bg-dark text-white footer-mini">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <h5 class="fw-semibold">Sampro Indonesia</h5>
+        <p class="text-white-50 mb-3">Partner terpercaya untuk jual-beli dan sewa properti di seluruh Indonesia.</p>
+        <div class="d-flex gap-3">
+          <a href="<?= $contact['facebook'] ?>"><i class="fab fa-facebook"></i></a>
+          <a href="<?= $contact['instagram'] ?>"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
-
-      <div class="col-lg-4 col-md-6">
-        <div class="article-card">
-          <div class="article-image">
-            <div class="article-category">Budget</div>
-          </div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-date">
-                <i class="fas fa-calendar-alt text-primary me-1"></i>
-                12 Desember 2024
-              </span>
-              <span class="article-author">
-                <i class="fas fa-user text-primary me-1"></i>
-                Tim Finance
-              </span>
-            </div>
-            <h5 class="article-title">Mengatur Budget Sewa Properti</h5>
-            <p class="article-excerpt">
-              Mengatur budget sewa yang tepat sangat penting untuk keuangan yang sehat.
-              Pelajari cara mengalokasikan budget sewa yang ideal...
-            </p>
-            <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-          </div>
-        </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-semibold">Perusahaan</h6>
+        <ul class="list-unstyled text-white-50 mb-0">
+          <li><a href="#tentang">Tentang</a></li>
+          <li><a href="<?= base_url('artikel') ?>">Artikel</a></li>
+        </ul>
       </div>
-
-      <div class="col-lg-4 col-md-6">
-        <div class="article-card">
-          <div class="article-image">
-            <div class="article-category">Legal</div>
-          </div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="article-date">
-                <i class="fas fa-calendar-alt text-primary me-1"></i>
-                10 Desember 2024
-              </span>
-              <span class="article-author">
-                <i class="fas fa-user text-primary me-1"></i>
-                Tim Legal
-              </span>
-            </div>
-            <h5 class="article-title">Aspek Legal dalam Sewa Properti</h5>
-            <p class="article-excerpt">
-              Memahami aspek legal dalam sewa properti sangat penting untuk melindungi hak Anda.
-              Pelajari dokumen dan perjanjian yang perlu diperhatikan...
-            </p>
-            <a href="#" class="article-link">Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i></a>
-          </div>
-        </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-semibold">Layanan</h6>
+        <ul class="list-unstyled text-white-50 mb-0">
+          <li><a href="<?= base_url('jual') ?>">Jual Properti</a></li>
+          <li><a href="<?= base_url('sewa') ?>">Sewa Properti</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="fw-semibold">Kontak Cepat</h6>
+        <ul class="list-unstyled text-white-50 mb-3">
+          <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i><?= $contact['telepon'] ?></li>
+          <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></li>
+          <li><i class="fas fa-clock me-2 text-primary"></i>Senin - Jumat, 09.00 - 17.00</li>
+        </ul>
+        <a href="wa.me/<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary w-100">
+          <i class="fab fa-whatsapp me-2"></i>Chat via WhatsApp
+        </a>
+      </div>
+    </div>
+    <hr class="border-secondary my-4">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
+      <span>© <?= date('Y') ?> Perusahaan Properti. All rights reserved.</span>
+      <div class="d-flex gap-3">
+        <a href="<?= base_url('kebijakan') ?>">Kebijakan Privasi</a>
+        <a href="<?= base_url('syarat') ?>">Syarat & Ketentuan</a>
       </div>
     </div>
   </div>
@@ -837,7 +798,7 @@
               </div>
             </div>
             <p class="project-price">Rp ${new Intl.NumberFormat('id-ID').format(property.price)}/bulan</p>
-            <a href="<?= base_url('properti/detail/') ?>${property.id}" class="btn btn-outline-primary btn-sm w-100">
+            <a href="<?= base_url('jual/detail/') ?>${property.id}" class="btn btn-outline-primary btn-sm w-100">
               Lihat Detail
             </a>
           </div>

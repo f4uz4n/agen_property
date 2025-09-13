@@ -471,12 +471,12 @@
         <div class="row" id="articlesContainer">
           <?php if (!empty($articles)): ?>
             <?php foreach ($articles as $article): ?>
-              <div class="col-md-6">
+              <div class="col-md-6 mb-3">
                 <div class="article-card">
                   <div class="article-image">
                     <?php if ($article['thumbnail'] && $article['thumbnail'] != 'default.jpg'): ?>
-                      <img src="<?= base_url('public/uploads/articles/' . $article['thumbnail']) ?>"
-                        alt="<?= $article['title'] ?>" style="width: 100%; height: 200px; object-fit: cover;">
+                      <img src="<?= base_url($article['thumbnail']) ?>" alt="<?= $article['title'] ?>"
+                        style="width: 100%; height: 200px; object-fit: cover;">
                     <?php else: ?>
                       <div
                         style="width: 100%; height: 200px; background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
@@ -511,7 +511,7 @@
                   </div>
                 </div>
               </div>
-            <?php endforeach; ?>
+            <?php endforeach ?>
           <?php else: ?>
             <div class="col-12 text-center">
               <div class="py-5">
@@ -531,21 +531,6 @@
             </button>
           </div>
         <?php endif; ?>
-
-        <!-- Pagination -->
-        <nav aria-label="Article pagination">
-          <ul class="pagination">
-            <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
-          </ul>
-        </nav>
       </div>
 
       <!-- Sidebar -->
@@ -601,6 +586,55 @@
             <?php endif; ?>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer konten -->
+<section class="pt-5 pb-4 bg-dark text-white footer-mini">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <h5 class="fw-semibold">Sampro Indonesia</h5>
+        <p class="text-white-50 mb-3">Partner terpercaya untuk jual-beli dan sewa properti di seluruh Indonesia.</p>
+        <div class="d-flex gap-3">
+          <a href="<?= $contact['facebook'] ?>"><i class="fab fa-facebook"></i></a>
+          <a href="<?= $contact['instagram'] ?>"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-semibold">Perusahaan</h6>
+        <ul class="list-unstyled text-white-50 mb-0">
+          <li><a href="#tentang">Tentang</a></li>
+          <li><a href="<?= base_url('artikel') ?>">Artikel</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-semibold">Layanan</h6>
+        <ul class="list-unstyled text-white-50 mb-0">
+          <li><a href="<?= base_url('jual') ?>">Jual Properti</a></li>
+          <li><a href="<?= base_url('sewa') ?>">Sewa Properti</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="fw-semibold">Kontak Cepat</h6>
+        <ul class="list-unstyled text-white-50 mb-3">
+          <li class="mb-1"><i class="fas fa-phone me-2 text-primary"></i><?= $contact['telepon'] ?></li>
+          <li class="mb-1"><i class="fas fa-envelope me-2 text-primary"></i><?= $contact['email'] ?></li>
+          <li><i class="fas fa-clock me-2 text-primary"></i>Senin - Jumat, 09.00 - 17.00</li>
+        </ul>
+        <a href="wa.me/<?= $contact['whatsapp'] ?>" target="_blank" rel="noopener" class="btn btn-primary w-100">
+          <i class="fab fa-whatsapp me-2"></i>Chat via WhatsApp
+        </a>
+      </div>
+    </div>
+    <hr class="border-secondary my-4">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
+      <span>© <?= date('Y') ?> Perusahaan Properti. All rights reserved.</span>
+      <div class="d-flex gap-3">
+        <a href="<?= base_url('kebijakan') ?>">Kebijakan Privasi</a>
+        <a href="<?= base_url('syarat') ?>">Syarat & Ketentuan</a>
       </div>
     </div>
   </div>
