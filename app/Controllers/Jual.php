@@ -106,7 +106,8 @@ class Jual extends BaseController
       'properties' => $properties,
       'categories' => $categories,
       'filters' => $filters,
-      'search_results' => true
+      'search_results' => true,
+      'page' => 1
     ];
 
     return $this->template->displayLanding('jual', $data);
