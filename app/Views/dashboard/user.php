@@ -39,7 +39,7 @@
                   <?= ucfirst($row['status']) ?></span>
               </td>
               <td class="text-center">
-                <?php if ($row['role'] != 'owner'): ?>
+                <?php if ($row['role'] != 'owner' || session('role') == 'owner'): ?>
                   <button class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
                     data-id="<?= $row['id'] ?>">
                     <i class="fas fa-edit"></i>
@@ -131,6 +131,9 @@
                 <select class="form-control" id="role" name="role" required>
                   <option value="agen">Agen</option>
                   <option value="admin">Admin</option>
+                  <?php if (session('role') == 'owner'): ?>
+                    <option value="owner">Owner</option>
+                  <?php endif ?>
                 </select>
                 <?php if (isset(session('errors')['role'])): ?>
                   <small class="text-danger"><?= session('errors')['role'] ?></small>

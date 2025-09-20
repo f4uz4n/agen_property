@@ -188,7 +188,7 @@ $agents = isset($agents) ? $agents : [
     </div>
     <hr class="border-secondary my-4">
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-white-50 small">
-      <span>© <?= date('Y') ?> Perusahaan Properti. All rights reserved.</span>
+      <span>© <?= date('Y') ?> Sampro Indonesia. All rights reserved.</span>
       <div class="d-flex gap-3">
         <a href="<?= base_url('kebijakan') ?>">Kebijakan Privasi</a>
         <a href="<?= base_url('syarat') ?>">Syarat & Ketentuan</a>
