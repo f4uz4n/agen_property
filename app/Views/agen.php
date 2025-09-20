@@ -1,16 +1,3 @@
-<?php
-// In a real app, this data would come from the controller.
-$agents = isset($agents) ? $agents : [
-  ["id" => "9", "name" => "Agus Setiawan", "email" => "agen6@example.com", "phone" => "628888990011", "location" => "Balikpapan, Kalimantan Timur", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-  ["id" => "4", "name" => "Dewi Lestari", "email" => "agen1@example.com", "phone" => "628333445566", "location" => "Semarang, Jawa Tengah", "role" => "agen", "status" => "aktif", "Terjual" => "1", "Tersewakan" => "1"],
-  ["id" => "7", "name" => "Fajar Nugroho", "email" => "agen4@example.com", "phone" => "628666778899", "location" => "Makassar, Sulawesi Selatan", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-  ["id" => "8", "name" => "Lina Marlina", "email" => "agen5@example.com", "phone" => "628777889900", "location" => "Yogyakarta, DI Yogyakarta", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-  ["id" => "10", "name" => "Nurul Aisyah", "email" => "agen7@example.com", "phone" => "628999100122", "location" => "Palembang, Sumatera Selatan", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-  ["id" => "6", "name" => "Putri Ayu", "email" => "agen3@example.com", "phone" => "628555667788", "location" => "Denpasar, Bali", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-  ["id" => "5", "name" => "Rahmat Hidayat", "email" => "agen2@example.com", "phone" => "628444556677", "location" => "Medan, Sumatera Utara", "role" => "agen", "status" => "aktif", "terjual" => 0, "tersewakan" => 0],
-];
-?>
-
 <style>
   .hero-section {
     background: linear-gradient(135deg, #4c80ae 0%, #5a8bc0 100%);
