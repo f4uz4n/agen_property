@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.theme.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.carousel.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.transitions.css') ?>">
+  <link rel="shortcut icon" href="<?= base_url('public/favicon-light.png') ?>" />
 </head>
 
 <body style="background-color: #f1f5f9">

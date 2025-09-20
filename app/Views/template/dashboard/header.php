@@ -30,7 +30,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="<?= base_url('public/css/style.css') ?>" />
   <!-- endinject -->
-  <link rel="shortcut icon" href="<?= base_url('public/images/favicon.png') ?>" />
+  <link rel="shortcut icon" href="<?= base_url('public/favicon-light.png') ?>" />
 </head>
 
 <body>
