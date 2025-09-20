@@ -396,6 +396,15 @@
       gap: 1rem;
     }
   }
+
+  .footer-mini a {
+    color: #cbd5e1;
+    text-decoration: none;
+  }
+
+  .footer-mini a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <!-- Hero Section -->

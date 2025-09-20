@@ -44,6 +44,7 @@ class User extends BaseController
     $status = $this->request->getPost('status');
     $province = $this->request->getPost('province');
     $city = $this->request->getPost('city');
+    $photo = $this->request->getFile('photo');
 
     $data = [
       'name' => $name,
@@ -75,6 +76,11 @@ class User extends BaseController
 
     try {
       $this->userModel->insert($data);
+      $id = $this->userModel->getInsertID();
+      $slugName = url_title($name, '-', true);
+      $uploaded = uploadUserPhoto($photo, $slugName);
+      $this->userModel->update($id, ['photo' => $uploaded]);
+
       return $this->response->setJSON([
         'title' => 'Berhasil',
         'icon' => 'success',
@@ -118,6 +124,7 @@ class User extends BaseController
     $status = $this->request->getPost('status');
     $province = $this->request->getPost('province');
     $city = $this->request->getPost('city');
+    $photo = $this->request->getFile('photo');
 
     $data = [
       'name' => $name,
@@ -160,6 +167,10 @@ class User extends BaseController
         'user' => session('name'),
         'id' => $id
       ]);
+
+      $slugName = url_title($name, '-', true);
+      $uploaded = uploadUserPhoto($photo, $slugName);
+      $this->userModel->update($id, ['photo' => $uploaded]);
 
       session()->setFlashdata([
         'title' => 'Berhasil',

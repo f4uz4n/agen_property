@@ -32,15 +32,15 @@ class TransactionModel extends Model
   {
     $builder = $this->db->table('properties p');
     $builder->select('p.*, c.name AS kategori, t.status AS transaksi, t.id AS transaksi_id,
-      t.buyer, t.wa_buyer, t.price AS jual, t.tanggal_penjualan, t.tanggal_serah_terima,
+      t.buyer, t.wa_buyer, t.price AS jual, t.tanggal_penjualan, t.tanggal_serah_terima, u.name AS agen,
       (CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS favorite');
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
+    $builder->join('users u', 't.agen_id = u.id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('favorites f', 'p.id = f.property_id', 'left');
     $builder->where('t.property_id IS NOT NULL');
     if ($agent_id != null) {
-      $builder->join('agents a', 'p.id = a.property_id');
-      $builder->where('a.agent_id', $agent_id);
+      $builder->where('t.agen_id', $agent_id);
     }
     if ($status != null) {
       $builder->where('t.status', $status);
@@ -63,7 +63,7 @@ class TransactionModel extends Model
       $query = $builder->get();
       $tempAgents = $query->getResultArray();
       $agents = array_column($tempAgents, 'name');
-      $data[$key]['agen'] = implode(', ', $agents);
+      $data[$key]['agents'] = implode(', ', $agents);
 
       $builder = $this->db->table('property_images pi');
       $builder->select('pi.*');

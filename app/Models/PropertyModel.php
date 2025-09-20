@@ -98,7 +98,7 @@ class PropertyModel extends Model
     $data = $query->getRowArray();
 
     $builder = $this->db->table('agents a');
-    $builder->select('u.name, u.phone, u.location, u.email');
+    $builder->select('u.name, u.phone, u.location, u.email, u.photo');
     $builder->join('users u', 'a.agent_id = u.id', 'left');
     $builder->where('a.property_id', $data['id']);
     $query = $builder->get();

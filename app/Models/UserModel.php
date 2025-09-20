@@ -18,6 +18,7 @@ class UserModel extends Model
     'password',
     'phone',
     'location',
+    'photo',
     'role',
     'status',
   ];
@@ -30,7 +31,7 @@ class UserModel extends Model
   public function getAgents($id = null)
   {
     $builder = $this->db->table($this->table . ' u');
-    $builder->select('u.id, u.name, u.email, u.phone, u.location, u.role, u.status');
+    $builder->select('u.id, u.name, u.email, u.phone, u.location, u.photo, u.role, u.status');
     $builder->where('u.role', 'agen');
     $builder->where('u.status', 'aktif');
     if ($id) {
@@ -53,17 +54,32 @@ class UserModel extends Model
       $query = $builder->get();
       $tempTransactions = $query->getResultArray();
       if ($tempTransactions == null) {
+        $data[$key]['omset'] = 0;
         $data[$key]['terjual'] = 0;
         $data[$key]['tersewakan'] = 0;
       } else {
+        $data[$key]['omset'] = $this->getOmset($value['id']);
         foreach ($tempTransactions as $row) {
           $data[$key][$row['property_status']] = $row['jumlah_transaksi'];
         }
       }
-      
     }
 
     return $data;
+  }
+
+  public function getOmset($agentId = null)
+  {
+    $builder = $this->db->table('transactions t');
+    $builder->select('SUM(t.price) AS omset');
+    $builder->where('YEAR(t.tanggal_penjualan)', date('Y'));
+    if ($agentId != null) {
+      $builder->where('t.agen_id', $agentId);
+    }
+    $builder->where('t.status', 'Valid');
+    $query = $builder->get();
+    $data = $query->getRowArray();
+    return $data['omset'];
   }
 }
 

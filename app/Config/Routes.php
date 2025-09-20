@@ -88,6 +88,13 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('disabled/(:num)', 'Kategori::disabled/$1');
   });
 
+  $routes->group('leaderboard', function ($routes) {
+    $routes->get('/', 'Leaderboard::index');
+    $routes->post('store', 'Leaderboard::store');
+    $routes->post('update/(:num)', 'Leaderboard::update/$1');
+    $routes->post('delete/(:num)', 'Leaderboard::delete/$1');
+  });
+
   $routes->group('user', ['filter' => 'auth:admin,owner'], function ($routes) {
     $routes->get('/', 'User::index');
     $routes->post('store', 'User::store');

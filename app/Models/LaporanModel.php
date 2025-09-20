@@ -39,7 +39,7 @@ class LaporanModel extends Model
     $builder->join('properties p', 't.property_id = p.id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('agents a', 't.property_id = a.property_id', 'left');
-    $builder->join('users u', 'a.agent_id = u.id', 'left');
+    $builder->join('users u', 't.agen_id = u.id', 'left');
     $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun
@@ -92,7 +92,7 @@ class LaporanModel extends Model
     $transaksi['total_transaksi'] = (int) max(floor($transaksi['total_transaksi'] / 100) * 100, 500);
     $transaksi['total_buyer'] = (int) max(floor($transaksi['total_buyer'] / 100) * 100, 400);
     $transaksi['total_kota'] = (int) max(floor($transaksi['total_kota'] / 10) * 10, 50);
-    $tahunAwal = 2010;
+    $tahunAwal = 2018;
     $tahun = (int) floor((date('Y') - $tahunAwal) / 5) * 5;
     $data = [
       'transaksi' => $transaksi['total_transaksi'] . '+',
@@ -119,8 +119,8 @@ class LaporanModel extends Model
             MIN(t.tanggal_penjualan) as penjualan_pertama,
             MAX(t.tanggal_penjualan) as penjualan_terakhir
         ');
-    $builder->join('users u', 'a.agent_id = u.id', 'left');
     $builder->join('transactions t', 'a.property_id = t.property_id', 'left');
+    $builder->join('users u', 't.agen_id = u.id', 'left');
     $builder->where('t.status', 'Valid');
 
     // Filter berdasarkan tahun

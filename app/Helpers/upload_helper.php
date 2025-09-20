@@ -72,6 +72,62 @@ function uploadArticleImages($image, int $propertyId)
   return $uploadedFiles;
 }
 
+function uploadPrestasi($image, int $nameFile)
+{
+  $uploadPath = FCPATH . 'public/uploads/prestasi/';
+
+  // cek & buat folder jika belum ada
+  if (!is_dir($uploadPath)) {
+    mkdir($uploadPath, 0777, true);
+    activity_log('create', 'folder ' . $uploadPath);
+  }
+
+  // hapus semua isi folder jika ada
+  if (is_dir($uploadPath)) {
+    array_map('unlink', glob($uploadPath . '*'));
+  }
+
+  if ($image->isValid() && !$image->hasMoved()) {
+    $extension = $image->getClientExtension();
+    $nameFile = $nameFile . '.' . $extension;
+    activity_log('upload', $nameFile);
+    $image->move($uploadPath, $nameFile);
+
+    $uploadedFiles = 'public/uploads/prestasi/' . $nameFile;
+    activity_log('terupload', 'public/uploads/prestasi/' . $nameFile);
+  }
+
+  return $uploadedFiles;
+}
+
+function uploadUserPhoto($image, int $nameFile)
+{
+  $uploadPath = FCPATH . 'public/uploads/users/';
+
+  // cek & buat folder jika belum ada
+  if (!is_dir($uploadPath)) {
+    mkdir($uploadPath, 0777, true);
+    activity_log('create', 'folder ' . $uploadPath);
+  }
+
+  // hapus semua isi folder jika ada
+  if (is_dir($uploadPath)) {
+    array_map('unlink', glob($uploadPath . '*'));
+  }
+
+  if ($image->isValid() && !$image->hasMoved()) {
+    $extension = $image->getClientExtension();
+    $nameFile = $nameFile . '.' . $extension;
+    activity_log('upload', $nameFile);
+    $image->move($uploadPath, $nameFile);
+
+    $uploadedFiles = 'public/uploads/users/' . $nameFile;
+    activity_log('terupload', 'public/uploads/users/' . $nameFile);
+  }
+
+  return $uploadedFiles;
+}
+
 function folder_delete($path)
 {
   // Validasi dasar

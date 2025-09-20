@@ -127,7 +127,8 @@
             <h5 class="mb-0 fw-bold">Informasi Agen</h5>
           </div>
           <div class="card-body text-center">
-            <i class="fas fa-user-tie fa-4x text-primary mb-3"></i>
+            <img src="<?= base_url($agen['photo']) ?>" class="card-img-top agent-image" alt="<?= esc($agen['name']) ?>"
+              style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
             <h5 class="card-title fw-bold"><?= $agen['name'] ?></h5>
             <p class="text-muted mb-3"><i class="fas fa-map-marker-alt me-2"></i><?= $agen['location'] ?></p>
             <a href="https://wa.me/<?= $agen['phone'] ?>" target="_blank" class="btn btn-success w-100 py-2 fw-bold">

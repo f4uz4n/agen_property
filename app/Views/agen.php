@@ -89,6 +89,15 @@
     border-color: #1EAE54;
     color: white;
   }
+
+  .footer-mini a {
+    color: #cbd5e1;
+    text-decoration: none;
+  }
+
+  .footer-mini a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <!-- Hero Section -->
@@ -101,7 +110,7 @@
 
 <div class="container my-5">
   <div class="row">
-    <?php foreach ($agents as $agent): ?>
+    <?php foreach ($data as $agent): ?>
       <?php
       // Handle inconsistent capitalization for sales and rental counts
       $sold = isset($agent['terjual']) ? $agent['terjual'] : (isset($agent['Terjual']) ? $agent['Terjual'] : 0);
@@ -110,7 +119,8 @@
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card agent-card shadow-sm">
           <div class="card-body text-center">
-            <i class="fas fa-user-tie fa-3x mb-3" style="color: #4c80ae;"></i>
+            <img src="<?= base_url($agent['photo']) ?>" class="card-img-top agent-image" alt="<?= esc($agent['name']) ?>"
+              style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
             <h5 class="card-title"><?= esc($agent['name']) ?></h5>
             <p class="location"><i class="fas fa-map-marker-alt me-2"></i><?= esc($agent['location']) ?></p>
 

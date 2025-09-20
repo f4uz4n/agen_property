@@ -7,7 +7,7 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <?php if (session('role') == 'owner'): ?>
+    <?php if (session('role') != 'agen'): ?>
       <li class="nav-item">
         <a class="nav-link" href="<?= base_url('dashboard/laporan') ?>" data-page="laporan">
           <i class="fa-solid fa-chart-line menu-icon"></i>
@@ -38,6 +38,12 @@
         <a class="nav-link" href="<?= base_url('dashboard/kategori') ?>" data-page="kategori">
           <i class="fa-solid fa-home menu-icon"></i>
           <span class="menu-title">Kategori</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('dashboard/leaderboard') ?>" data-page="leaderboard">
+          <i class="fa-solid fa-trophy menu-icon"></i>
+          <span class="menu-title">Leaderboard</span>
         </a>
       </li>
       <li class="nav-item">

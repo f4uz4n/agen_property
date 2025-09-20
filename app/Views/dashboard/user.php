@@ -66,9 +66,18 @@
         <h5 class="modal-title fw-semibold" id="myModalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="post" id="userForm">
+      <form method="post" enctype="multipart/form-data">
         <?= csrf_field() ?>
         <div class="modal-body">
+          <div class="form-group text-center">
+            <label for="photo" style="cursor: pointer;">
+              <img src="<?= base_url('public/uploads/users/default.png') ?>" alt="profile"
+                class="img-thumbnail rounded-circle mb-2" style="width: 150px; height: 150px; object-fit: cover;"
+                id="photopreview">
+            </label>
+            <input type="file" class="d-none" id="photo" name="photo" accept="image/*">
+            <div><small class="text-muted">Klik gambar untuk mengubah</small></div>
+          </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -99,32 +108,6 @@
                 <?php endif ?>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="provinsi">Provinsi</label>
-                <input type="hidden" name="province" id="province">
-                <select class="form-select steps-select" name="provinsi" id="provinsi">
-                  <option value="">--Pilih Provinsi--</option>
-                  <?php foreach ($provinsi as $p): ?>
-                    <option value="<?= $p['kode'] ?>" <?= (old('provinsi') == $p['kode']) ? 'selected' : '' ?>>
-                      <?= $p['name'] ?>
-                    </option>
-                  <?php endforeach ?>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="city">Kabupaten/Kota</label>
-                <select class="form-select steps-select" name="city" id="city">
-                  <option value="">--Pilih Kabupaten/Kota--</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="role">Role</label>
@@ -140,6 +123,32 @@
                 <?php endif ?>
               </div>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="provinsi">Provinsi</label>
+                <input type="hidden" name="province" id="province">
+                <select class="form-select modal-select" name="provinsi" id="provinsi">
+                  <option value="">--Pilih Provinsi--</option>
+                  <?php foreach ($provinsi as $p): ?>
+                    <option value="<?= $p['kode'] ?>" <?= (old('provinsi') == $p['kode']) ? 'selected' : '' ?>>
+                      <?= $p['name'] ?>
+                    </option>
+                  <?php endforeach ?>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="city">Kabupaten/Kota</label>
+                <select class="form-select modal-select" name="city" id="city">
+                  <option value="">--Pilih Kabupaten/Kota--</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="status">Status</label>
@@ -152,7 +161,7 @@
                 <?php endif ?>
               </div>
             </div>
-            <div class="col-12 text-end">
+            <div class="col-md-6 align-self-center text-end">
               <button type="button" class="btn btn-danger btn-sm btn-icon-text" id="btn-reset-password">
                 <i class="fa-solid fa-unlock btn-icon-prepend"></i> Reset Password</button>
             </div>
@@ -256,6 +265,38 @@
         });
       }
     });
+  })
+
+  $('#photo').on('change', function (e) {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        $('#photopreview').attr('src', e.target.result);
+      }
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  });
+
+  $('#myModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget)
+    let id = button.data('id')
+
+    if (id) {
+      let d = data.find(item => item.id == id);
+      console.log(d.photo);
+      if (d.photo) {
+        $('#photopreview').attr('src', `<?= base_url('') ?>${d.photo}`);
+      } else {
+        $('#photopreview').attr('src', `<?= base_url('public/uploads/users/default.png') ?>`);
+      }
+    } else {
+      $('#photopreview').attr('src', `<?= base_url('public/uploads/users/default.png') ?>`);
+    }
+  });
+
+  $('#myModal').on('hidden.bs.modal', function (e) {
+    $('#photopreview').attr('src', `<?= base_url('public/uploads/users/default.png') ?>`);
+    $('#photo').val('');
   })
 
   handleModalClick({

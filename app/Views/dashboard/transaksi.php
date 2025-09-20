@@ -202,6 +202,7 @@
             <th>Harga</th>
             <th>Pembeli</th>
             <th>Whatsapp Pembeli</th>
+            <th>Agen</th>
             <th>Status</th>
             <th class="text-center">Aksi</th>
           </tr>
@@ -217,6 +218,7 @@
       <td>${shortNumber(row.price)}</td>
       <td>${row.buyer}</td>
       <td>${row.wa_buyer}</td>
+      <td>${row.agen}</td>
       <td class="text-capitalize">
         <span class="badge badge-${row.transaksi == 'Valid' ? 'success' : 'danger'}">
           ${row.transaksi}</span>
