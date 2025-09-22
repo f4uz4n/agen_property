@@ -180,7 +180,7 @@ class LaporanModel extends Model
   /**
    * Mendapatkan total statistik penjualan
    */
-  public function getTotalStatistikPenjualan($tahun = null, $bulan = null)
+  public function getTotalStatistikPenjualan($tahun = null, $bulan = null, $agent_id = null)
   {
     $builder = $this->db->table('transactions t');
     $builder->select('
@@ -192,6 +192,10 @@ class LaporanModel extends Model
         ');
     $builder->where('t.status', 'Valid');
 
+    // Filter berdasarkan agen
+    if ($agent_id) {
+      $builder->where('t.agen_id', $agent_id);
+    }
     // Filter berdasarkan tahun
     if ($tahun) {
       $builder->where('YEAR(t.tanggal_penjualan)', $tahun);

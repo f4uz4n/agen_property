@@ -52,7 +52,7 @@ class Transaksi extends BaseController
         $kategori = defaultValue($this->request->getPost('kategori'), null);
 
         $res = $this->transactionModel->getData($agen, $status, $kategori);
-        
+
         return $this->response->setJSON($res);
     }
 
@@ -87,16 +87,16 @@ class Transaksi extends BaseController
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
-            return $this->response->setJSON([
+            session()->setFlashdata([
                 'title' => 'Gagal',
                 'icon' => 'Validasi gagal',
-                'text' => $validation->getErrors()
+                'text' => implode('<br>', array_values($validation->getErrors()))
             ]);
+            return redirect()->to(base_url('dashboard/transaksi'));
         }
 
         try {
             $this->transactionModel->insert($data);
-            $id = $this->transactionModel->insertID();
 
             $this->propertyModel->update($property_id, [
                 'publish' => 0,

@@ -48,12 +48,20 @@ class Setting extends BaseController
             return redirect()->to(base_url('dashboard/setting'));
         }
 
+        $name = $this->request->getPost('name');
+        $email = $this->request->getPost('email');
+        $phone = $this->request->getPost('whatsapp');
+        $photo = $this->request->getFile('photo');
+
         $data = [
-            'name' => $this->request->getPost('name'),
-            'email' => $this->request->getPost('email'),
-            'phone' => $this->request->getPost('whatsapp'),
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
         ];
         $this->userModel->update($id, $data);
+        $slugName = url_title($name, '-', true);
+        $uploaded = uploadUserPhoto($photo, $slugName);
+        $this->userModel->update($id, ['photo' => $uploaded]);
 
         session()->setFlashdata([
             'title' => 'Berhasil',
@@ -73,7 +81,7 @@ class Setting extends BaseController
             ]);
             return redirect()->to(base_url('dashboard/setting'));
         }
-        
+
         $rules = [
             'password' => 'required|min_length[8]',
             'password_confirm' => 'required|matches[password]',

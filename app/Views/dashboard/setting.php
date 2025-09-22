@@ -8,22 +8,26 @@
     <form action="<?= base_url('dashboard/setting/update/' . $data['id']) ?>" method="post">
       <div class="row mt-3">
         <div class="col-md-6">
-          <div class="mb-3">
+          <div class="form-group">
             <label for="name" class="form-label">Nama Lengkap</label>
             <input type="text" class="form-control" id="name" name="name" value="<?= $data['name'] ?? '' ?>">
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="mb-3">
+          <div class="form-group">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" value="<?= $data['email'] ?? '' ?>">
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="mb-3">
+          <div class="form-group">
             <label for="whatsapp" class="form-label">Nomor Whatsapp</label>
             <input type="text" class="form-control" id="whatsapp" name="whatsapp" value="<?= $data['phone'] ?? '' ?>">
             <small class="text-muted">Format: 628xxxxx</small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="photo" class="form-label">Foto Profil</label>
+            <input type="file" class="dropify" name="photo" id="photo"
+              data-default-file="<?= base_url($data['photo']) ?>" data-allowed-file-extensions="jpg jpeg png"
+              data-max-file-size="3M">
           </div>
         </div>
       </div>

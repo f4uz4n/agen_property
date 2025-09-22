@@ -39,7 +39,7 @@
   handleModalClick({
     selector: '.btn-modal',
     modalTitle: 'Transaksi',
-    formActionUrl: id => '<?= base_url('transaksi/') ?>' + (id ? 'update/' : 'store'),
+    formActionUrl: id => '<?= base_url('dashboard/transaksi/') ?>' + (id ? 'update/' : 'store'),
     findData: id => data.find(item => item.id == id),
     defaultValues: {
       property_id: '',
@@ -87,10 +87,10 @@
         <tr>
           <th>Agen</th>
           <td>
-            <select class="form-select modal-select" id="agen" name="agen">`;
+            <select class="form-select modal-select" id="agent_id" name="agent_id">`;
 
     if (role == 'agen') {
-      html += `<option value="<?= session('id') ?>"><?= session('name') ?></option>`;
+      html += `<option value="<?= session('id') ?>" selected><?= session('name') ?></option>`;
     } else {
       $.each(agens, function (i, agen) {
         html += `<option value="${agen.id}">${agen.name}</option>`;
@@ -109,7 +109,7 @@
           <td><input type="text" name="wa_buyer" class="form-control" required></td>
         </tr>
         <tr>
-          <th>Harga</th>
+          <th>UTJ</th>
           <td><input type="text" name="price" class="form-control currency" required></td>
         </tr>
         <input type="hidden" name="status" value="${res.status}">
