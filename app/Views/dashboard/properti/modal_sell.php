@@ -58,7 +58,9 @@
     e.preventDefault();
     let id = $(this).find('option:selected').val();
     let res = data.find(e => e.id == id);
-    let html = `
+
+    if (res != undefined) {
+      let html = `
       <table class="table table-bordered">
         <tr>
           <th class="fit-column">Iklan Properti</th>
@@ -89,15 +91,15 @@
           <td>
             <select class="form-select modal-select" id="agent_id" name="agent_id">`;
 
-    if (role == 'agen') {
-      html += `<option value="<?= session('id') ?>" selected><?= session('name') ?></option>`;
-    } else {
-      $.each(agens, function (i, agen) {
-        html += `<option value="${agen.id}">${agen.name}</option>`;
-      })
-    }
+      if (role == 'agen') {
+        html += `<option value="<?= session('id') ?>" selected="selected"><?= session('name') ?></option>`;
+      } else {
+        $.each(agens, function (i, agen) {
+          html += `<option value="${agen.id}">${agen.name}</option>`;
+        })
+      }
 
-    html += `</select>
+      html += `</select>
           </td>
         </tr>
         <tr>
@@ -122,8 +124,10 @@
           <td><input type="date" name="tanggal_serah_terima" class="form-control" required></td>
         </tr>
       </table>
-    `;
-    $('#property-details').html(html);
+      `;
+
+      $('#property-details').html(html);
+    }
   });
 </script>
 <?= $this->endSection() ?>

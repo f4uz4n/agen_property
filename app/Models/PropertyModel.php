@@ -45,7 +45,7 @@ class PropertyModel extends Model
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('favorites f', 'p.id = f.property_id', 'left');
-    $builder->where('t.property_id IS NULL');
+    $builder->where("t.status != 'Valid'");
     if ($agent_id != null) {
       $builder->join('agents a', 'p.id = a.property_id');
       $builder->where('a.agent_id', $agent_id);

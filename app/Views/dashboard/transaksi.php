@@ -85,7 +85,7 @@
 
 <?= $this->section('js') ?>
 <script>
-  let data = <?= json_encode($data) ?>;
+  let data = <?= json_encode($data) ?>;  
   let transaksi = {};
 
   let status = $('#status').find('option:selected').val();
@@ -180,7 +180,7 @@
         agen: agen,
       },
       success: function (res) {
-        console.log(res);
+        // console.log(res);
         transaksi = res;
         generateTable(res);
       },

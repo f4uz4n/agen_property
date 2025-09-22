@@ -91,8 +91,6 @@
   // ~format angka
   $(document).on('keyup', '.currency', function () {
     let value = $(this).val().replace(/[^0-9]/g, '');
-    console.log(value);
-
     $(this).val(value ? parseInt(value).toLocaleString('id-ID') : '');
   });
 

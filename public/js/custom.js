@@ -154,7 +154,7 @@ function handleModalClick({ selector, modalTitle, formActionUrl, findData, defau
     $("form").attr("action", fullAction);
 
     const values = isEdit ? findData(id) || {} : {};
-    
+        
     fieldMap.inputs?.forEach(({ name, valueKey = name }) => {      
       const val = values[valueKey];
       const finalVal = val !== undefined && val !== null && val !== "" ? val : defaultValues?.[name] ?? "";

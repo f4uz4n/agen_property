@@ -68,14 +68,14 @@ class Transaksi extends BaseController
 
         $data = [
             'property_id' => $property_id,
-            'agent_id' => $agent_id,
+            'agen_id' => $agent_id,
             'price' => $price,
             'buyer' => $buyer,
             'wa_buyer' => $wa_buyer,
             'tanggal_penjualan' => $tanggal_penjualan,
             'tanggal_serah_terima' => $tanggal_serah_terima,
         ];
-
+        
         $validation = \Config\Services::validation();
         $validation->setRules([
             'property_id' => 'required|numeric',
