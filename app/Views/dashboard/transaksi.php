@@ -102,12 +102,13 @@
 
   $(document).on('click', '.btn-validasi', function () {
     let id = $(this).data('id');
-    let res = data.find(e => e.id == id);
-    console.log(res);
+    let res = transaksi.find(e => e.id == id);
+    // console.log(res);
 
     $('#validateForm').attr('action', `<?= base_url('dashboard/transaksi/validasi/') ?>${id}`);
     let isiTable = {
       'Judul Iklan': res.title,
+      'Tipe Properti': res.kategori,
       'Harga Asli': formatAngka(res.price),
       'Harga Terjual': formatAngka(res.jual),
       'Agen': res.agen,

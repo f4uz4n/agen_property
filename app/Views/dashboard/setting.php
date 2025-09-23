@@ -5,7 +5,9 @@
   <div class="card-body">
     <h4>Informasi Profil</h4>
     <p class="text-muted">Perbarui nama, email, dan nomor telepon Anda.</p>
-    <form action="<?= base_url('dashboard/setting/update/' . $data['id']) ?>" method="post">
+    <form action="<?= base_url('dashboard/setting/update/' . $data['id']) ?>" method="post"
+      enctype="multipart/form-data">
+      <?= csrf_field() ?>
       <div class="row mt-3">
         <div class="col-md-6">
           <div class="form-group">
@@ -23,11 +25,15 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="photo" class="form-label">Foto Profil</label>
-            <input type="file" class="dropify" name="photo" id="photo"
-              data-default-file="<?= base_url($data['photo']) ?>" data-allowed-file-extensions="jpg jpeg png"
-              data-max-file-size="3M">
+          <div class="form-group text-center">
+            <label for="photo" style="cursor: pointer;">
+              <img class="img-thumbnail rounded mb-2" alt="profile" id="photopreview" src="<?= isset($data['photo'])
+                ? base_url($data['photo'])
+                : base_url('public/uploads/users/default.png') ?>"
+                style="width: 300px; height: 300px; object-fit: cover;">
+            </label>
+            <input type="file" class="d-none" id="photo" name="photo" accept="image/*">
+            <div><small class="text-muted">Klik gambar untuk mengubah</small></div>
           </div>
         </div>
       </div>
@@ -70,6 +76,16 @@
 
 <?= $this->section('js') ?>
 <script>
+  $('#photo').on('change', function (e) {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        $('#photopreview').attr('src', e.target.result);
+      }
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  });
+
   $('#password_confirm').on('keyup', function () {
     if ($('#password').val() !== $('#password_confirm').val()) {
       $('#password_confirmError').removeClass('text-success');

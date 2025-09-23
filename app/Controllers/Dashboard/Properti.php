@@ -177,8 +177,12 @@ class Properti extends BaseController
         }
 
         try {
-            $this->propertyModel->insert($data);
-            $id = $this->propertyModel->insertID();
+            $result = $this->propertyModel->insert($data);
+            if ($result) {
+                $id = $this->propertyModel->insertID();
+            } else {
+                throw new \Exception("Gagal menyimpan data properti.");
+            }
 
             foreach ($agen as $user) {
                 $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();

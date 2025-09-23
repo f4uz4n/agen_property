@@ -35,7 +35,7 @@
     <div class="col-12 col-md-4">
       <div class="form-group">
         <label for="type">Tipe Properti</label>
-        <input type="hidden" name="tipe" value="<?= reset($kategoris)['name'] ?? '' ?>">
+        <input type="hidden" name="tipe" id="tipe" value="<?= reset($kategoris)['name'] ?? '' ?>">
         <select class="form-select steps-select" name="type" id="type">
           <?php foreach ($kategoris as $k): ?>
             <option value="<?= $k['id'] ?>" <?= (old('type') == $k['id']) ? 'selected' : '' ?>><?= $k['name'] ?>
