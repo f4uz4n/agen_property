@@ -76,7 +76,7 @@
           Tim profesional kami siap mendampingi setiap langkah Anda.</p>
         <div class="d-flex gap-3">
           <a href="#tentang" class="btn btn-lg btn-light text-primary">Pelajari Lebih Lanjut</a>
-          <a href="#kontak" class="btn btn-lg btn-outline-light">Konsultasi Gratis</a>
+          <a href="<?= base_url('guest-property') ?>" class="btn btn-lg btn-outline-light">Input Properti</a>
         </div>
       </div>
       <div class="col-lg-5">
