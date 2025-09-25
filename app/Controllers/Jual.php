@@ -116,6 +116,10 @@ class Jual extends BaseController
   public function detail($id)
   {
     $property = $this->PropertyModel->getDataById($id);
+    $owner = stripos($property['description'], ';') !== false ? true : false;
+    $explode = $owner ? explode(';', $property['description']) : [$property['description'], null];
+    $property['description'] = $explode[0];
+    
     $data = [
       'contact' => $this->contactModel->getData(),
       'data' => $property,
