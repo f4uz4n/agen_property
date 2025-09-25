@@ -63,12 +63,6 @@ class Properti extends BaseController
         $kategori = defaultValue($this->request->getPost('kategori'), null);
 
         $res = $this->propertyModel->getData($agen, $status, $kategori);
-        // $key = 'properti_' . $agen . '_' . $status . '_' . $kategori;
-        // $res = $this->cache->get($key);
-        // if (!$res) {
-        //     $detik = 60 * 60;
-        //     $this->cache->save($key, $res, $detik);
-        // }
         return $this->response->setJSON($res);
     }
 
@@ -221,11 +215,16 @@ class Properti extends BaseController
         if (!$this->propertyModel->find($id)) {
             return redirect()->to('not-found');
         }
+        $property = $this->propertyModel->getDataById($id);
+        $owner = stripos($property['description'], ';') !== false ? true : false;
+        $explode = $owner ? explode(';', $property['description']) : [$property['description'], null];
+        $property['description'] = $explode[0];
+        $property['owner'] = $explode[1];
 
         $data = [
             'title' => 'Detail Properti',
             'subtitle' => 'Kelola detail properti Anda di Sini.',
-            'data' => $this->propertyModel->getDataById($id),
+            'data' => $property,
             'kategoris' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')

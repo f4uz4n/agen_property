@@ -67,11 +67,12 @@ class User extends BaseController
     ]);
 
     if (!$validation->withRequest($this->request)->run()) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Gagal',
         'icon' => 'Validasi gagal',
         'text' => $validation->getErrors()
       ]);
+      return redirect()->to(base_url('dashboard/user'));
     }
 
     try {
@@ -81,18 +82,19 @@ class User extends BaseController
       $uploaded = uploadUserPhoto($photo, $slugName);
       $this->userModel->update($id, ['photo' => $uploaded]);
 
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Berhasil',
         'icon' => 'success',
         'text' => 'User berhasil ditambahkan'
       ]);
     } catch (\Exception $e) {
-      return $this->response->setJSON([
+      session()->setFlashdata([
         'title' => 'Gagal',
         'icon' => 'error',
         'text' => 'Gagal menambahkan user: ' . $e->getMessage()
       ]);
     }
+    return redirect()->to(base_url('dashboard/user'));
   }
 
   public function update($id = null)

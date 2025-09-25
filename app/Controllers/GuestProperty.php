@@ -2,25 +2,31 @@
 
 namespace App\Controllers;
 
-use App\Models\PropertyModel;
+use App\Models\ContactModel;
+use App\Models\WilayahModel;
 use App\Models\CategoryModel;
 use App\Models\FacilityModel;
-use App\Models\ContactModel;
+use App\Models\PropertyModel;
+use App\Models\PropertyImageModel;
 use App\Controllers\BaseController;
 
 class GuestProperty extends BaseController
 {
+  protected $contactModel;
+  protected $wilayahModel;
   protected $propertyModel;
   protected $categoryModel;
   protected $facilityModel;
-  protected $contactModel;
+  protected $propertyImageModel;
 
   public function __construct()
   {
+    $this->contactModel = new ContactModel();
+    $this->wilayahModel = new WilayahModel();
     $this->propertyModel = new PropertyModel();
     $this->categoryModel = new CategoryModel();
     $this->facilityModel = new FacilityModel();
-    $this->contactModel = new ContactModel();
+    $this->propertyImageModel = new PropertyImageModel();
   }
 
   public function index()
@@ -35,6 +41,8 @@ class GuestProperty extends BaseController
       'subtitle' => 'Masukkan detail properti Anda',
       'categories' => $categories,
       'facilities' => $facilities,
+      'provinsi' => $this->wilayahModel->where('level', 'provinsi')->findAll(),
+      'kota' => $this->wilayahModel->where('level', 'kabupaten')->findAll(),
       'contact' => $contact,
       'validation' => \Config\Services::validation()
     ];
@@ -49,7 +57,6 @@ class GuestProperty extends BaseController
       'title' => 'required|min_length[10]|max_length[200]',
       'description' => 'required|min_length[20]',
       'type' => 'required',
-      'price' => 'required|numeric|greater_than[0]',
       'address' => 'required|min_length[10]',
       'city' => 'required',
       'province' => 'required',
@@ -61,44 +68,92 @@ class GuestProperty extends BaseController
     ];
 
     if (!$this->validate($rules)) {
-      return redirect()->back()->withInput()->with('validation', $this->validator);
+      session()->setFlashdata([
+        'title' => 'Validasi Gagal',
+        'icon' => 'error',
+        'text' => implode("\n", array_values($this->validator->getErrors())),
+      ]);
+      return redirect()->to(base_url('tawarkan-properti'))
+        ->withInput()->with('validation', $this->validator);
     }
 
-    // Ambil data dari form
+    // step 1
+    $title = $this->request->getPost('title');
+    $price = str_replace('.', '', $this->request->getPost('price'));
+    $type = $this->request->getPost('type');
+    $status = $this->request->getPost('status');
+    $province = $this->request->getPost('province');
+    $city = $this->request->getPost('city');
+    $address = $this->request->getPost('address');
+    $certificate = $this->request->getPost('certificate');
+    // step 2
+    $bedrooms = defaultValue($this->request->getPost('bedrooms'), 0);
+    $bathrooms = defaultValue($this->request->getPost('bathrooms'), 0);
+    $carport = defaultValue($this->request->getPost('carport'), 0);
+    $building_area = defaultValue($this->request->getPost('building_area'), 0);
+    $land_area = defaultValue($this->request->getPost('land_area'), 0);
+    $floors = defaultValue($this->request->getPost('floors'), 0);
+    // step 3
+    $tempFasilitas = defaultValue($this->request->getPost('facilities'), []);
+    $facilities = implode(',', $tempFasilitas);
+    $images = defaultValue($this->request->getFileMultiple('images'), []);
+    // step 4
+    $description = $this->request->getPost('description');
+    $owner_details = implode(', ', [
+      $this->request->getPost('owner_name'),
+      $this->request->getPost('owner_phone'),
+      $this->request->getPost('owner_email')
+    ]);
+    $description = $description . ";" . $owner_details;
+
     $propertyData = [
-      'title' => $this->request->getPost('title'),
-      'description' => $this->request->getPost('description'),
-      'type' => $this->request->getPost('type'),
-      'price' => str_replace(['.', ','], '', $this->request->getPost('price')),
-      'address' => $this->request->getPost('address'),
-      'city' => $this->request->getPost('city'),
-      'province' => $this->request->getPost('province'),
-      'certificate' => $this->request->getPost('certificate'),
-      'status' => $this->request->getPost('status'),
-      'bedrooms' => $this->request->getPost('bedrooms') ?: 0,
-      'bathrooms' => $this->request->getPost('bathrooms') ?: 0,
-      'carport' => $this->request->getPost('carport') ?: 0,
-      'building_area' => $this->request->getPost('building_area') ?: 0,
-      'land_area' => $this->request->getPost('land_area') ?: 0,
-      'floors' => $this->request->getPost('floors') ?: 1,
-      'facilities' => $this->request->getPost('facilities') ? implode(',', $this->request->getPost('facilities')) : '',
-      'publish' => 0, // Default tidak dipublikasi untuk guest
-      // masukkan owner ke deskripsi
-      'owner_name' => $this->request->getPost('owner_name'),
-      'owner_phone' => $this->request->getPost('owner_phone'),
-      'owner_email' => $this->request->getPost('owner_email')
+      'title' => $title,
+      'price' => $price,
+      'type' => $type,
+      'status' => $status,
+      'province' => $province,
+      'city' => $city,
+      'address' => $address,
+      'certificate' => $certificate,
+      'bedrooms' => $bedrooms,
+      'bathrooms' => $bathrooms,
+      'carport' => $carport,
+      'building_area' => $building_area,
+      'land_area' => $land_area,
+      'floors' => $floors,
+      'facilities' => $facilities,
+      'description' => $description,
+      'publish' => 0,
     ];
 
     // Simpan ke database
     if ($this->propertyModel->insert($propertyData)) {
       $propertyId = $this->propertyModel->getInsertID();
 
-      // Handle upload gambar jika ada
-      $this->handleImageUpload($propertyId);
+      $fileName = $this->request->getPost('tipe');
+      $uploaded = uploadPropertyImages($images, $propertyId, $fileName);
 
-      return redirect()->to('/guest-property/success')->with('success', 'Properti berhasil disubmit! Tim kami akan menghubungi Anda untuk verifikasi.');
+      // contoh simpan ke DB
+      foreach ($uploaded as $key => $imgUrl) {
+        $this->propertyImageModel->insert([
+          'property_id' => $propertyId,
+          'image_url' => $imgUrl,
+          'is_primary' => $key == 0 ? 1 : 0,
+        ]);
+      }
+      session()->setFlashdata([
+        'title' => 'Properti berhasil disubmit',
+        'icon' => 'success',
+        'text' => 'Properti Anda telah berhasil disubmit dan sedang dalam proses verifikasi.'
+      ]);
+      return redirect()->to('tawarkan-properti/success');
     } else {
-      return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+      session()->setFlashdata([
+        'title' => 'Properti gagal disubmit',
+        'icon' => 'error',
+        'text' => 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.'
+      ]);
+      return redirect()->to('tawarkan-properti');
     }
   }
 
@@ -113,47 +168,5 @@ class GuestProperty extends BaseController
     ];
 
     return $this->template->displayLanding('guest_property_success', $data);
-  }
-
-  private function handleImageUpload($propertyId)
-  {
-    $files = $this->request->getFiles();
-
-    if (!empty($files['images'])) {
-      $uploadPath = FCPATH . 'public/uploads/properties/';
-
-      // Pastikan direktori upload ada
-      if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0755, true);
-      }
-
-      foreach ($files['images'] as $index => $file) {
-        if ($file->isValid() && !$file->hasMoved()) {
-          // Validasi ukuran file (max 5MB)
-          if ($file->getSize() > 5 * 1024 * 1024) {
-            continue; // Skip file yang terlalu besar
-          }
-
-          // Validasi tipe file
-          $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-          if (!in_array($file->getMimeType(), $allowedTypes)) {
-            continue; // Skip file yang bukan gambar
-          }
-
-          $newName = $propertyId . '_' . ($index + 1) . '_' . time() . '.' . $file->getExtension();
-
-          if ($file->move($uploadPath, $newName)) {
-            // Simpan informasi gambar ke database
-            $imageData = [
-              'property_id' => $propertyId,
-              'image_url' => 'uploads/properties/' . $newName,
-              'is_primary' => $index == 0 ? 1 : 0
-            ];
-
-            $this->db->table('property_images')->insert($imageData);
-          }
-        }
-      }
-    }
   }
 }

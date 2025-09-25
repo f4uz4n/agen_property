@@ -213,6 +213,18 @@
     padding-left: 3rem;
   }
 
+  .select2 {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    transition: all 0.2s !important;
+  }
+
+  .select2-selection.select2-selection--single {
+    border: none !important;
+  }
+
   @media (max-width: 768px) {
     .hero-section {
       padding: 40px 0;
@@ -234,7 +246,7 @@
   <div class="container">
     <div class="row justify-content-center text-center">
       <div class="col-lg-8">
-        <h1 class="display-5 fw-bold mb-3">Input Properti Anda</h1>
+        <h1 class="display-5 fw-bold mb-3">Tawarkan Properti Anda</h1>
         <p class="lead mb-4">Daftarkan properti Anda dengan mudah dan aman. Tim profesional kami akan membantu
           memverifikasi dan mempublikasikan properti Anda.</p>
         <div class="d-flex justify-content-center gap-3">
@@ -285,7 +297,7 @@
             </div>
           <?php endif; ?>
 
-          <form action="<?= base_url('guest-property/submit') ?>" method="post" enctype="multipart/form-data"
+          <form action="<?= base_url('tawarkan-properti/submit') ?>" method="post" enctype="multipart/form-data"
             id="propertyForm">
             <?= csrf_field() ?>
 
@@ -308,6 +320,7 @@
 
                 <div class="col-md-6">
                   <div class="form-group">
+                    <input type="hidden" name="tipe" id="tipe" value="<?= $categories[0]['name'] ?>">
                     <label for="type" class="form-label">Tipe Properti <span class="required">*</span></label>
                     <select id="type" name="type"
                       class="form-select <?= ($validation->hasError('type')) ? 'is-invalid' : '' ?>" required>
@@ -339,11 +352,9 @@
                   <div class="form-group">
                     <label for="price" class="form-label">Harga <span class="required">*</span></label>
                     <div class="currency-input">
-                      <input type="text" id="price" name="price"
-                        class="form-control <?= ($validation->hasError('price')) ? 'is-invalid' : '' ?>"
-                        value="<?= old('price') ?>" placeholder="2.000.000.000" required>
+                      <input type="text" id="price" name="price" class="form-control" value="<?= old('price') ?>"
+                        placeholder="2.000.000.000" required>
                     </div>
-                    <div class="invalid-feedback"><?= $validation->getError('price') ?></div>
                     <div class="help-text">Masukkan harga dalam Rupiah (tanpa titik atau koma)</div>
                   </div>
                 </div>
@@ -358,10 +369,20 @@
                       </option>
                       <option value="HGB" <?= (old('certificate') == 'HGB') ? 'selected' : '' ?>>HGB (Hak Guna Bangunan)
                       </option>
-                      <option value="HP" <?= (old('certificate') == 'HP') ? 'selected' : '' ?>>HP (Hak Pakai)</option>
-                      <option value="Girik" <?= (old('certificate') == 'Girik') ? 'selected' : '' ?>>Girik</option>
+                      <option value="HGU" <?= (old('certificate') == 'HGU') ? 'selected' : '' ?>>HGU (Hak Guna Usaha)
+                      </option>
                       <option value="AJB" <?= (old('certificate') == 'AJB') ? 'selected' : '' ?>>AJB (Akta Jual Beli)
                       </option>
+                      <option value="Surat Keterangan" <?= (old('certificate') == 'Surat Keterangan') ? 'selected' : '' ?>>
+                        Surat Keterangan</option>
+                      <option value="SHGB" <?= (old('certificate') == 'SHGB') ? 'selected' : '' ?>>SHGB (Sertifikat Hak
+                        Guna Bangunan)</option>
+                      <option value="SHSRS" <?= (old('certificate') == 'SHSRS') ? 'selected' : '' ?>>SHSRS (Sertifikat Hak
+                        Satuan Rumah Susun)</option>
+                      <option value="HP" <?= (old('certificate') == 'HP') ? 'selected' : '' ?>>HP (Hak Pakai)</option>
+                      <option value="Girik" <?= (old('certificate') == 'Girik') ? 'selected' : '' ?>>Girik / Letter C
+                      </option>
+                      <option value="Lainnya" <?= (old('certificate') == 'Lainnya') ? 'selected' : '' ?>>Lainnya</option>
                     </select>
                     <div class="invalid-feedback"><?= $validation->getError('certificate') ?></div>
                   </div>
@@ -406,21 +427,31 @@
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="city" class="form-label">Kota <span class="required">*</span></label>
-                    <input type="text" id="city" name="city"
-                      class="form-control <?= ($validation->hasError('city')) ? 'is-invalid' : '' ?>"
-                      value="<?= old('city') ?>" placeholder="Jakarta Selatan" required>
-                    <div class="invalid-feedback"><?= $validation->getError('city') ?></div>
+                    <input type="hidden" name="province" id="province" value="">
+                    <label for="provinsi" class="form-label">Provinsi <span class="required">*</span></label>
+                    <select class="form-select multi-select" name="provinsi" id="provinsi">
+                      <option value="">--Pilih Provinsi--</option>
+                      <?php foreach ($provinsi as $p): ?>
+                        <option value="<?= $p['kode'] ?>" <?= (old('provinsi') == $p['kode']) ? 'selected' : '' ?>>
+                          <?= $p['name'] ?>
+                        </option>
+                      <?php endforeach ?>
+                    </select>
+                    <div class="invalid-feedback">
+                      <?= $validation?->getError('provinsi') ?>
+                    </div>
                   </div>
                 </div>
 
                 <div class="col-md-3">
                   <div class="form-group">
-                    <label for="province" class="form-label">Provinsi <span class="required">*</span></label>
-                    <input type="text" id="province" name="province"
-                      class="form-control <?= ($validation->hasError('province')) ? 'is-invalid' : '' ?>"
-                      value="<?= old('province') ?>" placeholder="DKI Jakarta" required>
-                    <div class="invalid-feedback"><?= $validation->getError('province') ?></div>
+                    <label for="city" class="form-label">Kota <span class="required">*</span></label>
+                    <select class="form-select multi-select" name="city" id="city">
+                      <option value="">--Pilih Kabupaten/Kota--</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      <?= $validation?->getError('city') ?>
+                    </div>
                   </div>
                 </div>
 
@@ -540,7 +571,7 @@
                     <div class="image-upload-area" onclick="document.getElementById('images').click()">
                       <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
                       <h5>Upload Foto Properti</h5>
-                      <p class="text-muted mb-0">Klik untuk memilih foto atau drag & drop foto ke sini</p>
+                      <p class="text-muted mb-0">Klik untuk memilih foto</p>
                       <small class="text-muted">Format: JPG, PNG, GIF (Max 5MB per foto)</small>
                     </div>
                     <input type="file" id="images" name="images[]" multiple accept="image/*" style="display: none;"
@@ -548,6 +579,19 @@
                     <div class="image-preview" id="imagePreview"></div>
                     <div class="help-text">Upload minimal 3 foto properti. Foto pertama akan menjadi foto utama</div>
                   </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="wajib" required>
+                  <label class="form-check-label" for="wajib">
+                    Saya dengan ini menyatakan bahwa saya bertanggung jawab penuh atas kebenaran dan keakuratan seluruh
+                    data yang saya inputkan dalam formulir ini, termasuk namun tidak terbatas pada nama, nomor telepon,
+                    dan alamat email. Saya mengerti bahwa jika terdapat ketidaksesuaian atau kesalahan dalam data yang
+                    saya berikan, saya akan menanggung segala akibat yang timbul dari hal tersebut dan tidak dapat
+                    mengalihkan tanggung jawab kepada pihak lain.
+                  </label>
                 </div>
               </div>
 
@@ -561,7 +605,7 @@
                 <button type="button" class="btn btn-outline-primary" onclick="prevStep(2)">
                   <i class="fas fa-arrow-left me-2"></i>Kembali
                 </button>
-                <button type="submit" class="btn btn-primary btn-lg">
+                <button type="submit" class="btn btn-primary btn-lg" id="btn-submit" disabled>
                   <i class="fas fa-paper-plane me-2"></i>Submit Properti
                 </button>
               </div>
@@ -574,6 +618,24 @@
 </section>
 
 <script>
+  document.getElementById('type').addEventListener('change', function () {
+    document.getElementById('tipe').value = this.options[this.selectedIndex].text.trim();
+  });
+
+  let kabupatens = <?= json_encode($kota) ?>;
+  document.querySelector('#provinsi').addEventListener('change', function () {
+    const id = this.value;
+    const province = this.options[this.selectedIndex].text.trim();
+
+    document.querySelector('#province').value = province;
+    let filteredKabupatens = kabupatens.filter(kabupaten => kabupaten.parent === id);
+    let opt = `<option value="">--Pilih Kabupaten/Kota--</option>`;
+    filteredKabupatens.forEach(kabupaten => {
+      opt += `<option value="${kabupaten.name}">${kabupaten.name}</option>`;
+    });
+    document.querySelector('#city').innerHTML = opt;
+  });
+
   let currentStep = 1;
   const totalSteps = 3;
 
@@ -634,15 +696,6 @@
         if (field.name === 'owner_phone' && field.value) {
           const phoneRegex = /^0[0-9]{9,12}$/;
           if (!phoneRegex.test(field.value)) {
-            field.classList.add('is-invalid');
-            isValid = false;
-          }
-        }
-
-        // Validasi khusus untuk harga
-        if (field.name === 'price' && field.value) {
-          const price = parseInt(field.value.replace(/\D/g, ''));
-          if (price < 1000000) { // Minimal 1 juta
             field.classList.add('is-invalid');
             isValid = false;
           }

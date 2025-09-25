@@ -217,7 +217,7 @@
         </div>
         <hr>
         <?php $listAgen = explode(';', $data['agen']) ?>
-        <div class="col-6 col-md-6">
+        <div class="col-12 col-md-6">
           <div class="form-group">
             <label for="agen" class="form-label">Agen</label>
             <select class="form-select multiple-select" id="agen" name="agen[]" multiple="multiple"
@@ -230,6 +230,20 @@
             </select>
           </div>
         </div>
+        <?php if ($data['owner'] != null): ?>
+          <div class="col-6">
+            <div class="form-group">
+              <?php $owner = explode(',', $data['owner']) ?>
+              <span class="fw-semibold">Data Pemilik Properti yang melakukan penawaran: </span>
+              <?php foreach ($owner as $key => $row): ?>
+                <?php if ($key == 1): ?>
+                  <br>
+                <?php endif ?>
+                <span><?= $row ?></span>
+              <?php endforeach ?>
+            </div>
+          </div>
+        <?php endif ?>
         <div class="col-12">
           <div class="form-group">
             <label for="description" class="form-label">Deskripsi</label>

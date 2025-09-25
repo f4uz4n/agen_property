@@ -250,7 +250,7 @@
       <div class="col-lg-8">
         <h3 class="mb-3">Ingin Submit Properti Lainnya?</h3>
         <p class="text-muted mb-4">Daftarkan properti lainnya dengan mudah menggunakan form yang sama</p>
-        <a href="<?= base_url('guest-property') ?>" class="btn btn-primary btn-lg">
+        <a href="<?= base_url('tawarkan-properti') ?>" class="btn btn-primary btn-lg">
           <i class="fas fa-plus me-2"></i>Submit Properti Baru
         </a>
       </div>

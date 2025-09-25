@@ -25,9 +25,9 @@ $routes->get('artikel/search', 'Artikel::search');
 $routes->get('artikel/get_ajax', 'Artikel::get_ajax');
 $routes->get('artikel/(:any)', 'Artikel::detail/$1');
 
-$routes->get('guest-property', 'GuestProperty::index');
-$routes->post('guest-property/submit', 'GuestProperty::submit');
-$routes->get('guest-property/success', 'GuestProperty::success');
+$routes->get('tawarkan-properti', 'GuestProperty::index');
+$routes->post('tawarkan-properti/submit', 'GuestProperty::submit');
+$routes->get('tawarkan-properti/success', 'GuestProperty::success');
 
 $routes->get('login', 'Login::index');
 $routes->post('user_login', 'Login::process');
