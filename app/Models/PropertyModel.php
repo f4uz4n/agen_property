@@ -53,8 +53,8 @@ class PropertyModel extends Model
     if ($kategori != null) {
       $builder->where('p.type', $kategori);
     }
+    $builder->orderBy('p.publish', 'ASC');
     $builder->orderBy('p.status', 'ASC');
-    $builder->orderBy('p.publish', 'DESC');
     $builder->orderBy('p.created_at', 'DESC');
     $builder->orderBy('c.name', 'ASC');
     $query = $builder->get();
@@ -112,7 +112,6 @@ class PropertyModel extends Model
     $images = $query->getResultArray();
     $data['images'] = $images;
 
-
     return $data;
   }
 
@@ -133,8 +132,10 @@ class PropertyModel extends Model
   public function getDataForLanding($limit = 6, $offset = 0, $filters = [])
   {
     $builder = $this->db->table($this->table . ' p');
-    $builder->select('p.*, c.name AS kategori');
+    $builder->select('p.*, c.name AS kategori,
+      (CASE WHEN f.id IS NULL THEN 0 ELSE 1 END) AS favorite');
     $builder->join('categories c', 'p.type = c.id', 'left');
+    $builder->join('favorites f', 'p.id = f.property_id', 'left');
     $builder->where('p.status', 'dijual');
     $builder->where('p.publish', 1);
 
@@ -169,6 +170,7 @@ class PropertyModel extends Model
       $builder->where('p.price <=', $filters['max_price']);
     }
 
+    $builder->orderBy('favorite', 'DESC');
     $builder->orderBy('p.created_at', 'DESC');
     $builder->limit($limit, $offset);
 

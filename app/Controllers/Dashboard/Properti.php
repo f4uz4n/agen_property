@@ -38,10 +38,12 @@ class Properti extends BaseController
     public function index()
     {
         $agen_id = session()->get('role') == 'agen' ? (int) (session()->get('id')) : null;
+        $property = $this->propertyModel->getData($agen_id);
+        $draft = $this->propertyModel->where('publish', 0)->countAllResults();
         $data = [
             'title' => 'Daftar Properti',
             'subtitle' => 'Kelola semua daftar properti Anda di Sini.',
-            'data' => $this->propertyModel->getData($agen_id),
+            'data' => $property,
             'kategori' => $this->categoryModel
                 ->where('status', 'aktif')
                 ->orderBy('name', 'ASC')
@@ -51,6 +53,7 @@ class Properti extends BaseController
                 ->where('role', 'agen')
                 ->orderBy('name', 'ASC')
                 ->findAll(),
+            'draft' => $draft,
         ];
         return $this->template->display('dashboard/properti', $data);
     }

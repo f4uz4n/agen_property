@@ -21,12 +21,14 @@ class Artikel extends BaseController
     {
         $articles = $this->articleModel->getData();
         $categories = $this->articleModel->getAllCategories();
+        $draft = $this->articleModel->where('status', 'draft')->countAllResults();
 
         $data = [
             'title' => 'Daftar Artikel',
             'subtitle' => 'Kelola semua daftar artikel Anda di Sini.',
             'data' => $articles,
             'categories' => $categories,
+            'draft' => $draft,
         ];
         return $this->template->display('dashboard/artikel', $data);
     }

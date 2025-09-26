@@ -114,6 +114,12 @@
         <button type="button" class="btn btn-primary mt-4" id="btn-cari">Cari</button>
       </div>
     </div>
+    <?php if (session('role') != 'agen' && $draft > 0): ?>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong><?= $draft ?></strong> artikel yang belum diverifikasi, silakan segera diverifikasi.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <?php endif ?>
     <div class="table-responsive" id="fetch-data"></div>
   </div>
 </div>

@@ -141,3 +141,5 @@
 
   </div>
 </div>
+
+<?= $this->include('footer-mini') ?>

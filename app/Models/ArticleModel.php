@@ -37,15 +37,6 @@ class ArticleModel extends Model
     $builder->select('a.*, u.name as author_name');
     $builder->join('users u', 'a.user_id = u.id', 'left');
 
-    // Filter berdasarkan pencarian
-    // if (!empty($filters['search'])) {
-    //   $builder->groupStart();
-    //   $builder->like('a.title', $filters['search']);
-    //   $builder->orLike('a.content', $filters['search']);
-    //   $builder->orLike('a.excerpt', $filters['search']);
-    //   $builder->groupEnd();
-    // }
-
     // Filter berdasarkan kategori
     if (!empty($filters['status'])) {
       $builder->where('a.status', $filters['status']);
@@ -54,41 +45,7 @@ class ArticleModel extends Model
       $builder->where('a.category', $filters['category']);
     }
 
-    // Filter berdasarkan periode
-    // if (!empty($filters['period'])) {
-    //   switch ($filters['period']) {
-    //     case 'today':
-    //       $builder->where('DATE(a.created_at)', date('Y-m-d'));
-    //       break;
-    //     case 'week':
-    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-7 days')));
-    //       break;
-    //     case 'month':
-    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-30 days')));
-    //       break;
-    //     case 'quarter':
-    //       $builder->where('a.created_at >=', date('Y-m-d', strtotime('-90 days')));
-    //       break;
-    //   }
-    // }
-
-    // Sorting
-    // $sort = $filters['sort'] ?? 'latest';
-    // switch ($sort) {
-    //   case 'popular':
-    //     $builder->orderBy('a.views', 'DESC');
-    //     break;
-    //   case 'alphabetical':
-    //     $builder->orderBy('a.title', 'ASC');
-    //     break;
-    //   case 'reverse_alphabetical':
-    //     $builder->orderBy('a.title', 'DESC');
-    //     break;
-    //   case 'latest':
-    //   default:
-    //     $builder->orderBy('a.created_at', 'DESC');
-    //     break;
-    // }
+    $builder->orderBy('a.created_at', 'DESC');
 
     return $builder->get()->getResultArray();
   }
