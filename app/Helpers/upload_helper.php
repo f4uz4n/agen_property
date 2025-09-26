@@ -72,7 +72,7 @@ function uploadArticleImages($image, int $propertyId)
   return $uploadedFiles;
 }
 
-function uploadPrestasi($image, int $nameFile)
+function uploadPrestasi($image, $nameFile)
 {
   $uploadPath = FCPATH . 'public/uploads/prestasi/';
 
@@ -84,7 +84,14 @@ function uploadPrestasi($image, int $nameFile)
 
   // hapus semua isi folder jika ada
   if (is_dir($uploadPath)) {
-    array_map('unlink', glob($uploadPath . '*'));
+    // hapus file yang sama
+    $files = glob($uploadPath . $nameFile . '.*');
+    foreach ($files as $file) {
+      if (file_exists($file)) {
+        unlink($file);
+        activity_log('hapus', $file);
+      }
+    }
   }
 
   if ($image->isValid() && !$image->hasMoved()) {
@@ -100,7 +107,7 @@ function uploadPrestasi($image, int $nameFile)
   return $uploadedFiles;
 }
 
-function uploadUserPhoto($image, int $nameFile)
+function uploadUserPhoto($image, $nameFile)
 {
   $uploadPath = FCPATH . 'public/uploads/users/';
 
@@ -112,7 +119,14 @@ function uploadUserPhoto($image, int $nameFile)
 
   // hapus semua isi folder jika ada
   if (is_dir($uploadPath)) {
-    array_map('unlink', glob($uploadPath . '*'));
+    // hapus file yang sama
+    $files = glob($uploadPath . $nameFile . '.*');
+    foreach ($files as $file) {
+      if (file_exists($file)) {
+        unlink($file);
+        activity_log('hapus', $file);
+      }
+    }
   }
 
   if ($image->isValid() && !$image->hasMoved()) {

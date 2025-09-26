@@ -25,6 +25,10 @@ $routes->get('artikel/search', 'Artikel::search');
 $routes->get('artikel/get_ajax', 'Artikel::get_ajax');
 $routes->get('artikel/(:any)', 'Artikel::detail/$1');
 
+$routes->get('tawarkan-properti', 'GuestProperty::index');
+$routes->post('tawarkan-properti/submit', 'GuestProperty::submit');
+$routes->get('tawarkan-properti/success', 'GuestProperty::success');
+
 $routes->get('login', 'Login::index');
 $routes->post('user_login', 'Login::process');
 $routes->get('logout', 'Login::logout');

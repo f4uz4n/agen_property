@@ -8,10 +8,7 @@ class PropertyModel extends Model
 {
   protected $table = 'properties';
   protected $primaryKey = 'id';
-  protected $useAutoIncrement = true;
-
   protected $returnType = 'array';
-  protected $protectFields = true;
   protected $allowedFields = [
     'title',
     'description',
@@ -45,7 +42,7 @@ class PropertyModel extends Model
     $builder->join('transactions t', 'p.id = t.property_id', 'left');
     $builder->join('categories c', 'p.type = c.id', 'left');
     $builder->join('favorites f', 'p.id = f.property_id', 'left');
-    $builder->where("t.status != 'Valid'");
+    $builder->where("(t.status != 'Valid' OR t.status IS NULL)");
     if ($agent_id != null) {
       $builder->join('agents a', 'p.id = a.property_id');
       $builder->where('a.agent_id', $agent_id);

@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.theme.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.carousel.css') ?>">
   <link rel="stylesheet" href="<?= base_url('public/vendors/owl-carousel/owl.transitions.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/select2/select2.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/select2-bootstrap-theme/select2-bootstrap.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('public/vendors/sweetalert2/sweetalert2.min.css') ?>">
   <link rel="shortcut icon" href="<?= base_url('public/favicon-light.png') ?>" />
 </head>
 

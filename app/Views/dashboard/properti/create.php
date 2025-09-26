@@ -6,9 +6,7 @@
 </div>
 
 <form action="<?= base_url('dashboard/properti/store') ?>" method="post" enctype="multipart/form-data" id="form-create">
-
   <div id="wizard">
-
     <h1>Informasi Dasar</h1>
     <section class="card" id="step1">
       <?= $this->include('dashboard/properti/create_step1') ?>
@@ -101,7 +99,6 @@
   });
 
   $(document).on('change', '#type', function () {
-    const id = $(this).find('option:selected').val();
     const category = $(this).find('option:selected').text().trim();
     $('#tipe').val(category);
   })
