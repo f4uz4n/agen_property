@@ -241,7 +241,7 @@
       <p class="section-subtitle">Panduan kami dalam melayani kebutuhan properti Anda.</p>
     </div>
     <div class="row g-4 justify-content-center">
-      <div class="col-lg-6">
+      <div class="col-lg-12">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="d-flex align-items-start">
@@ -256,7 +256,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-6">
+      <div class="col-lg-12">
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="d-flex align-items-start">
