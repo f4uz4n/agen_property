@@ -636,6 +636,10 @@
     document.querySelector('#city').innerHTML = opt;
   });
 
+  document.getElementById('wajib').addEventListener('change', function () {
+    document.getElementById('btn-submit').disabled = !this.checked;
+  });
+
   let currentStep = 1;
   const totalSteps = 3;
 
