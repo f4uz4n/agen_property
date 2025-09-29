@@ -68,9 +68,9 @@ class User extends BaseController
 
     if (!$validation->withRequest($this->request)->run()) {
       session()->setFlashdata([
-        'title' => 'Gagal',
-        'icon' => 'Validasi gagal',
-        'text' => $validation->getErrors()
+        'title' => 'Validasi gagal',
+        'icon' => 'error',
+        'text' => implode('<br>', $validation->getErrors())
       ]);
       return redirect()->to(base_url('dashboard/user'));
     }
@@ -78,9 +78,11 @@ class User extends BaseController
     try {
       $this->userModel->insert($data);
       $id = $this->userModel->getInsertID();
-      $slugName = url_title($name, '-', true);
-      $uploaded = uploadUserPhoto($photo, $slugName);
-      $this->userModel->update($id, ['photo' => $uploaded]);
+      if ($photo->isValid()) {
+        $slugName = url_title($name, '-', true);
+        $uploaded = uploadUserPhoto($photo, $slugName);
+        $this->userModel->update($id, ['photo' => $uploaded]);
+      }
 
       session()->setFlashdata([
         'title' => 'Berhasil',
@@ -170,9 +172,11 @@ class User extends BaseController
         'id' => $id
       ]);
 
-      $slugName = url_title($name, '-', true);
-      $uploaded = uploadUserPhoto($photo, $slugName);
-      $this->userModel->update($id, ['photo' => $uploaded]);
+      if ($photo->isValid()) {
+        $slugName = url_title($name, '-', true);
+        $uploaded = uploadUserPhoto($photo, $slugName);
+        $this->userModel->update($id, ['photo' => $uploaded]);
+      }
 
       session()->setFlashdata([
         'title' => 'Berhasil',
