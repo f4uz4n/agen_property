@@ -85,7 +85,7 @@
 
 <?= $this->section('js') ?>
 <script>
-  let data = <?= json_encode($data) ?>;  
+  let data = <?= json_encode($data) ?>;
   let transaksi = {};
 
   let status = $('#status').find('option:selected').val();
@@ -102,8 +102,7 @@
 
   $(document).on('click', '.btn-validasi', function () {
     let id = $(this).data('id');
-    let res = transaksi.find(e => e.id == id);
-    // console.log(res);
+    let res = transaksi.find(e => e.transaksi_id == id);    // console.log(res);
 
     $('#validateForm').attr('action', `<?= base_url('dashboard/transaksi/validasi/') ?>${id}`);
     let isiTable = {
@@ -228,22 +227,22 @@
 
       if (role == 'agen') {
         html += `<button type="button" class="btn btn-light btn-sm btn-modal" data-bs-toggle="modal" data-bs-target="#myModal"
-            data-id="${row.id}"><i class="fas fa-edit"></i>
+            data-id="${row.transaksi_id}"><i class="fas fa-edit"></i>
           </button>`;
       } else {
         if (row.transaksi != 'Valid') {
           html += `<button type="button" class="btn btn-info btn-sm btn-validasi" data-bs-toggle="modal" data-bs-target="#validasiModal"
-            data-id="${row.id}"><i class="fas fa-check"></i>
+            data-id="${row.transaksi_id}"><i class="fas fa-check"></i>
           </button>`;
         }
-        html += `<button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i>
+        html += `<button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${row.transaksi_id}"><i class="fas fa-trash"></i>
         </button>`;
       }
 
       html += `</td></tr>`;
     });
 
-    html += `</tbody ></table >`;
+    html += `</tbody></table>`;
 
     $('#fetch-data').html(html);
     tableInit('#basic-table');
