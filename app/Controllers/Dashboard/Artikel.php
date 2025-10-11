@@ -85,7 +85,7 @@ class Artikel extends BaseController
             'status' => $status,
             'featured' => $featured,
         ];
-
+        
         try {
             $this->articleModel->insert($data);
             $id = $this->articleModel->insertID();

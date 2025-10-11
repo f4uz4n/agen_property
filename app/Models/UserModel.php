@@ -51,7 +51,7 @@ class UserModel extends Model
 
     return $data;
   }
-
+  
   public function getAgents($id = null)
   {
     $builder = $this->db->table($this->table . ' u');
