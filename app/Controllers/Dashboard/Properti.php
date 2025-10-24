@@ -37,9 +37,10 @@ class Properti extends BaseController
 
     public function index()
     {
-        $agen_id = session()->get('role') == 'agen' ? (int) (session()->get('id')) : null;
-        $property = $this->propertyModel->getData($agen_id);
-        $draft = $this->propertyModel->where('publish', 0)->countAllResults();
+        $property = $this->propertyModel->getData();
+        $draft = count(array_filter($property, function ($item) {
+            return $item['publish'] == 0;
+        }));
         $data = [
             'title' => 'Daftar Properti',
             'subtitle' => 'Kelola semua daftar properti Anda di Sini.',
@@ -61,11 +62,9 @@ class Properti extends BaseController
     public function get_ajax()
     {
         $status = defaultValue($this->request->getPost('status'), null);
-        $agen = defaultValue($this->request->getPost('agen'), null);
-        $agen = session()->get('role') == 'agen' ? (int) (session()->get('id')) : $agen;
         $kategori = defaultValue($this->request->getPost('kategori'), null);
 
-        $res = $this->propertyModel->getData($agen, $status, $kategori);
+        $res = $this->propertyModel->getData(null, $status, $kategori);
         return $this->response->setJSON($res);
     }
 
@@ -148,6 +147,7 @@ class Properti extends BaseController
             'floors' => $floors,
             'facilities' => $facilities,
             'description' => $description,
+            'publish' => 1,
         ];
 
         if (session()->get('role') == 'agen') {
@@ -166,37 +166,21 @@ class Properti extends BaseController
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
-            return $this->response->setJSON([
+            session()->setFlashdata([
                 'title' => 'Gagal',
-                'icon' => 'Validasi gagal',
-                'text' => $validation->getErrors()
+                'icon' => 'error',
+                'text' => implode(', ', $validation->getErrors())
             ]);
+            return redirect()->back()->withInput();
         }
 
         try {
-            $result = $this->propertyModel->insert($data);
-            if ($result) {
-                $id = $this->propertyModel->insertID();
-            } else {
-                throw new \Exception("Gagal menyimpan data properti.");
-            }
-
-            foreach ($agen as $user) {
-                $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();
-                $tempAgen != null ? $this->agentModel->update($tempAgen['id'], ['agent_id' => $user, 'property_id' => $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
-            }
+            $this->propertyModel->insert($data);
+            $id = $this->propertyModel->insertID();
+            $this->saveAgent($id, $agen);
 
             $fileName = $this->request->getPost('tipe');
-            $uploaded = uploadPropertyImages($images, $id, $fileName);
-
-            // contoh simpan ke DB
-            foreach ($uploaded as $key => $imgUrl) {
-                $this->propertyImageModel->insert([
-                    'property_id' => $id,
-                    'image_url' => $imgUrl,
-                    'is_primary' => $key == 0 ? 1 : 0,
-                ]);
-            }
+            $this->saveImages($id, $fileName, $images);
 
             session()->setFlashdata([
                 'title' => 'Berhasil',
@@ -310,32 +294,20 @@ class Properti extends BaseController
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
-            return $this->response->setJSON([
+            session()->setFlashdata([
                 'title' => 'Gagal',
-                'icon' => 'Validasi gagal',
-                'text' => $validation->getErrors()
+                'icon' => 'error',
+                'text' => implode(', ', $validation->getErrors())
             ]);
+            return redirect()->back()->withInput();
         }
 
         try {
             $this->propertyModel->update($id, $data);
-
-            foreach ($agen as $user) {
-                $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $id)->first();
-                $tempAgen != null ? $this->agentModel->update($tempAgen['id'], ['agent_id' => $user, 'property_id' => $id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $id]);
-            }
+            $this->saveAgent($id, $agen);
 
             $fileName = $this->request->getPost('tipe');
-            $uploaded = uploadPropertyImages($images, $id, $fileName);
-
-            // simpan gambar ke DB
-            foreach ($uploaded as $key => $imgUrl) {
-                $this->propertyImageModel->insert([
-                    'property_id' => $id,
-                    'image_url' => $imgUrl,
-                    'is_primary' => $key == 0 ? 1 : 0,
-                ]);
-            }
+            $this->saveImages($id, $fileName, $images);
 
             session()->setFlashdata([
                 'title' => 'Berhasil',
@@ -415,5 +387,53 @@ class Properti extends BaseController
             'icon' => 'success',
             'text' => 'Properti berhasil dihapus'
         ]);
+    }
+
+    public function saveAgent($property_id, $agen)
+    {
+        if (!empty($agen)) {
+            foreach ($agen as $user) {
+                $tempAgen = $this->agentModel->where('agent_id', $user)->where('property_id', $property_id)->first();
+                $tempAgen != null ? $this->agentModel->update($tempAgen['id'], ['agent_id' => $user, 'property_id' => $property_id]) : $this->agentModel->insert(['agent_id' => $user, 'property_id' => $property_id]);
+            }
+        }
+    }
+
+    public function saveImages($property_id, $fileName, $images)
+    {
+        // Jika tidak ada gambar, langsung keluar
+        if (empty($images)) {
+            return;
+        }
+
+        // Pastikan $images berbentuk array
+        if (!is_array($images)) {
+            $images = [$images];
+        }
+
+        // Filter hanya file yang valid
+        $validImages = array_filter($images, function ($img) {
+            return $img instanceof \CodeIgniter\HTTP\Files\UploadedFile
+                && $img->isValid()
+                && !$img->hasMoved();
+        });
+
+        // Kalau tidak ada file valid, keluar juga
+        if (empty($validImages)) {
+            return;
+        }
+
+        $uploaded = uploadPropertyImages($validImages, $property_id, $fileName);
+
+        // Pastikan hasilnya berupa array
+        if (is_array($uploaded)) {
+            foreach ($uploaded as $key => $imgUrl) {
+                $this->propertyImageModel->insert([
+                    'property_id' => $property_id,
+                    'image_url' => $imgUrl,
+                    'is_primary' => $key == 0 ? 1 : 0,
+                ]);
+            }
+        }
     }
 }

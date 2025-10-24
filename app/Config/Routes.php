@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('agen', 'Home::agen');
+$routes->get('kpr', 'Home::kpr');
 $routes->get('kebijakan', 'Home::kebijakan');
 $routes->get('syarat', 'Home::syarat');
 
@@ -97,6 +98,7 @@ $routes->group('dashboard', ['namespace' => 'App\Controllers\Dashboard', 'filter
     $routes->post('store', 'Leaderboard::store');
     $routes->post('update/(:num)', 'Leaderboard::update/$1');
     $routes->post('delete/(:num)', 'Leaderboard::delete/$1');
+    $routes->post('tahun', 'Leaderboard::tahun');
   });
 
   $routes->group('user', ['filter' => 'auth:admin,owner'], function ($routes) {

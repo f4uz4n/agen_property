@@ -34,7 +34,7 @@ class Home extends BaseController
             'contact' => $this->contactModel->getData(),
             'stat' => $this->laporanModel->getStatistik(),
             'testimoni' => $testimoni,
-            'leaderboard' => $this->leaderboardModel->getData(date('Y') - 1),
+            'leaderboard' => $this->leaderboardModel->getData(true),
         ];
         return $this->template->displayLanding('home', $data);
     }
@@ -46,6 +46,14 @@ class Home extends BaseController
             'contact' => $this->contactModel->getData(),
         ];
         return $this->template->displayLanding('agen', $data);
+    }
+
+    public function kpr()
+    {
+        $data = [
+            'contact' => $this->contactModel->getData(),
+        ];
+        return $this->template->displayLanding('kpr', $data);
     }
 
     public function kebijakan()
